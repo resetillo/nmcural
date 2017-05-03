@@ -20,57 +20,56 @@ _nmppsArctan_64f:
     push ar1, gr1;
     push ar2, gr2;
     push ar3, gr3;
-    push ar5, gr5;
     gr7 = 0;//По умолчанию возвращаем 0
-    ar0 = [--ar5];//pSrc
-    ar1 = [--ar5];//pDst
-    gr0 = [--ar5];//len
+    ar2 = [--ar5];//pSrc
+    ar3 = [--ar5];//pDst
+    gr1 = [--ar5];//len
 
-    gr0;
+    gr1;
     if <= goto err_size;
-    gr1 = ar0;
-    gr1;
+    gr0 = ar2;
+    gr0;
     if =0 goto err_ptr;
-    gr1 = ar1;
-    gr1;
+    gr0 = ar3;
+    gr0;
     if =0 goto err_ptr;
 
 main_loop:
-    gr1 = 32;
-    gr2 = gr0;
-    gr0 - gr1;
+    gr3 = 32;
+    gr2 = gr1;
+    gr2 - gr3;
     if <= goto after_correct;
     gr2 = 32;
 after_correct:
-    gr1 = true;
-    gr1 = gr1 + gr2; //gr2 -1
-    vlen = gr1;//Загрузим длину
+    gr0 = true;
+    gr3 = gr2 + gr0; //gr2 -1
+    vlen = gr3;//Загрузим длину
     //0
-    ar2 = _zero_dbl;
-    fpu 0  rep  vlen  vreg0 = [ar2];
+    ar0 = _zero_dbl;
+    fpu 0  rep  vlen  vreg0 = [ar0];
 	//1
-    ar2 = _one_dbl;
-    fpu 0  rep  vlen  vreg1 = [ar2];
+    ar0 = _one_dbl;
+    fpu 0  rep  vlen  vreg1 = [ar0];
 
 	//X = 1
 	fpu 1  vreg1 = fpu 0 vreg1;
 	//Входное значение Y
-    ar2 = ar0;
-    fpu 1  rep  vlen  vreg5 = [ar2++];//Оригинальный Y для восстановления знака результата
+    ar0 = ar2;
+    fpu 1  rep  vlen  vreg5 = [ar0++];//Оригинальный Y для восстановления знака результата
     fpu 1  .double vreg2 = /vreg5/;//Модуль Y для расчетов
     
     //sum_angle = 0
     fpu 0  vreg7 = vreg0;//Выходной вектор
     
     //ЦИКЛ
-    gr1 = 52;//52;
-    ar2 = _tanTable;//Таблица тангенсов
-    ar3 = _angTable;//Таблица углов
+    gr0 = 52;//52;
+    ar0 = _tanTable;//Таблица тангенсов
+    ar1 = _angTable;//Таблица углов
 arctan_cycle:
-    fpu 0  rep vlen vreg2 = [ar2];
-    ar2+=2; //адрес double
-    fpu 0  rep vlen vreg3 = [ar3];
-    ar3+=2; //адрес double
+    fpu 0  rep vlen vreg2 = [ar0];
+    ar0+=2; //адрес double
+    fpu 0  rep vlen vreg3 = [ar1];
+    ar1+=2; //адрес double
 
 
     //s = copysign(1, y)
@@ -102,7 +101,7 @@ arctan_cycle:
 	fpu 1 vreg1 = fpu 1  vreg3;
 	//y =  Ynew;
 	fpu 1 vreg2 = fpu 1 vreg4;
-	gr1 = gr1 - 1;
+	gr0 = gr0 - 1;
 	if > goto arctan_cycle;
 
 	//Обработаем NAN и INF
@@ -115,43 +114,39 @@ arctan_cycle:
 		ar1 - changing value
 		gr0 - length of vector
 		vreg7 - out vector*/
-    push ar0, gr0;
-    push ar1, gr1;
-	ar0 = ar1;
+	ar0 = ar3;
     fpu 0 rep vlen [ar0++] = vreg7;
-    ar0 = ar1;
+    ar0 = ar3;
     ar1 = _half_pi_dbl; //arctan(inf) = pi/2
     gr0 = gr2;
 	call __macro_change_infinity;
-    pop ar1, gr1;
-    pop ar0, gr0;
 
     //Восстановим исходный знак
     fpu 0 vreg6 = fpu 1 vreg5;
     fpu 0 .double vreg6 + vreg6, set mask if <;
     fpu 0 .double vreg7 = mask ? -vreg7 : vreg7;
-    fpu 0 rep vlen [ar1++] = vreg7;
+    fpu 0 rep vlen [ar3++] = vreg7;
 
 
-    push gr0;
-    gr0 = gr2 << 1; //Смещение в double
-    ar0 = ar0 + gr0;
-    pop gr0;
-    gr1 = 32;
-    gr0 = gr0 - gr1;
-    if > goto main_loop;
+    gr0 = 32;
+    gr1 = gr1 - gr0;
+    if > delayed goto main_loop;
+    //Коррекция адреса входного вектора
+    gr2 = gr2 << 1; //Смещение в double
+    ar2 = ar2 + gr2;
 
     goto exit;
     
 err_size:
+    delayed goto exit;
     gr7 = -6;
-    goto exit;
+    nul;
 err_ptr:
+    delayed goto exit;
     gr7 = -8;
-    goto exit;
+    nul;
  
 exit:
-    pop ar5, gr5;
     pop ar3, gr3;
     pop ar2, gr2;
     pop ar1, gr1;
