@@ -6,23 +6,17 @@
 .data
 //nb63: .long 0xC000000000000000L // nb 1-63
 SB:
-	  .long 0x00000001 // 1 stroka
-	  .long 0x00000000
+	  .quad 0x00000001 // 1 stroka
 NB:
-	  .long 0x00000000 // 1 stolbets
-      .long 0x80000000
+      .quad 0x8000000000000000 // 1 stolbets
 WB:
-      .long 0x00000001
-      .long 0x00000000
+      .quad 0x00000001
 BIAS:
-      .long 0x00000000
-	  .long 0x3ff00000
+	  .quad 0x3ff0000000000000
 SIGN_BIT:
-	  .long 0xffffffff
-      .long 0x7fffffff
+      .quad 0x7fffffffffffffff
 DpCode_const:
-	  .long 0
-	  .long 0x80200000
+	  .quad 0x8020000000000000
 
 .text
 /**
@@ -32,6 +26,7 @@ _nmppsSqrt_64f:
     ar5 = ar7 - 2;
     
     // Сохранение в стеке регистров, чтобы исключить их повреждение
+    push ar0, gr0;
     push ar1, gr1;
     push ar2, gr2;
     push ar3, gr3;
@@ -65,10 +60,18 @@ _nmppsSqrt_64f:
     sb = sir;	
 	ar2 = WB;
     rep 1 wfifo = [ar2], ftw, wtw; // Загрузка матрицы  весов
-	
+
+main_loop:
+	gr3 = gr1;
+	gr2 = 32;
+	gr3 - gr2;
+    if <= goto after_correct;
+    gr3 = 32;
+
+after_correct:
 	gr2 = true;
-	gr2 = gr2 + gr1;
-	vlen = gr2;
+	gr3 = gr2 + gr3;
+	vlen = gr3;
 
     //Вычисление приближенного значения X = ~sqrt(x)
 	ar2 = BIAS;
@@ -163,8 +166,8 @@ continue:*/
 	//Анализ входного вектора
 	ar2 = _nan_dbl;
     fpu 0 rep vlen vreg6 = [ar2];
-	ar2 = ar1;
-    fpu 0 rep vlen vreg5 = [ar1++];
+	//ar2 = ar1;
+    fpu 0 rep vlen vreg5 = [ar1++];//Входной вектор
 
     //проверка на nan & inf
     fpu 0 .double vreg5 - vreg5, set mask if <>0;
@@ -184,6 +187,12 @@ continue:*/
 	gr7 = 3;
 save_result:
 	fpu 0 rep vlen [ar0++] = vreg1;
+
+    gr2 = 32;
+	gr1 = gr1 - gr2;
+    if > goto main_loop;
+
+
     //nb1 = [NB];	
     //sb = [SB];	
 	//ar5 = WB; 
@@ -202,4 +211,5 @@ exit:
     pop ar3, gr3;
     pop ar2, gr2;
     pop ar1, gr1;
+    pop ar0, gr0;
     return; 

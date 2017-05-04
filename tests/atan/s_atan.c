@@ -1,5 +1,5 @@
 
-#include "tests\test_math.h"
+#include "tests/test_math.h"
 
 
 static const double atanhi[] = {
@@ -36,10 +36,10 @@ huge   = 1.0e300;
 
 
 /**
- * @brief вычисление арктангенса в формате double 
+ * @brief пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ double 
  *
- * @param x - тангенс
- * @retval угол в радианах
+ * @param x - пїЅпїЅпїЅпїЅпїЅпїЅпїЅ
+ * @retval пїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
  */
 double right_atan(double x)
 {

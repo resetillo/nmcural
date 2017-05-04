@@ -1,5 +1,5 @@
 
-#include "tests\test_math.h"
+#include "tests/test_math.h"
 
 static const double one = 1.0, tiny = 1.0e-300;
 
@@ -104,10 +104,10 @@ double __ieee754_sqrt(double x)
  */
 
 /**
- * @brief вычисление квадратного корня double 
+ * @brief пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ double 
  *
- * @param x - подкоренное выражение
- * @retval квадратный корень x
+ * @param x - пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
+ * @retval пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ x
  */
 double right_sqrt(double x)
 {

@@ -1,6 +1,6 @@
 #include "nmpps.h"
-#include "tests\test_proto.h"
-#include "tests\test_math.h"
+#include "tests/test_proto.h"
+#include "tests/test_math.h"
 
 #define COUNT_ITERATION (100)
 
@@ -8,13 +8,13 @@ double right_atan(double x);
 float right_atanf(float x);
 
 /**
- * @brief Создание тестовых векторов
+ * @brief пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
  *
- * @param in указатель на вектор аргументов
- * @param out указатель на вектор арктангенсов
- * @param len Длина веторов
- * @param bgn стартовое значение
- * @param step Шаг изменения
+ * @param in пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
+ * @param out пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
+ * @param len пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ
+ * @param bgn пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
+ * @param step пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
  * */
 void create_atan_vecs(nmpps64f* in, nmpps64f* out, unsigned int len,
 					  nmpps64f bgn, nmpps64f step)
@@ -41,16 +41,16 @@ void create_atanf_vecs(nmpps32f* in, nmpps32f* out, unsigned int len,
 }
 
 
-const nmpps64f atan_critical_error = 10e-15;//Ошибка непрохождения в %
-const nmpps32f atanf_critical_error = 10e-07;//Ошибка непрохождения в %
+const nmpps64f atan_critical_error = 10e-15;//пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ %
+const nmpps32f atanf_critical_error = 10e-07;//пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ %
 
 
 /**
- * @brief Тестирование вычисления арктангенса для диапазона значений
+ * @brief пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
  *
- * @param bgn стартовое значение
- * @param step Шаг изменения
- * @param count Кол-во значений
+ * @param bgn пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
+ * @param step пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
+ * @param count пїЅпїЅпїЅ-пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
  * */
 nmppsStatus test_atan_diap(nmpps64f bgn, nmpps64f step, int count){
 	nmpps64f in[COUNT_ITERATION];
@@ -62,9 +62,9 @@ nmppsStatus test_atan_diap(nmpps64f bgn, nmpps64f step, int count){
 	//nmpps64f max_err_arg;
 	int i = 0;
 	nmppsStatus stat;
-	//Считаем КД
+	//пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ
 	create_atan_vecs(in, kd, count, arg, step);
-	//Производим рассчет
+	//пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 	stat = nmppsArctan_64f(in, res, count);
 	if (stat!=nmppsStsNoErr) return stat;
 	for(i=0;i<count;i++){
@@ -93,9 +93,9 @@ nmppsStatus test_atanf_diap(nmpps32f bgn, nmpps32f step, int count){
 	int i = 0, i1, nVec=0;
 	while (i<count){
 		nVec++;
-		//Считаем КД
+		//пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ
 		create_atanf_vecs(in, kd, 32, arg, step);
-		//Производим рассчет
+		//пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 		stat = nmppsArctan_32f(in, res, 32);
 		if (stat!=nmppsStsNoErr) return stat;
 		for(i1=0;i1<32;i1++){
@@ -134,26 +134,26 @@ int test_atan_check_answer(){
 		nmppsArctan_64f(&data[1], &out[1], i+1);
 		for(k=0; k < sizeof(data)/sizeof(nmpps64f); k++){
 			if (data[k]!=original[k]) {
-				return 3;//Потерся входной вектор
+				return 3;//пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
 			}
 		}
 		if (out[0]!=0) {
-			return 4;//Перетерирание перед выходным вектором
+			return 4;//пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 		}
 		if (out[i+2]!=0) {
-			return 5;//Перетерирание за пределом выходного вектора
+			return 5;//пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 		}
 	}
 
 
 	if (nmppsArctan_64f(data, NULL, 1) != nmppsStsNullPtrErr ||
 			nmppsArctan_64f(NULL, out, 1) != nmppsStsNullPtrErr	){
-		return 6; //Не сработала проверка на NULL
+		return 6; //пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ NULL
 	}
 
 	if (nmppsArctan_64f(data, out, 0) != nmppsStsSizeErr ||
 			nmppsArctan_64f(data, out, -1) != nmppsStsSizeErr	){
-		return 7; //Не сработала проверка на длину вектора
+		return 7; //пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 	}
 
 
@@ -178,26 +178,26 @@ int test_atanf_check_answer(){
 		nmppsArctan_32f(&data[1], &out[1], i+1);
 		for(k=0; k < sizeof(data)/sizeof(nmpps64f); k++){
 			if (data[k]!=original[k]) {
-				return 3;//Потерся входной вектор
+				return 3;//пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
 			}
 		}
 		if (out[0]!=0) {
-			return 4;//Перетерирание перед выходным вектором
+			return 4;//пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 		}
 		if (out[i+2]!=0) {
-			return 5;//Перетерирание за пределом выходного вектора
+			return 5;//пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 		}
 	}
 
 
 	if (nmppsArctan_32f(data, NULL, 1) != nmppsStsNullPtrErr ||
 			nmppsArctan_32f(NULL, out, 1) != nmppsStsNullPtrErr	){
-		return 6; //Не сработала проверка на NULL
+		return 6; //пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ NULL
 	}
 
 	if (nmppsArctan_32f(data, out, 0) != nmppsStsSizeErr ||
 			nmppsArctan_32f(data, out, -1) != nmppsStsSizeErr	){
-		return 7; //Не сработала проверка на длину вектора
+		return 7; //пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 	}
 
 
@@ -206,13 +206,13 @@ int test_atanf_check_answer(){
 
 int test_atan(){
 	nmppsStatus stat;
-	//Нормальные значения
+	//пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 	stat = test_atan_diap(-40, ((double)87/(double)COUNT_ITERATION), COUNT_ITERATION);
 	if (stat!=nmppsStsNoErr) {
 		return 1;
 	}
 
-	//Большие по модулю
+	//пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
 	stat = test_atan_diap(1.9875e+300, 17.937, COUNT_ITERATION);
 	if (stat!=nmppsStsNoErr) {
 		return 2;
@@ -222,7 +222,7 @@ int test_atan(){
 		return 3;
 	}
 
-	//Близкие к нулю
+	//пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅ
 	stat = test_atan_diap(3.3333e-300, 1.3337e-300, COUNT_ITERATION);
 	if (stat!=nmppsStsNoErr) {
 		return 4;
@@ -243,13 +243,13 @@ int test_atan(){
 int test_atanf(){
 	nmppsStatus stat;
 
-	//Нормальные значения
+	//пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 	stat = test_atanf_diap(-50, ((float)87/(float)COUNT_ITERATION), COUNT_ITERATION);
 	if (stat!=nmppsStsNoErr) {
 		return 1;
 	}
 
-	//Большие по модулю
+	//пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
 	stat = test_atanf_diap(1.9875e+38, 17.937, COUNT_ITERATION);
 	if (stat!=nmppsStsNoErr) {
 		return 2;
@@ -259,7 +259,7 @@ int test_atanf(){
 		return 3;
 	}
 
-	//Близкие к нулю
+	//пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅ
 	stat = test_atanf_diap(3.3333e-38, 1.3337e-38, COUNT_ITERATION);
 	if (stat!=nmppsStsNoErr) {
 		return 4;

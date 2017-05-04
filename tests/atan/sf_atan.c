@@ -1,5 +1,5 @@
 
-#include "tests\test_math.h"
+#include "tests/test_math.h"
 
 
 static const float atanhi[] = {
@@ -38,10 +38,10 @@ one   = 1.0,
 huge   = 1.0e30;
 
 /**
- * @brief вычисление арктангенса в формате float 
+ * @brief пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ float 
  *
- * @param x - тангенс
- * @retval угол в радианах
+ * @param x - пїЅпїЅпїЅпїЅпїЅпїЅпїЅ
+ * @retval пїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
  */ 
 float right_atanf(float x)
 {

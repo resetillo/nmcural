@@ -27,11 +27,12 @@
 								<option id="ru.mipt.designcenter.compiler.base.category.optimization.level.1556091697" name="Optimization Level" superClass="ru.mipt.designcenter.compiler.base.category.optimization.level" value="ru.mipt.designcenter.compiler.base.category.optimization.level.none" valueType="enumerated"/>
 								<option id="ru.mipt.designcenter.compiler.base.category.debugging.level.1628135005" name="Debug Level" superClass="ru.mipt.designcenter.compiler.base.category.debugging.level"/>
 								<option id="ru.mipt.designcenter.compiler.base.category.include.additional.1014922739" name="Include Option" superClass="ru.mipt.designcenter.compiler.base.category.include.additional" valueType="includePath">
-									<listOptionValue builtIn="false" value="-I&quot;..\include&quot;"/>
-									<listOptionValue builtIn="false" value="-I&quot;..\&quot;"/>
-									<listOptionValue builtIn="false" value="-I&quot;..\tests&quot;"/>
+									<listOptionValue builtIn="false" value="-I&quot;../include&quot;"/>
+									<listOptionValue builtIn="false" value="-I&quot;../&quot;"/>
+									<listOptionValue builtIn="false" value="-I&quot;../tests&quot;"/>
 								</option>
 								<option id="ru.mipt.designcenter.compiler.base.category.general.other.1435366736" name="Other Flags" superClass="ru.mipt.designcenter.compiler.base.category.general.other" value="-fno-builtin" valueType="string"/>
+								<option id="ru.mipt.designcenter.compiler.base.category.general.compile.nmc4-float.775642512" name="Add nmc4_float library" superClass="ru.mipt.designcenter.compiler.base.category.general.compile.nmc4-float" value="false" valueType="boolean"/>
 								<inputType id="ru.mipt.designcenter.compiler.nmgcc.input.1305400036" superClass="ru.mipt.designcenter.compiler.nmgcc.input"/>
 							</tool>
 							<tool id="ru.mipt.designcenter.compiler.nmgpp.exe.debug.1910125237" name="NM C++ Compiler" superClass="ru.mipt.designcenter.compiler.nmgpp.exe.debug">
@@ -42,6 +43,7 @@
 								<option id="ru.mipt.designcenter.assembler.base.category.general.other.1895728767" name="Other Flags" superClass="ru.mipt.designcenter.assembler.base.category.general.other" value="-g" valueType="string"/>
 								<option id="ru.mipt.designcenter.compiler.base.category.general.compile.mgas.1667032075" name="Use GAS assembler" superClass="ru.mipt.designcenter.compiler.base.category.general.compile.mgas" value="false" valueType="boolean"/>
 								<option id="ru.mipt.designcenter.assembler.base.category.general.compile.748301041" name="Compile" superClass="ru.mipt.designcenter.assembler.base.category.general.compile" value="false" valueType="boolean"/>
+								<option id="ru.mipt.designcenter.assembler.base.category.general.compile.nmc4.70052503" name="Add nmc4 library" superClass="ru.mipt.designcenter.assembler.base.category.general.compile.nmc4" value="false" valueType="boolean"/>
 							</tool>
 						</toolChain>
 					</folderInfo>

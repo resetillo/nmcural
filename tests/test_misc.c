@@ -1,5 +1,5 @@
 #include "nmpps.h"
-#include "tests\test_proto.h"
+#include "tests/test_proto.h"
 
 
 //kd = copysign(a,b);
@@ -38,7 +38,7 @@ int test_copysign(){
 	for(i = 1; i<33; i++){
 		if (data[i] != kd[i]) return i;
 	}
-	//Проверка на запись в ненужные места
+	//пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ
 	if (data[0] != 0) return 33;
 	if (data[33] != 0) return 34;
 	if (a[0] != 0) return 35;

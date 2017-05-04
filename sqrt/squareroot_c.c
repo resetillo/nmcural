@@ -160,7 +160,7 @@ nmppsStatus c_nmppsSqrt_64f (const nmpps64f*  pSrc, nmpps64f*  pDst,    int len)
 }
 
 
-nmppsStatus nmppsSqrt_32f (const nmpps32f*  pSrc, nmpps32f*  pDst,    int len){
+nmppsStatus c_nmppsSqrt_32f (const nmpps32f*  pSrc, nmpps32f*  pDst,    int len){
     nmppsStatus ret = nmppsStsNoErr;
     int i = 0;
     if (pSrc == NULL || pDst == NULL) return nmppsStsNullPtrErr;

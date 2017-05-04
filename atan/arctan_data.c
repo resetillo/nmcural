@@ -1,5 +1,5 @@
 #include "nmpps.h"
-#include "tests\test_math.h"
+#include "tests/test_math.h"
 
 nmpps64f zero_dbl = 0.0;
 nmpps64f half_dbl = 0.5;
@@ -7,6 +7,13 @@ nmpps64f one_dbl = 1.0;
 nmpps64f two_dbl = 2.0;
 nmpps64f half_pi_dbl = 1.5707963267948966192313216916398;
 nmpps64f nan_dbl = (((nmpps64f)0.0)/((nmpps64f)0.0));
+
+nmpps32f zero_flt[2] = {0.0, 0.0};
+nmpps32f half_flt[2] = {0.5, 0.5};
+nmpps32f one_flt[2] = {1.0, 1.0};
+nmpps32f two_flt[2] = {2.0, 2.0};
+nmpps32f half_pi_flt[2] = {1.5707963267948966192313216916398 , 1.5707963267948966192313216916398};
+nmpps32f nan_flt[2] = {(((nmpps32f)0.0)/((nmpps32f)0.0)), (((nmpps32f)0.0)/((nmpps32f)0.0))};
 
 
 nmpps64f tanTable[52] = {1.0L, 0.41421356237309503L, 0.19891236737965801L, 0.098491403357164248L,

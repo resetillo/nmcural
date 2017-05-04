@@ -8,5 +8,8 @@
 #include "nmppstypes.h"
 #include "nmppss.h"
 
-#define NULL ((void*)0)
+#ifndef NULL
+	#define NULL ((void *)0)
+#endif
+
 #endif /* __NMPPS_H__ */

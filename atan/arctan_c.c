@@ -1,5 +1,5 @@
 #include "nmpps.h"
-#include "tests\test_math.h"
+#include "tests/test_math.h"
 
 
 
@@ -95,7 +95,7 @@ nmppsStatus c_nmppsArctan_64f(const nmpps64f* pSrc, nmpps64f* pDst,    int len){
     for(i=0; i < len; i++){
         tmp = fabs(pSrc[i]);
         pDst[i] = arctan2(1.0, tmp);
-        //Восстановим знак
+        //пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ
         pDst[i] = copysign(pDst[i], pSrc[i]);
     }
     
@@ -111,7 +111,7 @@ nmppsStatus nmppsArctan_32f(const nmpps32f* pSrc, nmpps32f* pDst,    int len){
     for(i=0; i < len; i++){
         tmp = fabsf(pSrc[i]);
         pDst[i] = arctan2(1.0, tmp);
-        //Восстановим знак
+        //пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ
         pDst[i] = copysignf(pDst[i], pSrc[i]);
     }
     

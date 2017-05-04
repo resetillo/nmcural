@@ -1,6 +1,6 @@
 #include "nmpps.h"
-#include "tests\test_proto.h"
-#include "tests\test_math.h"
+#include "tests/test_proto.h"
+#include "tests/test_math.h"
 //#include "stdlib.h"
 
 float right_sqrtf(float x);
@@ -9,19 +9,18 @@ double right_sqrt(double x);
 #define COUNT_ITERATION (100)
 
 /**
- * @brief Создание тестовых векторов
+ * @brief пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
  *
- * @param in указатель на вектор аргументов
- * @param out указатель на вектор корней
- * @param len Длина веторов
- * @param bgn стартовое значение
- * @param step Шаг изменения
+ * @param in пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
+ * @param out пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
+ * @param len пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ
+ * @param bgn пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
+ * @param step пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
  * */
 void create_sqrt_vecs(nmpps64f* in, nmpps64f* out, unsigned int len,
 					  nmpps64f bgn, nmpps64f step)
 {
 	int i;
-	if (len>32) len = 32;
 	for(i=0; i<len; i++){
 		in[i] = bgn;
 		out[i] = right_sqrt(in[i]);
@@ -43,75 +42,71 @@ void create_sqrtf_vecs(nmpps32f* in, nmpps32f* out, unsigned int len,
 
 
 
-const nmpps64f sqrt_critical_error = 10e-14;//Ошибка непрохождения в %
-const nmpps32f sqrtf_critical_error = 10e-05;//Ошибка непрохождения в %
+const nmpps64f sqrt_critical_error = 10e-14;//пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ %
+const nmpps32f sqrtf_critical_error = 10e-05;//пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ %
 /**
- * @brief Тестирование вычисления квадратного корня для диапазона значений
+ * @brief пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
  *
- * @param bgn стартовое значение
- * @param step Шаг изменения
- * @param count Кол-во значений
+ * @param bgn пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
+ * @param step пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
+ * @param count пїЅпїЅпїЅ-пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
  * */
-nmppsStatus test_srqt_diap(nmpps64f bgn, nmpps64f step, int count){
-	nmpps64f in[32];
-	nmpps64f res[32];
-	nmpps64f kd[32];
+nmppsStatus test_sqrt_diap(nmpps64f bgn, nmpps64f step, int count){
+	nmpps64f in[COUNT_ITERATION];
+	nmpps64f res[COUNT_ITERATION];
+	nmpps64f kd[COUNT_ITERATION];
 	nmppsStatus stat;
 	double er;
 	double arg = bgn;
 	//double step = 1.3333777e-1;
 	double max_err = 0;
-	double max_err_arg;
-	int i = 0, i1, nVec=0;
-	while (i<count){
-		nVec++;
-		//Считаем КД
-		create_sqrt_vecs(in, kd, 32, arg, step);
-		//Производим рассчет
-		stat = nmppsSqrt_64f(in, res, 32);
-		if (stat!=nmppsStsNoErr) return stat;
-		for(i1=0;i1<32;i1++){
-			arg = in[i1];
-			er = 100*fabs(kd[i1]-res[i1])/kd[i1];
-			if (er > max_err) {
-				max_err = er;
-				max_err_arg = arg;
-				if (max_err > sqrt_critical_error) {
-					return nVec;
-				}
+	//double max_err_arg;
+	int i;
+	//пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ
+	create_sqrt_vecs(in, kd, count, arg, step);
+	//пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ
+	stat = nmppsSqrt_64f(in, res, count);
+	if (stat!=nmppsStsNoErr) return stat;
+	for (i=0; i<count; i++){
+		arg = in[i];
+		er = fabs(kd[i]-res[i]);
+		if (kd[i] != 0) er = 100*er/kd[i];
+		if (er > max_err) {
+			max_err = er;
+			//max_err_arg = arg;
+			if (max_err > sqrt_critical_error) {
+				return i+1;
 			}
-
 		}
-
-		i+=32;
 	}
 	return nmppsStsNoErr;
 }
 
-nmppsStatus test_srqtf_diap(nmpps32f bgn, nmpps32f step, int count){
+nmppsStatus test_sqrtf_diap(nmpps32f bgn, nmpps32f step, int count){
 	nmpps32f in[32];
 	nmpps32f res[32];
 	nmpps32f kd[32];
 	nmppsStatus stat;
-	nmpps32f r1, right, er;
+	nmpps32f er;
 	nmpps32f arg = bgn;
 	//double step = 1.3333777e-1;
 	nmpps32f max_err = 0;
-	nmpps32f max_err_arg = 0;
+	//nmpps32f max_err_arg = 0;
 	int i = 0, i1, nVec=0;
 	while (i<count){
 		nVec++;
-		//Считаем КД
+		//пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ
 		create_sqrtf_vecs(in, kd, 32, arg, step);
-		//Производим рассчет
+		//пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 		stat = nmppsSqrt_32f(in, res, 32);
 		if (stat!=nmppsStsNoErr) return stat;
 		for(i1=0;i1<32;i1++){
 			arg = in[i1];
-			er = 100*fabsf(kd[i1]-res[i1])/kd[i1];
+			er = fabsf(kd[i1]-res[i1]);
+			if (kd[i1] != 0) er = 100*er/kd[i1];
 			if (er > max_err) {
 				max_err = er;
-				max_err_arg = arg;
+				//max_err_arg = arg;
 				if (max_err > sqrtf_critical_error) {
 					return nVec;
 				}
@@ -152,26 +147,26 @@ int test_sqrt_check_answer(){
 		nmppsSqrt_64f(&data[1], &out[1], i+1);
 		for(k=0; k < sizeof(data)/sizeof(nmpps64f); k++){
 			if (data[k]!=original[k]) {
-				return 3;//Потерся входной вектор
+				return 3;//пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
 			}
 		}
 		if (out[0]!=0) {
-			return 4;//Перетерирание перед выходным вектором
+			return 4;//пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 		}
 		if (out[i+2]!=0) {
-			return 5;//Перетерирание за пределом выходного вектора
+			return 5;//пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 		}
 	}
 
 
 	if (nmppsSqrt_64f(data, NULL, 1) != nmppsStsNullPtrErr ||
 		nmppsSqrt_64f(NULL, out, 1) != nmppsStsNullPtrErr	){
-		return 6; //Не сработала проверка на NULL
+		return 6; //пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ NULL
 	}
 
 	if (nmppsSqrt_64f(data, out, 0) != nmppsStsSizeErr ||
 		nmppsSqrt_64f(data, out, -1) != nmppsStsSizeErr	){
-		return 7; //Не сработала проверка на длину вектора
+		return 7; //пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 	}
 
 
@@ -200,46 +195,46 @@ int test_sqrtf_check_answer(){
 		nmppsSqrt_32f(&data[1], &out[1], i+1);
 		for(k=0; k < sizeof(data)/sizeof(nmpps32f); k++){
 			if (data[k]!=original[k]) {
-				return 3;//Потерся входной вектор
+				return 3;//пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
 			}
 		}
 		if (out[0]!=0) {
-			return 4;//Перетерирание перед выходным вектором
+			return 4;//пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 		}
 		if (out[i+2]!=0) {
-			return 5;//Перетерирание за пределом выходного вектора
+			return 5;//пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 		}
 	}
 
 
 	if (nmppsSqrt_32f(data, NULL, 1) != nmppsStsNullPtrErr ||
 		nmppsSqrt_32f(NULL, out, 1) != nmppsStsNullPtrErr	){
-		return 6; //Не сработала проверка на NULL
+		return 6; //пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ NULL
 	}
 
 	if (nmppsSqrt_32f(data, out, 0) != nmppsStsSizeErr ||
 		nmppsSqrt_32f(data, out, -1) != nmppsStsSizeErr	){
-		return 7; //Не сработала проверка на длину вектора
+		return 7; //пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 	}
 
 
 	return 0;
 }
 
-int test_srqt(){
+int test_sqrt(){
 	//fabs(-1);
 	nmppsStatus stat;
-	stat = test_srqt_diap(0, 0.133377789, COUNT_ITERATION);
+	stat = test_sqrt_diap(0, 0.133377789, COUNT_ITERATION);
 	if (stat!=nmppsStsNoErr) {
 		return 1;
 	}
 
-	stat = test_srqt_diap(1.7789e+300, 13.337, COUNT_ITERATION);
+	stat = test_sqrt_diap(1.7789e+300, 13.337, COUNT_ITERATION);
 	if (stat!=nmppsStsNoErr) {
 		return 2;
 	}
 
-	stat = test_srqt_diap(3.3333e-300, 1.3337e-300, COUNT_ITERATION);
+	stat = test_sqrt_diap(3.3333e-300, 1.3337e-300, COUNT_ITERATION);
 	if (stat!=nmppsStsNoErr) {
 		return 3;
 	}
@@ -253,20 +248,20 @@ int test_srqt(){
 }
 
 
-int test_srqtf(){
+int test_sqrtf(){
 
 	nmppsStatus stat;
-	stat = test_srqtf_diap(0, 0.133377789, 1000);
+	stat = test_sqrtf_diap(0, 0.133377789, 1000);
 	if (stat!=nmppsStsNoErr) {
 		return 1;
 	}
 
-	stat = test_srqtf_diap(1.7789e+38, -13.337, 1000);
+	stat = test_sqrtf_diap(1.7789e+38, -13.337, 1000);
 	if (stat!=nmppsStsNoErr) {
 		return 2;
 	}
 
-	stat = test_srqtf_diap(3.3333e-38, 1.3337e-300, 1000);
+	stat = test_sqrtf_diap(3.3333e-38, 1.3337e-300, 1000);
 	if (stat!=nmppsStsNoErr) {
 		return 3;
 	}

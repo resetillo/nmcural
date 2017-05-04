@@ -1,6 +1,6 @@
 
 
-#include "tests\test_math.h"
+#include "tests/test_math.h"
 
 static	const float	one	= 1.0, tiny=1.0e-30;
                
@@ -69,10 +69,10 @@ float __ieee754_sqrtf(float x)
 
 
 /**
- * @brief вычисление квадратного корня float 
+ * @brief пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ float 
  *
- * @param x - подкоренное выражение
- * @retval квадратный корень x
+ * @param x - пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
+ * @retval пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ x
  */
 float right_sqrtf(float x)
 {

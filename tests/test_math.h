@@ -135,7 +135,9 @@ float fabsf(const float x);
 double copysign(const double data_arg, const double sign_arg);
 float copysignf(const float data_arg, const float sign_arg);
 
-#define NULL ((void *)0)
+#ifndef NULL
+	#define NULL ((void *)0)
+#endif
 
 #endif /* __NMPPS_MATH_TESTS_H__ */
 
