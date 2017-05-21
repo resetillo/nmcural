@@ -39,10 +39,10 @@
 								<option id="ru.mipt.designcenter.compiler.base.category.optimization.level.1423070164" name="Optimization Level" superClass="ru.mipt.designcenter.compiler.base.category.optimization.level" value="ru.mipt.designcenter.compiler.base.category.optimization.level.none" valueType="enumerated"/>
 								<option id="ru.mipt.designcenter.compiler.base.category.debugging.level.2082925259" name="Debug Level" superClass="ru.mipt.designcenter.compiler.base.category.debugging.level"/>
 							</tool>
-							<tool command="nmc-as-gnu" id="ru.mipt.designcenter.assebler.nmgcc.exe.debug.662136516" name="NM Assembler" superClass="ru.mipt.designcenter.assebler.nmgcc.exe.debug">
-								<option id="ru.mipt.designcenter.assembler.base.category.general.other.1895728767" name="Other Flags" superClass="ru.mipt.designcenter.assembler.base.category.general.other" value="-g" valueType="string"/>
-								<option id="ru.mipt.designcenter.compiler.base.category.general.compile.mgas.1667032075" name="Use GAS assembler" superClass="ru.mipt.designcenter.compiler.base.category.general.compile.mgas" value="false" valueType="boolean"/>
-								<option id="ru.mipt.designcenter.assembler.base.category.general.compile.748301041" name="Compile" superClass="ru.mipt.designcenter.assembler.base.category.general.compile" value="false" valueType="boolean"/>
+							<tool command="nmc-gcc" id="ru.mipt.designcenter.assebler.nmgcc.exe.debug.662136516" name="NM Assembler" superClass="ru.mipt.designcenter.assebler.nmgcc.exe.debug">
+								<option id="ru.mipt.designcenter.assembler.base.category.general.other.1895728767" name="Other Flags" superClass="ru.mipt.designcenter.assembler.base.category.general.other" value="-fno-builtin -g -Wa,-a=abs -I../include" valueType="string"/>
+								<option id="ru.mipt.designcenter.compiler.base.category.general.compile.mgas.1667032075" name="Use GAS assembler" superClass="ru.mipt.designcenter.compiler.base.category.general.compile.mgas" value="true" valueType="boolean"/>
+								<option id="ru.mipt.designcenter.assembler.base.category.general.compile.748301041" name="Compile" superClass="ru.mipt.designcenter.assembler.base.category.general.compile" value="true" valueType="boolean"/>
 								<option id="ru.mipt.designcenter.assembler.base.category.general.compile.nmc4.70052503" name="Add nmc4 library" superClass="ru.mipt.designcenter.assembler.base.category.general.compile.nmc4" value="false" valueType="boolean"/>
 							</tool>
 						</toolChain>
