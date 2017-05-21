@@ -29,9 +29,10 @@
 								<option id="ru.mipt.designcenter.compiler.base.category.include.additional.1014922739" name="Include Option" superClass="ru.mipt.designcenter.compiler.base.category.include.additional" valueType="includePath">
 									<listOptionValue builtIn="false" value="-I&quot;../include&quot;"/>
 									<listOptionValue builtIn="false" value="-I&quot;../&quot;"/>
+									<listOptionValue builtIn="false" value="-I&quot;../unity&quot;"/>
 									<listOptionValue builtIn="false" value="-I&quot;../tests&quot;"/>
 								</option>
-								<option id="ru.mipt.designcenter.compiler.base.category.general.other.1435366736" name="Other Flags" superClass="ru.mipt.designcenter.compiler.base.category.general.other" value="-fno-builtin" valueType="string"/>
+								<option id="ru.mipt.designcenter.compiler.base.category.general.other.1435366736" name="Other Flags" superClass="ru.mipt.designcenter.compiler.base.category.general.other" value="-fno-builtin -DUNITY_INCLUDE_DOUBLE" valueType="string"/>
 								<option id="ru.mipt.designcenter.compiler.base.category.general.compile.nmc4-float.775642512" name="Add nmc4_float library" superClass="ru.mipt.designcenter.compiler.base.category.general.compile.nmc4-float" value="false" valueType="boolean"/>
 								<inputType id="ru.mipt.designcenter.compiler.nmgcc.input.1305400036" superClass="ru.mipt.designcenter.compiler.nmgcc.input"/>
 							</tool>
