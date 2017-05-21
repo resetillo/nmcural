@@ -26,7 +26,7 @@ typedef enum {
     nmppsStsRangeErr              = -7,    /* Incorrect values for bounds: the lower bound is greater than the upper bound. */
     nmppsStsSizeErr               = -6,    /* Incorrect value for data size. */
     nmppsStsBadArgErr             = -5,    /* Incorrect arg/param of the function.  */
-
+    nmppsStsNotImplemented        = -1,    /* Called function isn't implemented yet. */
      /* no errors */
     nmppsStsNoErr                 =   0,   /* No errors. */
 
