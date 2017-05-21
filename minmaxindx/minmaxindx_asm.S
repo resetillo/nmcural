@@ -350,9 +350,9 @@ _nmppsMinMaxIndx_64f: .globl _nmppsMinMaxIndx_64f
 	ar4 = gr3 with gr4;								// ar4 == pMax
 
 	// if (pMaxIndx == 0) return nmppsStsNullPtrErr;
-	if =0 delayed goto .LnmppsMinMaxIndx_64f_return;
-	nul;											// delay slot
-	with gr0;										// delay slot
+	if =0 delayed goto .LnmppsMinMaxIndx_64f_return with gr1 = false noflags;
+	sir = gr1;										// delay slot
+	fp0_dmask = sir with gr0;						// delay slot
 
 	// if (len <= 0) return nmppsStsSizeErr;
 	if <= delayed goto .LnmppsMinMaxIndx_64f_return with gr0 = gr0 - 1;

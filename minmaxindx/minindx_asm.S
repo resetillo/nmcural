@@ -243,17 +243,17 @@ _nmppsMinIndx_64f: .globl _nmppsMinIndx_64f
 	ar1 = gr2 with gr1;								// delay slot: ar1 == pMin
 
 	// if (pIndx == 0) return nmppsStsNullPtrErr;
-	if =0 delayed goto .LnmppsMinIndx_64f_return;
-	nul;											// delay slot: ar3 == addr of min
-	ar3, gr3 = ar0 with gr0;						// delay slot: gr3 == base of pSrc
+	if =0 delayed goto .LnmppsMinIndx_64f_return with gr1 = false noflags;
+	sir = gr1;										// delay slot
+	fp0_dmask = sir with gr0;						// delay slot
 
 	// if (len <= 0) return nmppsStsSizeErr;
 	if <= delayed goto .LnmppsMinIndx_64f_return with gr0 = gr0 - 1;
 	gr7 = nmppsStsSizeErr;							// delay slot (x2)
 
 	if <= delayed goto .LnmppsMinIndx_64f_give_result with gr7 = nmppsStsNoErr;
-	nul;
-	fpu 0 rep 1 vreg0 = [ar0++];
+	ar3, gr3 = ar0 with gr0;						// delay slot: gr3 == base of pSrc; ar3 == addr of min
+	fpu 0 rep 1 vreg0 = [ar0++];					// delay slot
 
 .LnmppsMinIndx_64f_loop:
 	fpu 0 rep 1 vreg1 = [ar0++];

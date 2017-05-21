@@ -243,15 +243,17 @@ _nmppsMaxIndx_64f: .globl _nmppsMaxIndx_64f
 	ar1 = gr2 with gr1;								// delay slot: ar1 == pMax
 
 	// if (pIndx == 0) return nmppsStsNullPtrErr;
-	if =0 goto .LnmppsMaxIndx_64f_return with gr0;
+	if =0 delayed goto .LnmppsMaxIndx_64f_return with gr1 = false noflags;
+	sir = gr1;										// delay slot
+	fp0_dmask = sir with gr0;						// delay slot
 
 	// if (len <= 0) return nmppsStsSizeErr;
 	if <= delayed goto .LnmppsMaxIndx_64f_return with gr0 = gr0 - 1;
 	gr7 = nmppsStsSizeErr;							// delay slot (x2)
 
 	if <= delayed goto .LnmppsMaxIndx_64f_give_result with gr7 = nmppsStsNoErr;
-	ar3, gr3 = ar0;									// delay slot: ar3 == addr of max
-	fpu 0 rep 1 vreg0 = [ar0++];					// delay slot: gr3 == base of pSrc
+	ar3, gr3 = ar0 with gr0;						// delay slot: gr3 == base of pSrc; ar3 == addr of max
+	fpu 0 rep 1 vreg0 = [ar0++];					// delay slot
 
 .LnmppsMaxIndx_64f_loop:
 	fpu 0 rep 1 vreg1 = [ar0++];
