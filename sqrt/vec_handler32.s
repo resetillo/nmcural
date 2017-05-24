@@ -4,6 +4,8 @@
 
 .data
 
+  .align 8
+
 SBx2:
 	  .quad 0x200000002 // 2 строки
 NB:

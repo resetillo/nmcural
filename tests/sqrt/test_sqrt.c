@@ -32,7 +32,6 @@ void create_sqrtf_vecs(nmpps32f* in, nmpps32f* out, unsigned int len,
 					  nmpps32f bgn, nmpps32f step)
 {
 	int i;
-	if (len>32) len = 32;
 	for(i=0; i<len; i++){
 		in[i] = bgn;
 		out[i] = right_sqrtf(in[i]);
@@ -52,9 +51,9 @@ const nmpps32f sqrtf_critical_error = 10e-05;//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿
  * @param count ï¿½ï¿½ï¿½-ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
  * */
 nmppsStatus test_sqrt_diap(nmpps64f bgn, nmpps64f step, int count){
-	nmpps64f in[COUNT_ITERATION];
-	nmpps64f res[COUNT_ITERATION];
-	nmpps64f kd[COUNT_ITERATION];
+	nmpps64f in[count];
+	nmpps64f res[count];
+	nmpps64f kd[count];
 	nmppsStatus stat;
 	double er;
 	double arg = bgn;

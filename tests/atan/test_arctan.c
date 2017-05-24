@@ -32,7 +32,6 @@ void create_atanf_vecs(nmpps32f* in, nmpps32f* out, unsigned int len,
 					  nmpps32f bgn, nmpps32f step)
 {
 	int i;
-	if (len>32) len = 32;
 	for(i=0; i<len; i++){
 		in[i] = bgn;
 		out[i] = right_atanf(in[i]);

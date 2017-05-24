@@ -84,7 +84,7 @@ int test_vec_handler32(){
 	/*for (int k = 1; k<132;k++){
 		res += subtest2_vh32(vec, outvector, k);
 	}*/
-    res = subtest_vh32(&vec[1], outvector, 130);
+    //res = subtest_vh32(&vec[1], outvector, 130);
 
 	res = subtest2_vh32(vec, outvector, 8);
 	if (res!=0) {

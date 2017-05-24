@@ -4,6 +4,8 @@
 .global _nan_dbl
 
 .data
+
+  .align 8
 //nb63: .long 0xC000000000000000L // nb 1-63
 SB:
 	  .quad 0x00000001 // 1 stroka
@@ -36,7 +38,7 @@ _nmppsSqrt_64f:
     
     ar1 = [--ar5]; // Входящий вектор
     ar0 = [--ar5]; // Результирующий вектор
-	gr1 = [--ar5]; // Размер 
+	gr1 = [--ar5]; // Размер
 				
 	ar5 = ar7 + 2;
 	ar6 = ar5 + 64;

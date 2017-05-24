@@ -10,6 +10,8 @@
 
 .data
 
+  .align 8
+
 mantis_dbl: .quad 0x000FFFFFFFFFFFFF
 exp_dbl:    .quad 0x7ff0000000000000
 
