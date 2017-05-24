@@ -487,7 +487,7 @@ NMPPSAPI(nmppsStatus, nmppsSqr_64fc,      (const nmpps64fc* pSrc, nmpps64fc* pDs
 //   nmppsStsSqrtNegArg        negative value in real sequence
 //   nmppsStsNoErr             otherwise
 */
-nmppsStatus square_root32f(); //Вызывается через обработчик vec_handler32
+nmppsStatus square_root32f(); //Р’С‹Р·С‹РІР°РµС‚СЃСЏ С‡РµСЂРµР· РѕР±СЂР°Р±РѕС‚С‡РёРє vec_handler32
 NMPPSAPI(nmppsStatus, vec_handler32,       (nmppsStatus* func, const nmpps32f*  pSrc, nmpps32f*  pDst,    int len))
 
 #define nmppsSqrt_32f(arg...)   vec_handler32( (nmppsStatus*)square_root32f, arg)
@@ -1246,14 +1246,14 @@ NMPPSAPI(nmppsStatus, nmppsMaxAbs_16s, (const nmpps16s* pSrc, int len, nmpps16s*
 NMPPSAPI(nmppsStatus, nmppsMaxAbs_32s, (const nmpps32s* pSrc, int len, nmpps32s* pMaxAbs))
 
 /* /////////////////////////////////////////////////////////////////////////////
-// Names:      nmppsMinIndx, nmppsMaxIndx
+// Names:      nmppsMinIndx, nmppsMaxIndx, nmppsMinMaxIndx
 // Purpose:    Find element with min/max value and return the value and the index.
 // Parameters:
 //    pSrc     - Pointer to the input vector.
 //    len      - Length of the vector.
 //    pMin     - Pointer to min value found.
 //    pMax     - Pointer to max value found.
-//    pIndx    - Pointer to index of the first min/max value, may be NULL.
+//    pIndx    - Pointer to index of the first min/max value.
 //    pMinIndx - Pointer to index of the first minimum value.
 //    pMaxIndx - Pointer to index of the first maximum value.
 // Returns:
