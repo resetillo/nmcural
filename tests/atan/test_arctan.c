@@ -53,9 +53,9 @@ const nmpps32f atanf_critical_error = 10e-07;//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿
  * @param count ï¿½ï¿½ï¿½-ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
  * */
 nmppsStatus test_atan_diap(nmpps64f bgn, nmpps64f step, int count){
-	nmpps64f in[COUNT_ITERATION];
-	nmpps64f res[COUNT_ITERATION];
-	nmpps64f kd[COUNT_ITERATION];
+	nmpps64f in[count];
+	nmpps64f res[count];
+	nmpps64f kd[count];
 	nmpps64f er;
 	nmpps64f arg = bgn;
 	nmpps64f max_err = 0;
@@ -82,37 +82,33 @@ nmppsStatus test_atan_diap(nmpps64f bgn, nmpps64f step, int count){
 }
 
 nmppsStatus test_atanf_diap(nmpps32f bgn, nmpps32f step, int count){
-	nmpps32f in[32];
-	nmpps32f res[32];
-	nmpps32f kd[32];
+	nmpps32f in[count];
+	nmpps32f res[count];
+	nmpps32f kd[count];
 	nmppsStatus stat;
 	nmpps32f er;
 	nmpps32f arg = bgn;
 	nmpps32f max_err = 0;
 	//nmpps32f max_err_arg = 0;
-	int i = 0, i1, nVec=0;
-	while (i<count){
-		nVec++;
-		//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½
-		create_atanf_vecs(in, kd, 32, arg, step);
-		//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
-		stat = nmppsArctan_32f(in, res, 32);
-		if (stat!=nmppsStsNoErr) return stat;
-		for(i1=0;i1<32;i1++){
-			arg = in[i1];
-			er = fabsf(kd[i1]-res[i1]);
-			if (er > max_err) {
-				max_err = er;
-				//max_err_arg = arg;
-				if (max_err > atanf_critical_error) {
-					return nVec;
-				}
+	int i = 0;
+	//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½
+	create_atanf_vecs(in, kd, count, arg, step);
+	//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+	stat = nmppsArctan_32f(in, res, count);
+	if (stat!=nmppsStsNoErr) return stat;
+	for(i=0;i<count;i++){
+		arg = in[i];
+		er = fabsf(kd[i]-res[i]);
+		if (er > max_err) {
+			max_err = er;
+			//max_err_arg = arg;
+			if (max_err > atanf_critical_error) {
+				return i + 1;
 			}
-
 		}
 
-		i+=32;
 	}
+
 	return nmppsStsNoErr;
 }
 

@@ -5,45 +5,35 @@
 			<storageModule buildSystemId="org.eclipse.cdt.managedbuilder.core.configurationDataProvider" id="ru.mipt.designcenter.configuration.exe.debug.1892294406" moduleId="org.eclipse.cdt.core.settings" name="Debug">
 				<externalSettings/>
 				<extensions>
-					<extension id="org.eclipse.cdt.core.ELF" point="org.eclipse.cdt.core.BinaryParser"/>
 					<extension id="org.eclipse.cdt.core.GLDErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
 					<extension id="org.eclipse.cdt.core.GCCErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
 				</extensions>
 			</storageModule>
 			<storageModule moduleId="cdtBuildSystem" version="4.0.0">
-				<configuration artifactName="${ProjName}" buildArtefactType="org.eclipse.cdt.build.core.buildArtefactType.exe" buildProperties="org.eclipse.cdt.build.core.buildArtefactType=org.eclipse.cdt.build.core.buildArtefactType.exe,org.eclipse.cdt.build.core.buildType=org.eclipse.cdt.build.core.buildType.debug" description="" id="ru.mipt.designcenter.configuration.exe.debug.1892294406" name="Debug" parent="ru.mipt.designcenter.configuration.exe.debug">
+				<configuration artifactName="${ProjName}" buildArtefactType="org.eclipse.cdt.build.core.buildArtefactType.exe" buildProperties="org.eclipse.cdt.build.core.buildArtefactType=org.eclipse.cdt.build.core.buildArtefactType.exe,org.eclipse.cdt.build.core.buildType=org.eclipse.cdt.build.core.buildType.debug" description="" id="ru.mipt.designcenter.configuration.exe.debug.1892294406" name="Debug" parent="ru.mipt.designcenter.configuration.exe.debug.1892294406">
 					<folderInfo id="ru.mipt.designcenter.configuration.exe.debug.1892294406." name="/" resourcePath="">
 						<toolChain id="ru.mipt.designcenter.toolchain.linux.debug.154313634" name="NM Toolchain" superClass="ru.mipt.designcenter.toolchain.linux.debug">
-							<targetPlatform archList="all" id="ru.mipt.designcenter.toolchain.targetplatform.any.debug.1914311276" isAbstract="false" name="Any Target Platform" osList="all" superClass="ru.mipt.designcenter.toolchain.targetplatform.any.debug"/>
-							<builder buildPath="${workspace_loc:/nmpps}/Debug" id="ru.mipt.designcenter.toolchain.builder.debug.918382925" keepEnvironmentInBuildfile="false" managedBuildOn="true" name="CDT Internal Builder" superClass="ru.mipt.designcenter.toolchain.builder.debug"/>
-							<tool id="ru.mipt.designcenter.linker.nmgcc.exe.debug.703592704" name="NM C Linker" superClass="ru.mipt.designcenter.linker.nmgcc.exe.debug">
-								<inputType id="ru.mipt.designcenter.linker.base.input.1584312058" superClass="ru.mipt.designcenter.linker.base.input">
+							<targetPlatform archList="all" id="ru.mipt.designcenter.toolchain.targetplatform.any.debug.1914311276" isAbstract="false" name="Any Target Platform" osList="all"/>
+							<builder buildPath="${workspace_loc:/nmpps}/Debug" id="ru.mipt.designcenter.toolchain.builder.debug.918382925" keepEnvironmentInBuildfile="false" managedBuildOn="true" name="CDT Internal Builder"/>
+							<tool id="ru.mipt.designcenter.linker.nmgpp.1726933936" name="NM C++ Linker" superClass="ru.mipt.designcenter.linker.nmgpp"/>
+							<tool id="ru.mipt.designcenter.linker.nmgcc.exe.debug.linux.2022472179" name="NM C Linker" superClass="ru.mipt.designcenter.linker.nmgcc.exe.debug.linux">
+								<inputType id="ru.mipt.designcenter.linker.base.input.147184647" superClass="ru.mipt.designcenter.linker.base.input">
 									<additionalInput kind="additionalinputdependency" paths="$(USER_OBJS)"/>
 									<additionalInput kind="additionalinput" paths="$(LIBS)"/>
 								</inputType>
 							</tool>
-							<tool id="ru.mipt.designcenter.linker.nmgpp.1726933936" name="NM C++ Linker" superClass="ru.mipt.designcenter.linker.nmgpp"/>
-							<tool id="ru.mipt.designcenter.compiler.nmgcc.exe.debug.1184507360" name="NM C Compiler" superClass="ru.mipt.designcenter.compiler.nmgcc.exe.debug">
-								<option id="ru.mipt.designcenter.compiler.base.category.optimization.level.1556091697" name="Optimization Level" superClass="ru.mipt.designcenter.compiler.base.category.optimization.level" value="ru.mipt.designcenter.compiler.base.category.optimization.level.none" valueType="enumerated"/>
-								<option id="ru.mipt.designcenter.compiler.base.category.debugging.level.1628135005" name="Debug Level" superClass="ru.mipt.designcenter.compiler.base.category.debugging.level"/>
-								<option id="ru.mipt.designcenter.compiler.base.category.include.additional.1014922739" name="Include Option" superClass="ru.mipt.designcenter.compiler.base.category.include.additional" valueType="includePath">
-									<listOptionValue builtIn="false" value="-I&quot;../include&quot;"/>
-									<listOptionValue builtIn="false" value="-I&quot;../&quot;"/>
+							<tool id="ru.mipt.designcenter.compiler.nmgcc.exe.debug.linux.567896855" name="NM C Compiler" superClass="ru.mipt.designcenter.compiler.nmgcc.exe.debug.linux">
+								<option id="ru.mipt.designcenter.compiler.base.category.include.additional.72655980" name="Include Option" superClass="ru.mipt.designcenter.compiler.base.category.include.additional" valueType="includePath">
 									<listOptionValue builtIn="false" value="-I&quot;../tests&quot;"/>
+									<listOptionValue builtIn="false" value="-I&quot;../&quot;"/>
+									<listOptionValue builtIn="false" value="-I&quot;../include&quot;"/>
 								</option>
-								<option id="ru.mipt.designcenter.compiler.base.category.general.other.1435366736" name="Other Flags" superClass="ru.mipt.designcenter.compiler.base.category.general.other" value="-fno-builtin" valueType="string"/>
-								<option id="ru.mipt.designcenter.compiler.base.category.general.compile.nmc4-float.775642512" name="Add nmc4_float library" superClass="ru.mipt.designcenter.compiler.base.category.general.compile.nmc4-float" value="false" valueType="boolean"/>
-								<inputType id="ru.mipt.designcenter.compiler.nmgcc.input.1305400036" superClass="ru.mipt.designcenter.compiler.nmgcc.input"/>
+								<option id="ru.mipt.designcenter.compiler.base.category.optimization.level.875388337" name="Optimization Level" superClass="ru.mipt.designcenter.compiler.base.category.optimization.level" value="ru.mipt.designcenter.compiler.base.category.optimization.level.none" valueType="enumerated"/>
+								<inputType id="ru.mipt.designcenter.compiler.nmgcc.input.387650882" superClass="ru.mipt.designcenter.compiler.nmgcc.input"/>
 							</tool>
-							<tool id="ru.mipt.designcenter.compiler.nmgpp.exe.debug.1910125237" name="NM C++ Compiler" superClass="ru.mipt.designcenter.compiler.nmgpp.exe.debug">
-								<option id="ru.mipt.designcenter.compiler.base.category.optimization.level.1423070164" name="Optimization Level" superClass="ru.mipt.designcenter.compiler.base.category.optimization.level" value="ru.mipt.designcenter.compiler.base.category.optimization.level.none" valueType="enumerated"/>
-								<option id="ru.mipt.designcenter.compiler.base.category.debugging.level.2082925259" name="Debug Level" superClass="ru.mipt.designcenter.compiler.base.category.debugging.level"/>
-							</tool>
-							<tool command="nmc-as-gnu" id="ru.mipt.designcenter.assebler.nmgcc.exe.debug.662136516" name="NM Assembler" superClass="ru.mipt.designcenter.assebler.nmgcc.exe.debug">
-								<option id="ru.mipt.designcenter.assembler.base.category.general.other.1895728767" name="Other Flags" superClass="ru.mipt.designcenter.assembler.base.category.general.other" value="-g" valueType="string"/>
-								<option id="ru.mipt.designcenter.compiler.base.category.general.compile.mgas.1667032075" name="Use GAS assembler" superClass="ru.mipt.designcenter.compiler.base.category.general.compile.mgas" value="false" valueType="boolean"/>
-								<option id="ru.mipt.designcenter.assembler.base.category.general.compile.748301041" name="Compile" superClass="ru.mipt.designcenter.assembler.base.category.general.compile" value="false" valueType="boolean"/>
-								<option id="ru.mipt.designcenter.assembler.base.category.general.compile.nmc4.70052503" name="Add nmc4 library" superClass="ru.mipt.designcenter.assembler.base.category.general.compile.nmc4" value="false" valueType="boolean"/>
+							<tool id="ru.mipt.designcenter.compiler.nmgpp.exe.debug.linux.933317821" name="NM C++ Compiler" superClass="ru.mipt.designcenter.compiler.nmgpp.exe.debug.linux"/>
+							<tool command="nmc-as-gnu -g" commandLinePattern="${COMMAND} ${OUTPUT_FLAG} ${OUTPUT_PREFIX}${OUTPUT} ${INPUTS}" id="ru.mipt.designcenter.assebler.nmgcc.exe.debug.linux.878432754" name="NM Assembler" superClass="ru.mipt.designcenter.assebler.nmgcc.exe.debug.linux">
+								<option id="ru.mipt.designcenter.compiler.base.category.general.compile.mgas.1260943432" name="Use GAS assembler" superClass="ru.mipt.designcenter.compiler.base.category.general.compile.mgas" value="false" valueType="boolean"/>
 							</tool>
 						</toolChain>
 					</folderInfo>
@@ -55,34 +45,28 @@
 			<storageModule buildSystemId="org.eclipse.cdt.managedbuilder.core.configurationDataProvider" id="ru.mipt.designcenter.configuration.exe.release.1737228058" moduleId="org.eclipse.cdt.core.settings" name="Release">
 				<externalSettings/>
 				<extensions>
-					<extension id="org.eclipse.cdt.core.ELF" point="org.eclipse.cdt.core.BinaryParser"/>
 					<extension id="org.eclipse.cdt.core.GLDErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
 					<extension id="org.eclipse.cdt.core.GCCErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
 				</extensions>
 			</storageModule>
 			<storageModule moduleId="cdtBuildSystem" version="4.0.0">
-				<configuration artifactName="${ProjName}" buildArtefactType="org.eclipse.cdt.build.core.buildArtefactType.exe" buildProperties="org.eclipse.cdt.build.core.buildArtefactType=org.eclipse.cdt.build.core.buildArtefactType.exe,org.eclipse.cdt.build.core.buildType=org.eclipse.cdt.build.core.buildType.release" description="" id="ru.mipt.designcenter.configuration.exe.release.1737228058" name="Release" parent="ru.mipt.designcenter.configuration.exe.release">
+				<configuration artifactName="${ProjName}" buildArtefactType="org.eclipse.cdt.build.core.buildArtefactType.exe" buildProperties="org.eclipse.cdt.build.core.buildArtefactType=org.eclipse.cdt.build.core.buildArtefactType.exe,org.eclipse.cdt.build.core.buildType=org.eclipse.cdt.build.core.buildType.release" description="" id="ru.mipt.designcenter.configuration.exe.release.1737228058" name="Release" parent="ru.mipt.designcenter.configuration.exe.release.1737228058">
 					<folderInfo id="ru.mipt.designcenter.configuration.exe.release.1737228058." name="/" resourcePath="">
 						<toolChain id="ru.mipt.designcenter.toolchain.linux.release.1080532341" name="NM Toolchain" superClass="ru.mipt.designcenter.toolchain.linux.release">
-							<targetPlatform archList="all" id="ru.mipt.designcenter.toolchain.targetplatform.any.release.826001863" isAbstract="false" name="Any Target Platform" osList="all" superClass="ru.mipt.designcenter.toolchain.targetplatform.any.release"/>
-							<builder buildPath="${workspace_loc:/nmpps}/Release" id="ru.mipt.designcenter.toolchain.builder.release.1414025203" keepEnvironmentInBuildfile="false" managedBuildOn="true" name="CDT Internal Builder" superClass="ru.mipt.designcenter.toolchain.builder.release"/>
-							<tool id="ru.mipt.designcenter.linker.nmgcc.exe.release.1473103289" name="NM C Linker" superClass="ru.mipt.designcenter.linker.nmgcc.exe.release">
-								<inputType id="ru.mipt.designcenter.linker.base.input.1770451073" superClass="ru.mipt.designcenter.linker.base.input">
+							<targetPlatform archList="all" id="ru.mipt.designcenter.toolchain.targetplatform.any.release.826001863" isAbstract="false" name="Any Target Platform" osList="all"/>
+							<builder buildPath="${workspace_loc:/nmpps}/Release" id="ru.mipt.designcenter.toolchain.builder.release.1414025203" keepEnvironmentInBuildfile="false" managedBuildOn="true" name="CDT Internal Builder"/>
+							<tool id="ru.mipt.designcenter.linker.nmgpp.634939225" name="NM C++ Linker" superClass="ru.mipt.designcenter.linker.nmgpp"/>
+							<tool id="ru.mipt.designcenter.linker.nmgcc.exe.release.linux.1782875964" name="NM C Linker" superClass="ru.mipt.designcenter.linker.nmgcc.exe.release.linux">
+								<inputType id="ru.mipt.designcenter.linker.base.input.2006705642" superClass="ru.mipt.designcenter.linker.base.input">
 									<additionalInput kind="additionalinputdependency" paths="$(USER_OBJS)"/>
 									<additionalInput kind="additionalinput" paths="$(LIBS)"/>
 								</inputType>
 							</tool>
-							<tool id="ru.mipt.designcenter.linker.nmgpp.634939225" name="NM C++ Linker" superClass="ru.mipt.designcenter.linker.nmgpp"/>
-							<tool id="ru.mipt.designcenter.compiler.nmgcc.exe.release.1135515129" name="NM C Compiler" superClass="ru.mipt.designcenter.compiler.nmgcc.exe.release">
-								<option id="ru.mipt.designcenter.compiler.base.category.optimization.level.1245048586" name="Optimization Level" superClass="ru.mipt.designcenter.compiler.base.category.optimization.level" value="ru.mipt.designcenter.compiler.base.category.optimization.level.most" valueType="enumerated"/>
-								<option id="ru.mipt.designcenter.compiler.base.category.debugging.level.273662426" name="Debug Level" superClass="ru.mipt.designcenter.compiler.base.category.debugging.level" value="ru.mipt.designcenter.compiler.base.category.debugging.level.none" valueType="enumerated"/>
-								<inputType id="ru.mipt.designcenter.compiler.nmgcc.input.335702673" superClass="ru.mipt.designcenter.compiler.nmgcc.input"/>
+							<tool id="ru.mipt.designcenter.compiler.nmgcc.exe.release.linux.431798526" name="NM C Compiler" superClass="ru.mipt.designcenter.compiler.nmgcc.exe.release.linux">
+								<inputType id="ru.mipt.designcenter.compiler.nmgcc.input.1681502211" superClass="ru.mipt.designcenter.compiler.nmgcc.input"/>
 							</tool>
-							<tool id="ru.mipt.designcenter.compiler.nmgpp.exe.release.1665742497" name="NM C++ Compiler" superClass="ru.mipt.designcenter.compiler.nmgpp.exe.release">
-								<option id="ru.mipt.designcenter.compiler.base.category.optimization.level.1488939041" name="Optimization Level" superClass="ru.mipt.designcenter.compiler.base.category.optimization.level" value="ru.mipt.designcenter.compiler.base.category.optimization.level.most" valueType="enumerated"/>
-								<option id="ru.mipt.designcenter.compiler.base.category.debugging.level.817918929" name="Debug Level" superClass="ru.mipt.designcenter.compiler.base.category.debugging.level" value="ru.mipt.designcenter.compiler.base.category.debugging.level.none" valueType="enumerated"/>
-							</tool>
-							<tool id="ru.mipt.designcenter.assebler.nmgcc.exe.release.769009731" name="NM Assembler" superClass="ru.mipt.designcenter.assebler.nmgcc.exe.release"/>
+							<tool id="ru.mipt.designcenter.compiler.nmgpp.exe.release.linux.1720297575" name="NM C++ Compiler" superClass="ru.mipt.designcenter.compiler.nmgpp.exe.release.linux"/>
+							<tool id="ru.mipt.designcenter.assebler.nmgcc.exe.release.linux.1658706688" name="NM Assembler" superClass="ru.mipt.designcenter.assebler.nmgcc.exe.release.linux"/>
 						</toolChain>
 					</folderInfo>
 				</configuration>
@@ -91,7 +75,7 @@
 		</cconfiguration>
 	</storageModule>
 	<storageModule moduleId="cdtBuildSystem" version="4.0.0">
-		<project id="nmpps.ru.mipt.designcenter.configuration.project.exe.1785664955" name="Executable" projectType="ru.mipt.designcenter.configuration.project.exe"/>
+		<project id="nmpps.ru.mipt.designcenter.configuration.project.exe.1785664955" name="Executable"/>
 	</storageModule>
 	<storageModule moduleId="scannerConfiguration">
 		<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>
