@@ -102,7 +102,7 @@ nmppsStatus c_nmppsArctan_64f(const nmpps64f* pSrc, nmpps64f* pDst,    int len){
     return nmppsStsNoErr;
 }
 
-nmppsStatus nmppsArctan_32f(const nmpps32f* pSrc, nmpps32f* pDst,    int len){
+nmppsStatus c_nmppsArctan_32f(const nmpps32f* pSrc, nmpps32f* pDst,    int len){
     int i = 0;
     nmpps32f tmp;
     if (pSrc == NULL || pDst == NULL) return nmppsStsNullPtrErr;

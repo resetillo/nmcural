@@ -83,39 +83,35 @@ nmppsStatus test_sqrt_diap(nmpps64f bgn, nmpps64f step, int count){
 }
 
 nmppsStatus test_sqrtf_diap(nmpps32f bgn, nmpps32f step, int count){
-	nmpps32f in[32];
-	nmpps32f res[32];
-	nmpps32f kd[32];
+	nmpps32f in[count];
+	nmpps32f res[count];
+	nmpps32f kd[count];
 	nmppsStatus stat;
 	nmpps32f er;
 	nmpps32f arg = bgn;
 	//double step = 1.3333777e-1;
 	nmpps32f max_err = 0;
 	//nmpps32f max_err_arg = 0;
-	int i = 0, i1, nVec=0;
-	while (i<count){
-		nVec++;
-		//������� ��
-		create_sqrtf_vecs(in, kd, 32, arg, step);
-		//���������� �������
-		stat = nmppsSqrt_32f(in, res, 32);
-		if (stat!=nmppsStsNoErr) return stat;
-		for(i1=0;i1<32;i1++){
-			arg = in[i1];
-			er = fabsf(kd[i1]-res[i1]);
-			if (kd[i1] != 0) er = 100*er/kd[i1];
-			if (er > max_err) {
-				max_err = er;
-				//max_err_arg = arg;
-				if (max_err > sqrtf_critical_error) {
-					return nVec;
-				}
+	int i = 0;
+	//������� ��
+	create_sqrtf_vecs(in, kd, count, arg, step);
+	//���������� �������
+	stat = nmppsSqrt_32f(in, res, count);
+	if (stat!=nmppsStsNoErr) return stat;
+	for(i=0;i<count;i++){
+		arg = in[i];
+		er = fabsf(kd[i]-res[i]);
+		if (kd[i] != 0) er = 100*er/kd[i];
+		if (er > max_err) {
+			max_err = er;
+			//max_err_arg = arg;
+			if (max_err > sqrtf_critical_error) {
+				return i+1;
 			}
-
 		}
 
-		i+=32;
 	}
+
 	return nmppsStsNoErr;
 }
 
