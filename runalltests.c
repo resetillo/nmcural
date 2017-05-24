@@ -9,6 +9,7 @@ void runAllTests(void) {
     RUN_TEST_GROUP(tests_maxindx);
     RUN_TEST_GROUP(tests_minmax);
     RUN_TEST_GROUP(tests_minmaxindx);
+    RUN_TEST_GROUP(tests_copy);
 }
 
 int main(void) {

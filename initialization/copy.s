@@ -33,7 +33,7 @@ _nmppsCopy_32sc:
 
   gr2 = [--ar5]; // len
   // Проверка корректности значения количества копируемыых элементов
-  gr2 - 1;
+  gr2;
   if <= delayed goto Lexit_16sc;
   gr7 = -6;
   nul;
@@ -99,7 +99,7 @@ _nmppsCopy_64sc:
 
   gr2 = [--ar5]; // len
   // Проверка корректности значения количества копируемыых элементов
-  gr2 - 1;
+  gr2;
   if <= delayed goto Lexit_64sc;
   gr7 = -6;
   nul;
@@ -159,12 +159,13 @@ _nmppsCopy_1u:
   gr0 = [--ar5]; // pSrc
   gr0;
   if =0 goto Lerr_ptr_1u;
+  ar0 = gr0;
 
   gr1 = [--ar5]; // srcBitOffset
   gr0 = 7;
   gr1 - gr0;
   if > goto Lerr_size_1u;
-  gr1 - 1;
+  gr1;
   if < goto Lerr_size_1u;
 
 
@@ -176,11 +177,11 @@ _nmppsCopy_1u:
   gr3 = [--ar5]; // dstBitOffset
   gr3 - gr0;
   if > goto Lerr_size_1u;
-  gr3 - 1;
+  gr3;
   if < goto Lerr_size_1u;
 
   gr0 = [--ar5]; // len
-  gr0 - 1;
+  gr0;
   if <= goto Lerr_size_1u;
 
   //Выделение места для массивов масок
@@ -189,6 +190,7 @@ _nmppsCopy_1u:
    * ar1 ... ar1 + 8 - массив масок входного вектора
    * ar1 + 9 ... ar1 + 16 - массив масок выходного вектора
    */
+
   ar1 = ar7 + 2;
   ar7 = ar7 + 18;
 
@@ -197,7 +199,7 @@ _nmppsCopy_1u:
   //значения: 0x80, 0x40, 0x20, 0x10, 0x08, 0x04, 0x02, 0x01
   ar5 = ar1;
   gr4 = 0x80;
-  gr2 = 7;
+  gr2 = 8;
 
   Linit_loop1:
 
@@ -209,7 +211,7 @@ _nmppsCopy_1u:
   //Инициализация масок выходного вектора
   //значения: 0x7F, 0xBF, 0xDF, 0xEF, 0xF7, 0xFB, 0xFD, 0xFE
   gr4 = 0x80;
-  gr2 = 7;
+  gr2 = 8;
   gr5 = 0xFF;
 Lloop_init2:
 
@@ -240,10 +242,11 @@ Lloop:
   if > goto Lleft_shift_data;
 
 // Сдвиг копироваемого разряда вправо на разность dstBitOffset - srcBitOffset
+gr2 = gr3 - gr1;
 Lright_shift_data:
   gr6 >>= 1;
   gr2 = gr2 - 1;
-  if > goto Lleft_shift_data;
+  if > goto Lright_shift_data;
 
   goto Lcontinue_loop;
 
@@ -296,6 +299,7 @@ Lcontinue_loop:
   gr0 = gr0 - 1;
   if > goto Lloop;
 
+  goto Lexit_1u;
 Lerr_ptr_1u:
     gr7 = -8;
     goto Lexit_with_err_1u;
@@ -317,3 +321,4 @@ Lexit_with_err_1u:
   pop ar0, gr0;
 
   return;
+

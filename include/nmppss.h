@@ -34,7 +34,7 @@ NMPPSAPI(nmppsStatus, nmppsCopy_32s,  (const nmpps32s*  pSrc, nmpps32s*  pDst, i
 NMPPSAPI(nmppsStatus, nmppsCopy_32sc, (const nmpps32sc* pSrc, nmpps32sc* pDst, int len))
 NMPPSAPI(nmppsStatus, nmppsCopy_64s,  (const nmpps64s*  pSrc, nmpps64s*  pDst, int len))
 NMPPSAPI(nmppsStatus, nmppsCopy_64sc, (const nmpps64sc* pSrc, nmpps64sc* pDst, int len))
-
+NMPPSAPI(nmppsStatus, nmppsCopy_1u,   (const nmpps8u* pSrc, int srcBitOffset, nmpps8u* pDst, int dstBitOffset, int len))
 
 /* /////////////////////////////////////////////////////////////////////////////
 //  Name:       nmppsMove
