@@ -36,10 +36,10 @@ TEST(tests_old_tests, test_vec_handler32) {
 
 
 TEST_GROUP_RUNNER(tests_old_tests) {
+    RUN_TEST_CASE(tests_old_tests, test_vec_handler32);
     RUN_TEST_CASE(tests_old_tests, test_sqrt);
     RUN_TEST_CASE(tests_old_tests, test_sqrtf);
-//    RUN_TEST_CASE(tests_old_tests, test_atan);
-//    RUN_TEST_CASE(tests_old_tests, test_atanf);
-    RUN_TEST_CASE(tests_old_tests, test_copysign);
-    RUN_TEST_CASE(tests_old_tests, test_vec_handler32);
+    RUN_TEST_CASE(tests_old_tests, test_atan);
+    RUN_TEST_CASE(tests_old_tests, test_atanf);
+    //RUN_TEST_CASE(tests_old_tests, test_copysign);
 }

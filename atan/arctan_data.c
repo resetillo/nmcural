@@ -6,9 +6,9 @@
 __asm__(" .align 8");
 
 nmpps64f zero_dbl __attribute__((aligned (2))) = 0.0;
-nmpps64f half_dbl __attribute__((aligned (16))) = 0.5;
+nmpps64f half_dbl __attribute__((aligned (2))) = 0.5;
 nmpps64f one_dbl  __attribute__((aligned (2))) = 1.0;
-nmpps64f two_dbl  __attribute__((aligned (8))) = 2.0;
+nmpps64f two_dbl  __attribute__((aligned (2))) = 2.0;
 nmpps64f half_pi_dbl __attribute__((aligned (2))) = 1.5707963267948966192313216916398;
 nmpps64f nan_dbl  __attribute__((aligned (2))) =  (((nmpps64f)0.0)/((nmpps64f)0.0));
 

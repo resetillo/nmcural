@@ -47,7 +47,7 @@ int subtest_vh32(int* vec, int* result, int size){
 
 	}
 
-	for (int k=2;k<size+1;k++){
+	for (int k=1;k<size+1;k++){
 		if (vec[k] != result[k] ) {
 			return k;
 		}
@@ -86,49 +86,71 @@ int test_vec_handler32(){
 	}*/
     //res = subtest_vh32(&vec[1], outvector, 130);
 
-	res = subtest2_vh32(vec, outvector, 8);
+	res = subtest2_vh32(vec, outvector, 1);
 	if (res!=0) {
 		return 1;
 	}
-	res = subtest2_vh32(vec, outvector, 63);
+
+	res = subtest2_vh32(vec, outvector, 2);
 	if (res!=0) {
 		return 2;
 	}
-	res = subtest2_vh32(vec, outvector, 64);
+	res = subtest2_vh32(vec, outvector, 3);
 	if (res!=0) {
 		return 3;
 	}
-	res = subtest2_vh32(vec, outvector, 65);
+
+	res = subtest2_vh32(vec, outvector, 4);
 	if (res!=0) {
 		return 4;
 	}
-	res = subtest2_vh32(vec, outvector, 66);
+	res = subtest2_vh32(vec, outvector, 8);
 	if (res!=0) {
 		return 5;
 	}
-	res = subtest2_vh32(vec, outvector, 67);
+	res = subtest2_vh32(vec, outvector, 63);
+	if (res!=0) {
+		return 6;
+	}
+	res = subtest2_vh32(vec, outvector, 64);
 	if (res!=0) {
 		return 7;
 	}
-	res = subtest2_vh32(vec, outvector, 126);
+	res = subtest2_vh32(vec, outvector, 65);
 	if (res!=0) {
 		return 8;
 	}
-	res = subtest2_vh32(vec, outvector, 127);
+	res = subtest2_vh32(vec, outvector, 66);
 	if (res!=0) {
 		return 9;
 	}
-	res = subtest2_vh32(vec, outvector, 128);
+	res = subtest2_vh32(vec, outvector, 67);
 	if (res!=0) {
 		return 10;
 	}
-	res = subtest2_vh32(vec, outvector, 129);
+	res = subtest2_vh32(vec, outvector, 126);
 	if (res!=0) {
 		return 11;
 	}
-	res = subtest2_vh32(vec, outvector, 130);
+	res = subtest2_vh32(vec, outvector, 127);
 	if (res!=0) {
 		return 12;
+	}
+	res = subtest2_vh32(vec, outvector, 128);
+	if (res!=0) {
+		return 13;
+	}
+	res = subtest2_vh32(vec, outvector, 129);
+	if (res!=0) {
+		return 14;
+	}
+	/*res = subtest2_vh32(vec, outvector, 130);
+	if (res!=0) {
+		return 12;
+	}*/
+	res = subtest2_vh32(vec, outvector, 140);
+	if (res!=0) {
+		return 15;
 	}
 
 

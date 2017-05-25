@@ -119,53 +119,61 @@ after_size_correction:
 	################################################
 	##Копирование входной информации в четный буфер
 	################################################
-	//Первый адрес нечетный, необходимо провести сдвиг
-    sir = [NB];
-    nb1l = sir;
-    nb1h = sir;
-    sir = [SBx2];
-    sbl = sir;
-    sbh = sir;
-	ar5 = WBhi;
-    rep 2 wfifo = [ar5++], ftw, wtw; // Загрузка матрицы  весов
-    
-
-    //Выделяем старшие слова
-	ar5 = ar1;
-	ar5 = ar5 - 1;
-	rep 32 ram = [ar5++];
-	rep 32 with vsum, ram, 0;
-    //rep 32 data = [ar5++] with vsum, data, 0;
-    ar5 = ar3;
-    rep 32 [ar5++] = afifo;
-
-    //Если адрес нечетный, можем обработать максимум 63
+	//Если адрес нечетный, можем обработать максимум 63
     gr5 = 63;
     gr2 - gr5;
-    if < goto L1notnul;
+    if < goto L1notover63;
     gr2 = 63;
-    //+ в таком случае обнуляем старшее слово
-    gr5 = 64;
+L1notover63:
+	//Первый адрес нечетный, необходимо провести сдвиг вправо
+	ar5 = ar1 - 1; //Входные данные будут с лишним младшим словом
+	gr3 = gr2 + 1;
+
+	gr5 = 1;
+	gr5 and gr3;
+	if =0 delayed goto L1evenGr3;
+	gr3 = gr3 >> 1;
+	nul;
+
+	gr3 = gr3 + 1; //Нечетный, надо увеличить на 1
+L1evenGr3:
+	gr3 = gr3 - 1; //vlen дб на 1 меньше
+	vlen = gr3;
+
+	fpu 0 rep vlen vreg0 = [ar5++];
+
+    //Сдвигаем младшие слова в старшую часть
+    fpu 0 .packer = vreg0 with .float .in_high <= .float .in_low;
     ar5 = ar3;
-    ar5 = ar5 + gr5 with gr5 = false;
+    fpu rep vlen [ar5++] = .packer; // выгрузка данных для последующей загрузки со сдвигом в 2 слова
+
+    //обнуляем старшие 2 слова
     ar5 = ar5 + 2;
+    gr5 = false;
     [--ar5] = gr5;
     [--ar5] = gr5;
-L1notnul:
-    //Выделяем младшие слова
-	ar5 = WBlow;
-    rep 2 wfifo = [ar5++], ftw, wtw; // Загрузка матрицы  весов
-    ar5 = ar1;
-	ar5 = ar5 - 1;
-    //rep 32 data = [ar5++] with vsum, data, 0;
-    rep 32 ram = [ar5++];
-    rep 32 with vsum, ram, 0;
-    ar5 = ar3 + 2;//Загрузка со смещением в 1 слово
-    //rep 32 data = [ar5++] with data or afifo; //Сложение
-    rep 32 ram = [ar5++];
-    rep 32 with ram or afifo; //Сложение
+    //Загрузка со смещением
+    ar5 = ar3 + 2;
+    fpu 0 rep vlen vreg2 = [ar5++];
+
+    //Сдвигаем старшие слова в младшую часть
+    fpu 0 .packer = vreg0 with .float .in_low <= .float .in_high;
+    fpu 0 rep vlen vreg1 = .packer;
+    //Сложение
+    fpu 0 .float vreg0 = vreg1 + vreg2;
+
     ar5 = ar3;//Выгрузка полученных данных
-    rep 32 [ar5++] = afifo;
+    fpu 0 rep vlen [ar5++] = vreg0;
+
+
+L1end_lastcopy:
+
+	//Cледующее за последним - обнулим, дабы в функцию не попал мусор из стэка
+	ar5 = ar3;
+    gr5 = gr2;
+    gr4 = false;
+    [ar5 + gr5] = gr4;
+
     ar4 = ar3;
     
     gr3 = 1;
@@ -199,7 +207,6 @@ even_adr1_check:
 call_func:
 	
 	//FIXME Подготовка аргументов
-    //ar0 = __test_func;
     call ar0; //Вызов функции
     //Результат в fpu 0 vreg7
     //Откорректируем входной адрес для следующей итерации
@@ -207,155 +214,100 @@ call_func:
     gr5 = gr5 + gr2;
     ar1 = gr5;
 
-	gr0 = ar2;
+
 	gr3 = 1;
-	gr3 and gr0;
-	if =0 goto even_adr2;
+	gr2 and gr3;
+	if <>0 goto L2_buf_copy;
 
-	######################################################
-	##Копирование выходной информации по нечетному адресу
-	######################################################
-	gr3 and gr2;
-    if =0 delayed goto L2even_output_size;
+	gr4 = ar2;
+	gr3 and gr4;
+	if <>0 goto L2_buf_copy;
+
+simple_output:
+    //Простое копирование на четный адрес четного кол-ва элементов
+	fpu 0 rep vlen [ar2++] = vreg7;
+	goto next_iteration;
+
+L2_buf_copy:
+	//Копирование через буфер
+	ar5 = ar3;
+	fpu 0 rep vlen [ar5++] = vreg7; //Сохранение результата в буфер
+
+	gr4 = ar2;
+	gr3 and gr4;
+	if <>0 goto L2_shift_output;
+
+	gr2 - 1;
+	if =0 goto L2_lastword_copy;
 	gr3 = gr2 >> 1;
-	nul;
-	gr3 = gr3 + 1;
-L2even_output_size:
-    gr3 = gr3 - 1;
-    vlen = gr3;
-    ar5 = ar3;
-    fpu 0 rep vlen [ar5++] = vreg7;
-    //Сохраним первое слово по нечетному адресу
-    gr0 = [ar3];
-    [ar2] = gr0;
-    ar2 = ar2 + 1; // Теперь адрес четный
-
-	gr5 = 1;
-	gr1 - gr5;
-	if =0 goto exit;//Скопировано последнее слово
-
-    gr3;
-    if =0 delayed goto L2_last_word_copy;//Копируем 2 слова по нечетному адресу, сдвигать не нужно
-	gr3 = gr2 - 1;
-	nul;
-
-
-    //Копировать остаток надо с нечетного адреса
-
-    //Т.е. через сдвиг
-    sir = [NB];
-    nb1l = sir;
-    nb1h = sir;
-    sir = [SBx2];
-    sbl = sir;
-    sbh = sir;
-	ar5 = WBhi;
-    rep 2 wfifo = [ar5++], ftw, wtw; // Загрузка матрицы  весов
-
-    //Выделяем старшие слова
-	ar5 = ar3;
-	rep 32 ram = [ar5++];
-	rep 32 with vsum, ram, 0;
-    //rep 32 data = [ar5++] with vsum, data, 0;
-    ar5 = ar3+68;
-    rep 32 [ar5++] = afifo;
-    //Обнуляем последнее слово в массиве
-    ar5 = ar3 + 134;//68 + 66
-         with gr5 = false;
-    [--ar5] = gr5;
-    [--ar5] = gr5;
-    //Выделяем младшие слова
-	ar5 = WBlow;
-    rep 2 wfifo = [ar5++], ftw, wtw; // Загрузка матрицы  весов
-	ar5 = ar3;
-	rep 32 ram = [ar5++];
-	rep 32 with vsum, ram, 0;
-    //rep 32 data = [ar5++] with vsum, data, 0;
- /*   ####################
-    gr5 = 10;
-    gr1 - gr5;
-    if > goto Continue_debug;
-    rep 32 [ar2++] = afifo;
-    goto exit;
-    Continue_debug:
-
-    ####################*/
-
-
-
-    ar5 = ar3 + 70;//Загрузка со смещением в 1 слово
-	rep 32 ram = [ar5++];
-    rep 32 with ram or afifo; //Сложение
-    //rep 32 data = [ar5++] with data or afifo; //Сложение
-    ar5 = ar3;//Выгрузка полученных данных
-    rep 32 [ar5++] = afifo;
-
-	gr3 = gr2 - 1; //На 1 меньше, т.к. первое слово уже скопировано
-    gr3 = gr3 >> 1; //Последнее слово для нечетного значения учтем позже
-    gr3 = gr3 - 1;
-    vlen = gr3;
-    ar5 = ar3;
-    fpu 0 rep vlen vreg7 = [ar5++] ;
-    fpu 0 rep vlen [ar2++] = vreg7;
-    //Возможно надо скопировать еще одно слово
-	gr3 = gr2 - 1;
-	gr0 = 1;
-	gr3 and gr0;
-	if =0 goto next_iteration;//Копирование не нужно
 	gr3 = gr3 - 1;
-L2_last_word_copy:
+	vlen = gr3;
+	ar5 = ar3;
+	fpu 0 rep vlen vreg7 = [ar5++];
+	fpu 0 rep vlen [ar2++] = vreg7;
+
+L2_lastword_copy:
+    //Копирование последнего слова
+    gr3 = gr2 -1;
 	gr5 = [ar3 + gr3];
 	[ar2] = gr5;
-	ar2 = ar2 + 1; //На следующей итерации снова будет нечетный адрес, что печально
-
+	ar2 = ar2 + 1;
 	goto next_iteration;
 
 
-even_adr2:
-	gr2 and gr3;
-	if =0 delayed goto simple_save;
-    gr3 = gr2 >> 1;
-    nul;
+L2_shift_output:
+	//Копирование через сдвиг
+	//на нечетный адрес
 
-	gr1 - gr2;
-	if > delayed goto simple_save;
-	gr3 = gr2 + 1;
-    gr3 = gr3 >> 1;
-	######################################################
-	##Копирование выходной информации через буфер
-	##Если размер нечетный, то копировать надо через буфер, дабы
-	##не затереть данные, расположенные после последнего слова выходного вектора
-	######################################################
-    gr3 = gr2 >> 1;
-    gr3;
-    if =0 delayed  goto save_last_word;//Копирование 1 слова - исключительная ситуация
-    ar5 = ar3;
-    nul;
-
-    //gr3 = gr3 - 1;
-    vlen = gr3;
-    fpu 0 rep vlen [ar5++] = vreg7;
-
-	gr3 = gr3 - 1;
-    vlen = gr3;
-    ar5 = ar3;
-    fpu 0 rep vlen vreg7 = [ar5++];
-    fpu 0 rep vlen [ar2++] = vreg7;
-    //Сохраняем последнее слово
-save_last_word:
-    gr5 = [ar5];
+    //Для начала скопируем первое слово
+    gr5 = [ar3];
     [ar2] = gr5;
-    ar2 = ar2 + 1;
-	goto next_iteration;
+    ar2 = ar2 + 1; //Адрес теперь четный
 
-simple_save:
+    gr2 - 1;
+    if =0 goto next_iteration; //Первое слово является последним
+
+	gr3 = 2;
+    gr2 - gr3;
+	if =0 goto L2_lastword_copy; //Первое слово скопировали, осталось последнее (второе)
+
+	//Выходные данные во vreg7
+    //Сдвигаем младшие слова в старшую часть
+    fpu 0 .packer = vreg7 with .float .in_high <= .float .in_low;
+    ar5 = ar3 + 68;
+    fpu rep vlen [ar5++] = .packer; // выгрузка данных для последующей загрузки со сдвигом в 2 слова
+
+    //обнуляем старшие 2 слова
+    ar5 = ar5 + 2;
+    gr5 = false;
+    [--ar5] = gr5;
+    [--ar5] = gr5;
+    //Загрузка со смещением
+    ar5 = ar3 + 70;
+    fpu 0 rep vlen vreg2 = [ar5++];
+
+    //Сдвигаем старшие слова в младшую часть
+    fpu 0 .packer = vreg7 with .float .in_low <= .float .in_high;
+    fpu 0 rep vlen vreg1 = .packer;
+    //Сложение
+    fpu 0 .float vreg0 = vreg1 + vreg2;
+
+    ar5 = ar3 + 68;//Выгрузка полученных данных
+    fpu 0 rep vlen [ar5++] = vreg0;
+
+	//Сохраняемая длина может быть меньше длины выходного вектора
+    gr3 = gr2 - 1;
+    gr3 = gr3 >> 1;
     gr3 = gr3 - 1;
     vlen = gr3;
-    fpu 0 rep vlen [ar2++] = vreg7;
-    gr3 = 1;
-    gr2 and gr3;
-    if =0 goto next_iteration;
-    ar2 = ar2 - 1;
+
+    ar5 = ar3 + 68;
+    fpu 0 rep vlen vreg0 = [ar5++];
+    fpu 0 rep vlen [ar2++] = vreg0 ;
+
+	gr3 = 1;
+	gr2 and gr3;
+	if =0 goto L2_lastword_copy;//Необходимо скопировать последнее слово
 
 next_iteration:
     gr1 = gr1 - gr2;
