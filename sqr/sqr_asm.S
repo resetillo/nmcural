@@ -35,7 +35,7 @@ _nmppsSqr_8u_Sfs: .globl _nmppsSqr_8u_Sfs
 	push ar2, gr2;									// ar2,gr2 used for temp vars
 	push ar3, gr3;									// ar3 used for item iteration, gr3 used to compare length
 	push ar4, gr4;									// ar4,gr4 used to obtain shifting pair
-	push ar6, gr6;									// ar6,gr6 used to choose a scale strategy
+	push ar6, gr6;									// ar6,gr6 used to choose a scale handler
 
 	ar7 = ar7 + 256 addr; 							// allocate 128x2 words, stack grows up!
 
@@ -49,58 +49,63 @@ _nmppsSqr_8u_Sfs: .globl _nmppsSqr_8u_Sfs
 	ar5 = ar7 - 256 addr with gr1;					// ar5 == point to local vars
 
 	// if (pSrc == 0) return nmppsStsNullPtrErr;
-	if =0 delayed goto .LnmppsSqr_xy_Sfs_return;
+	if =0 delayed goto .LnmppsSqr_8u_Sfs_return_err;
 	gr1 = ar1 set;									// delay slot
 	gr0 = gr2 with gr1;								// delay slot: __ gr0 == len __
 
 	// if (pDst == 0) return nmppsStsNullPtrErr;
-	if =0 delayed goto .LnmppsSqr_xy_Sfs_return;
+	if =0 delayed goto .LnmppsSqr_8u_Sfs_return_err;
 	nul;											// delay slot
 	gr6 = ar2 with gr0;								// delay slot: __ gr6 == scaleFactor __
 
 	// if (len <= 0) return nmppsStsSizeErr;
-	if <= delayed goto .LnmppsSqr_xy_Sfs_return;
+	if <= delayed goto .LnmppsSqr_8u_Sfs_return_err;
 	gr7 = nmppsStsSizeErr;
 
-	gr1 = 15;										// min/max value of scaleFactor, more or less is meaningless for 8-bits
+	gr1 = 15;										// max value of positive scaleFactor, more is meaningless for 8-bits
+	gr2 = -8;										// min value of negative scaleFactor, less is meaningless for 8-bits
 	ar2 = nmppsSqr_8u_Sfs_FPCP_Settings;			// fixed point co-processor settings
+	ar6 = Unsigned_Scale_Handlers_Table;			// table for scaling
 
 	/* /////////////////////////////////////////////////////////////////////////////
 	// IMPORTANT!
 	//
-	// The next code is COMMON part for nmppsSqr_8u_Sfs, nmppsSqr_16s_Sfs, nmppsSqr_16u_Sfs functions!
+	// The next code is COMMON part of nmppsSqr_8u_Sfs, nmppsSqr_16s_Sfs, nmppsSqr_16u_Sfs functions!
 	//
 	// The header of nmppsSqr_16s_Sfs, nmppsSqr_16u_Sfs functions MUST be same as in nmppsSqr_8u_Sfs,
 	// except the next lines:
 	//   1) << min/max value of scaleFactor >>;
-	//   2) << fixed point co-processor settings >>.
+	//   2) << fixed point co-processor settings >>;
+	//   3) << table for scaling >>.
 	*/
 
-.LnmppsSqr_xy_Sfs_implementation:
-	nul;
+.LnmppsSqr_implementation_same_as_for_8u_Sfs:
+	gr3 = gr6;										// temporarily save gr6 ...
 	with gr6 - gr1;
 	/*
-	// analyze scaleFactor to choose strategy {{{
+	// analyze scaleFactor to choose handler {{{
 	*/
 
-	// if (scaleFactor > gr1)
-	if > delayed goto .LnmppsSqr_xy_Sfs_strategy_has_been_choosen with gr6 + gr1;
-	ar6 = Scale_Strategy_Wipe_Bits;					// delay slot (x2)
+	// if (scaleFactor > gr1) gr6 = 32;
+	if > delayed goto .LnmppsSqr_8u_Sfs_choose_scale_handler with gr6 - gr2;
+	gr6 = 32;										// delay slot (x2)
 
-	// if (scaleFactor < gr1)
-	if < delayed goto .LnmppsSqr_xy_Sfs_strategy_has_been_choosen;
-	ar6 = Scale_Strategy_Too_Big;					// delay slot (x2)
+	// if (scaleFactor < gr2) gr6 = -31;
+	if < delayed goto .LnmppsSqr_8u_Sfs_choose_scale_handler;
+	gr6 = -31;										// delay slot (x2)
 
-.LnmppsSqr_xy_Sfs_choose_scale_strategy:
-	gr2 = 30;										// the bias of Scale_Strategies_Table
-	ar6 = Scale_Strategies_Table;
-	with gr6 += gr2;
-	ar6 = [ar6 + gr6] with gr6 -= gr2 noflags;		// scaleStrategy = Scale_Strategies_Table[gr6 + 30];
+	// else gr6 is gr6 :)
+	gr6 = gr3;										// ... and then restore
+
+.LnmppsSqr_8u_Sfs_choose_scale_handler:
+	gr1 = 31;										// the bias of the table
+	// XXX: fatal error if gr6 is negative, so let's find handler through bias
+	with gr6 += gr1;
+	ar6 = [ar6 + gr6] with gr6 -= gr1;				// scale_handler(&x, shift) = Table[gr6 + 31];
 	/*
 	// }}}
 	*/
 
-.LnmppsSqr_xy_Sfs_strategy_has_been_choosen:
 	gr3 = 64;
 	gr4 = 4;
 
@@ -113,8 +118,8 @@ _nmppsSqr_8u_Sfs: .globl _nmppsSqr_8u_Sfs
 	sb = sir with gr0 - gr3;
 
 	// try do for 64, 32, 16, 8, 4, 2, 1 elements ...
-	if < delayed goto .LnmppsSqr_xy_Sfs_less64 with gr7 = nmppsStsNoErr noflags;
-.LnmppsSqr_xy_Sfs_more_or_equal64:
+	if < delayed goto .LnmppsSqr_8u_Sfs_less64;
+.LnmppsSqr_8u_Sfs_more_or_equal64:
 	ar2 = Mask_LO32;								// delay slot (x2)
 
 	ar4 = ar5 set; 									// ar5 == base for diagonal matrices 2x2, max 128 32-bit words
@@ -149,11 +154,11 @@ _nmppsSqr_8u_Sfs: .globl _nmppsSqr_8u_Sfs
 	rep 32 data = [ar0++] with mask ram, data, 0;
 	rep 32 [ar4++gr4] = afifo;
 
+	gr1 = ar5;										// save ar5
+
 	ar4 = ar5 addr;
 	ar0 = ar0 - 64 addr;
 	ar3 = ar5 + 128 addr;							// ar5 + 128 == base for immediate results
-
-	rep 32 wfifo = [ar4++], ftw, wtw;				// we can load only 16 matrices 2x2 at once
 
 	// multiply one vector by matrix 2x2
 	//
@@ -163,37 +168,29 @@ _nmppsSqr_8u_Sfs: .globl _nmppsSqr_8u_Sfs
 	//           |   |
 	//          B^2 A^2  <- output
 	//
-	.rept 16
-	rep 1 data = [ar0++], ftw with vsum, data, 0;
-	rep 1 [ar3++] = afifo, wtw;
+	.rept 32
+	rep 2 wfifo = [ar4++], ftw;						// don't load all matrices to allow handlers use co-processor as well
+	wtw;											// load matrices one by one
+	rep 1 data = [ar0++] with vsum, data, 0;
+	rep 1 [ar3++] = afifo;
+	delayed call ar6 + 0;							// invoke scale handler (MUST BE ALIGNED!), do `+ 0' to remove one delay slot
+	ar2 = ar3 - 2 addr with gr2 = gr6;				// delay slot (x2)
 	.endr
 
-	rep 32 wfifo = [ar4++], ftw, wtw;				// load next 16 matrices
-
-	.rept 16
-	rep 1 data = [ar0++], ftw with vsum, data, 0;
-	rep 1 [ar3++] = afifo, wtw;
-	.endr
-
-	nul;											// to align next command
-
-	delayed call ar6;								// invoke scale strategy
-	ar3 = ar5 + 128 addr;							// delay slot (x2)
-	nul;											// delay slot
-
-	with gr0 -= gr3;								// update flags after call
+	ar5 = gr1 with gr0 -= gr3;						// restore ar5
+	ar3 = ar5 + 128 addr;
 
 	// saturate the end result
 	rep 32 data = [ar3++] with vsum, 0, activate data;
 	rep 32 [ar1++] = afifo;
 
-	if > goto .LnmppsSqr_xy_Sfs_more_or_equal64;
-	if =0 delayed goto .LnmppsSqr_xy_Sfs_return;
-.LnmppsSqr_xy_Sfs_less64:
+	if > goto .LnmppsSqr_8u_Sfs_more_or_equal64;
+	if =0 delayed goto .LnmppsSqr_8u_Sfs_return;
+.LnmppsSqr_8u_Sfs_less64:
 	with gr3 >>= 1;									// delay slot: gr3 == 32 (64/2)
 	with gr0 - gr3;									// delay slot
 
-	if < delayed goto .LnmppsSqr_xy_Sfs_less32;
+	if < delayed goto .LnmppsSqr_8u_Sfs_less32;
 	ar2 = Mask_LO32;								// delay slot (x2)
 
 	ar4 = ar5 set;
@@ -213,35 +210,34 @@ _nmppsSqr_8u_Sfs: .globl _nmppsSqr_8u_Sfs
 	rep 16 data = [ar0++] with mask ram, data, 0;
 	rep 16 [ar4++gr4] = afifo;
 
+	gr1 = ar5;										// save ar5
+
 	ar4 = ar5 addr;
 	ar0 = ar0 - 32 addr;
 	ar3 = ar5 + 128 addr;
 
-	rep 32 wfifo = [ar4++], ftw, wtw;
-
 	.rept 16
-	rep 1 data = [ar0++], ftw with vsum, data, 0;
-	rep 1 [ar3++] = afifo, wtw;
+	rep 2 wfifo = [ar4++], ftw;
+	wtw;
+	rep 1 data = [ar0++] with vsum, data, 0;
+	rep 1 [ar3++] = afifo;
+	delayed call ar6 + 0;							// invoke scale handler (MUST BE ALIGNED!), do `+ 0' to remove one delay slot
+	ar2 = ar3 - 2 addr with gr2 = gr6;				// delay slot (x2)
 	.endr
 
-	nul;											// to align next command
-
-	delayed call ar6;								// invoke scale strategy
-	ar3 = ar5 + 128 addr;							// delay slot (x2)
-	nul;											// delay slot
-
-	with gr0 -= gr3;								// update flags after call
+	ar5 = gr1 with gr0 -= gr3;
+	ar3 = ar5 + 128 addr;							// restore ar5
 
 	// saturate the end result
 	rep 16 data = [ar3++] with vsum, 0, activate data;
 	rep 16 [ar1++] = afifo;
 
-	if =0 delayed goto .LnmppsSqr_xy_Sfs_return;
-.LnmppsSqr_xy_Sfs_less32:
+	if =0 delayed goto .LnmppsSqr_8u_Sfs_return;
+.LnmppsSqr_8u_Sfs_less32:
 	with gr3 >>= 1; 								// delay slot: gr3 == 16 (32/2)
 	with gr0 - gr3;									// delay slot
 
-	if < delayed goto .LnmppsSqr_xy_Sfs_less16;
+	if < delayed goto .LnmppsSqr_8u_Sfs_less16;
 	ar2 = Mask_LO32;								// delay slot (x2)
 
 	ar4 = ar5 set;
@@ -261,35 +257,34 @@ _nmppsSqr_8u_Sfs: .globl _nmppsSqr_8u_Sfs
 	rep 8 data = [ar0++] with mask ram, data, 0;
 	rep 8 [ar4++gr4] = afifo;
 
+	gr1 = ar5;										// save ar5
+
 	ar4 = ar5 addr;
 	ar0 = ar0 - 16 addr;
 	ar3 = ar5 + 128 addr;
 
-	rep 16 wfifo = [ar4++], ftw, wtw;
-
 	.rept 8
-	rep 1 data = [ar0++], ftw with vsum, data, 0;
-	rep 1 [ar3++] = afifo, wtw;
+	rep 2 wfifo = [ar4++], ftw;
+	wtw;
+	rep 1 data = [ar0++] with vsum, data, 0;
+	rep 1 [ar3++] = afifo;
+	delayed call ar6 + 0;							// invoke scale handler (MUST BE ALIGNED!), do `+ 0' to remove one delay slot
+	ar2 = ar3 - 2 addr with gr2 = gr6;				// delay slot (x2)
 	.endr
 
-	nul;											// to align next command
-
-	delayed call ar6;								// invoke scale strategy
-	ar3 = ar5 + 128 addr;							// delay slot (x2)
-	nul;											// delay slot
-
-	with gr0 -= gr3;								// update flags after call
+	ar5 = gr1 with gr0 -= gr3;						// restore ar5
+	ar3 = ar5 + 128 addr;
 
 	// saturate the end result
 	rep 8 data = [ar3++] with vsum, 0, activate data;
 	rep 8 [ar1++] = afifo;
 
-	if =0 delayed goto .LnmppsSqr_xy_Sfs_return;
-.LnmppsSqr_xy_Sfs_less16:
+	if =0 delayed goto .LnmppsSqr_8u_Sfs_return;
+.LnmppsSqr_8u_Sfs_less16:
 	with gr3 >>= 1; 								// delay slot: gr3 == 8 (16/2)
 	with gr0 - gr3;									// delay slot
 
-	if < delayed goto .LnmppsSqr_xy_Sfs_less8;
+	if < delayed goto .LnmppsSqr_8u_Sfs_less8;
 	ar2 = Mask_LO32;								// delay slot (x2)
 
 	ar4 = ar5 set;
@@ -309,35 +304,34 @@ _nmppsSqr_8u_Sfs: .globl _nmppsSqr_8u_Sfs
 	rep 4 data = [ar0++] with mask ram, data, 0;
 	rep 4 [ar4++gr4] = afifo;
 
+	gr1 = ar5 set;									// save ar5
+
 	ar4 = ar5 addr;
 	ar0 = ar0 - 8 addr;
 	ar3 = ar5 + 128 addr;
 
-	rep 8 wfifo = [ar4++], ftw, wtw;
-
 	.rept 4
-	rep 1 data = [ar0++], ftw with vsum, data, 0;
-	rep 1 [ar3++] = afifo, wtw;
+	rep 2 wfifo = [ar4++], ftw;
+	wtw;
+	rep 1 data = [ar0++] with vsum, data, 0;
+	rep 1 [ar3++] = afifo;
+	delayed call ar6 + 0;							// invoke scale handler (MUST BE ALIGNED!), do `+ 0' to remove one delay slot
+	ar2 = ar3 - 2 addr with gr2 = gr6;				// delay slot (x2)
 	.endr
 
-	nul;											// to align next command
-
-	delayed call ar6;								// invoke scale strategy
-	ar3 = ar5 + 128 addr;							// delay slot (x2)
-	nul;											// delay slot
-
-	with gr0 -= gr3;								// update flags after call
+	ar5 = gr1 with gr0 -= gr3;						// restore ar5
+	ar3 = ar5 + 128 addr;
 
 	// saturate the end result
 	rep 4 data = [ar3++] with vsum, 0, activate data;
 	rep 4 [ar1++] = afifo;
 
-	if =0 delayed goto .LnmppsSqr_xy_Sfs_return;
-.LnmppsSqr_xy_Sfs_less8:
+	if =0 delayed goto .LnmppsSqr_8u_Sfs_return;
+.LnmppsSqr_8u_Sfs_less8:
 	with gr3 >>= 1;									// delay slot: gr3 == 4 (8/2)
 	with gr0 - gr3;									// delay slot
 
-	if < delayed goto .LnmppsSqr_xy_Sfs_less4;
+	if < delayed goto .LnmppsSqr_8u_Sfs_less4;
 	ar2 = Mask_LO32;								// delay slot (x2)
 
 	ar4 = ar5 set;
@@ -357,35 +351,34 @@ _nmppsSqr_8u_Sfs: .globl _nmppsSqr_8u_Sfs
 	rep 2 data = [ar0++] with mask ram, data, 0;
 	rep 2 [ar4++gr4] = afifo;
 
+	gr1 = ar5;										// save ar5
+
 	ar4 = ar5 addr;
 	ar0 = ar0 - 4 addr;
 	ar3 = ar5 + 128 addr;
 
-	rep 4 wfifo = [ar4++], ftw, wtw;
-
 	.rept 2
-	rep 1 data = [ar0++], ftw with vsum, data, 0;
-	rep 1 [ar3++] = afifo, wtw;
+	rep 2 wfifo = [ar4++], ftw;
+	wtw;
+	rep 1 data = [ar0++] with vsum, data, 0;
+	rep 1 [ar3++] = afifo;
+	delayed call ar6 + 0;							// invoke scale handler (MUST BE ALIGNED!), do `+ 0' to remove one delay slot
+	ar2 = ar3 - 2 addr with gr2 = gr6;				// delay slot (x2)
 	.endr
 
-	nul;											// to align next command
-
-	delayed call ar6;								// invoke scale strategy
-	ar3 = ar5 + 128 addr;							// delay slot (x2)
-	nul;											// delay slot
-
-	with gr0 -= gr3;								// update flags after call
+	ar5 = gr1 with gr0 -= gr3;						// restore ar5
+	ar3 = ar5 + 128 addr;
 
 	// saturate the end result
 	rep 2 data = [ar3++] with vsum, 0, activate data;
 	rep 2 [ar1++] = afifo;
 
-	if =0 delayed goto .LnmppsSqr_xy_Sfs_return;
-.LnmppsSqr_xy_Sfs_less4:
+	if =0 delayed goto .LnmppsSqr_8u_Sfs_return;
+.LnmppsSqr_8u_Sfs_less4:
 	with gr3 >>= 1;									// delay slot: gr3 == 2 (4/2)
 	with gr0 - gr3;									// delay slot
 
-	if < delayed goto .LnmppsSqr_xy_Sfs_the_last_one;
+	if < delayed goto .LnmppsSqr_8u_Sfs_the_last_one;
 	ar2 = Mask_LO32;								// delay slot (x2)
 
 	ar4 = ar5 set;
@@ -409,25 +402,22 @@ _nmppsSqr_8u_Sfs: .globl _nmppsSqr_8u_Sfs
 	ar0 = ar0 - 2 addr;
 	ar3 = ar5 + 128 addr;
 
+	gr1 = ar5;										// save ar5
 	rep 2 wfifo = [ar4++], ftw, wtw;
+	rep 1 data = [ar0++] with vsum, data, 0;
+	rep 1 [ar3++] = afifo;
+	delayed call ar6 + 0;							// invoke scale handler (MUST BE ALIGNED!), do `+ 0' to remove one delay slot
+	ar2 = ar3 - 2 addr with gr2 = gr6;				// delay slot (x2)
 
-	rep 1 data = [ar0++], ftw with vsum, data, 0;
-	rep 1 [ar3++] = afifo, wtw;
-
-	nul;											// to align next command
-
-	delayed call ar6;								// invoke scale strategy
-	ar3 = ar5 + 128 addr;							// delay slot (x2)
-	nul;											// delay slot
-
-	with gr0 -= gr3;								// update flags after call
+	ar5 = gr1 with gr0 -= gr3;						// restore ar5
+	ar3 = ar5 + 128 addr;
 
 	// saturate the end result
 	rep 1 data = [ar3++] with vsum, 0, activate data;
 	rep 1 [ar1++] = afifo;
 
-	if =0 delayed goto .LnmppsSqr_xy_Sfs_return;
-.LnmppsSqr_xy_Sfs_the_last_one:
+	if =0 delayed goto .LnmppsSqr_8u_Sfs_return;
+.LnmppsSqr_8u_Sfs_the_last_one:
 	ar2 = Mask_LO32;								// delay slot (x2)
 
 	ar4 = ar5 set with gr3 = gr0 noflags;
@@ -444,31 +434,33 @@ _nmppsSqr_8u_Sfs: .globl _nmppsSqr_8u_Sfs
 	rep 1 with 0 + 0;
 	rep 1 [ar4++gr4] = afifo;
 
+	gr1 = ar5;										// save ar5
 	ar4 = ar5 addr;
-
-	rep 2 wfifo = [ar4++], ftw, wtw;
 
 	ar3 = ar5 + 128 addr;
 
+	rep 2 wfifo = [ar4++], ftw;
+	wtw;
 	rep 1 data = [ar0++] with vsum, data, 0;
 	rep 1 [ar3++] = afifo;
+	delayed call ar6 + 0;							// invoke scale handler (MUST BE ALIGNED!), do `+ 0' to remove one delay slot
+	ar2 = ar3 - 2 addr with gr2 = gr6;				// delay slot (x2)
 
-	nul;											// to align next command
-
-	delayed call ar6;								// invoke scale strategy
-	ar3 = ar5 + 128 addr;							// delay slot (x2)
-	nul;											// delay slot
-
-	// saturate the end result
+	ar5 = gr1;
+	ar3 = ar5 + 128 addr;
 	ar4 = ar3 + 2 addr;
 
+	// saturate the end result
 	rep 1 data = [ar3] with vsum, 0, activate data;
 	rep 1 [ar4] = afifo;
 
 	gr2 = [ar4];
 	[ar1++] = gr2;
 
-.LnmppsSqr_xy_Sfs_return:
+.LnmppsSqr_8u_Sfs_return:
+	gr7 = nmppsStsNoErr;
+
+.LnmppsSqr_8u_Sfs_return_err:
 	ar7 = ar7 - 256 addr;
 	pop ar6, gr6;
 	pop ar4, gr4;
@@ -493,7 +485,7 @@ _nmppsSqr_16s_Sfs: .globl _nmppsSqr_16s_Sfs
 	push ar2, gr2;									// ar2,gr2 used for temp vars
 	push ar3, gr3;									// ar3 used for item iteration, gr3 used to compare length
 	push ar4, gr4;									// ar4,gr4 used to obtain shifting pair
-	push ar6, gr6;									// ar6,gr6 used to choose a scale strategy
+	push ar6, gr6;									// ar6,gr6 used to choose a scale handler
 
 	ar7 = ar7 + 256 addr; 							// allocate 128x2 words, stack grows up!
 
@@ -507,24 +499,25 @@ _nmppsSqr_16s_Sfs: .globl _nmppsSqr_16s_Sfs
 	ar5 = ar7 - 256 addr with gr1;					// ar5 == point to local vars
 
 	// if (pSrc == 0) return nmppsStsNullPtrErr;
-	if =0 delayed goto .LnmppsSqr_xy_Sfs_return;
+	if =0 delayed goto .LnmppsSqr_8u_Sfs_return_err;
 	gr1 = ar1 set;									// delay slot
 	gr0 = gr2 with gr1;								// delay slot: __ gr0 == len __
 
 	// if (pDst == 0) return nmppsStsNullPtrErr;
-	if =0 delayed goto .LnmppsSqr_xy_Sfs_return;
+	if =0 delayed goto .LnmppsSqr_8u_Sfs_return_err;
 	nul;											// delay slot
 	gr6 = ar2 with gr0;								// delay slot: __ gr6 == scaleFactor __
 
 	// if (len <= 0) return nmppsStsSizeErr;
-	if <= delayed goto .LnmppsSqr_xy_Sfs_return;
+	if <= delayed goto .LnmppsSqr_8u_Sfs_return_err;
 	gr7 = nmppsStsSizeErr;
 
-	gr1 = 30;										// min/max value of scaleFactor, more or less is meaningless for 16-bits
+	gr1 = 31;										// max value of positive scaleFactor, more is meaningless for 16-bits
+	gr2 = -14;										// min value of negative scaleFactor, less is meaningless for 16-bits
 	ar2 = nmppsSqr_16s_Sfs_FPCP_Settings;			// fixed point co-processor settings
+	ar6 = Unsigned_Scale_Handlers_Table;
 
-	// try do for 64, 32, 16, 8, 4, 2 elements ...
-	goto .LnmppsSqr_xy_Sfs_implementation;
+	goto .LnmppsSqr_implementation_same_as_for_8u_Sfs;
 /*
 // }
 */
@@ -541,7 +534,7 @@ _nmppsSqr_16u_Sfs: .globl _nmppsSqr_16u_Sfs
 	push ar2, gr2;									// ar2,gr2 used for temp vars
 	push ar3, gr3;									// ar3 used for item iteration, gr3 used to compare length
 	push ar4, gr4;									// ar4,gr4 used to obtain shifting pair
-	push ar6, gr6;									// ar6,gr6 used to choose a scale strategy
+	push ar6, gr6;									// ar6,gr6 used to choose a scale handler
 
 	ar7 = ar7 + 256 addr; 							// allocate 128x2 words, stack grows up!
 
@@ -555,24 +548,25 @@ _nmppsSqr_16u_Sfs: .globl _nmppsSqr_16u_Sfs
 	ar5 = ar7 - 256 addr with gr1;					// ar5 == point to local vars
 
 	// if (pSrc == 0) return nmppsStsNullPtrErr;
-	if =0 delayed goto .LnmppsSqr_xy_Sfs_return;
+	if =0 delayed goto .LnmppsSqr_8u_Sfs_return_err;
 	gr1 = ar1 set;									// delay slot
 	gr0 = gr2 with gr1;								// delay slot: __ gr0 == len __
 
 	// if (pDst == 0) return nmppsStsNullPtrErr;
-	if =0 delayed goto .LnmppsSqr_xy_Sfs_return;
+	if =0 delayed goto .LnmppsSqr_8u_Sfs_return_err;
 	nul;											// delay slot
 	gr6 = ar2 with gr0;								// delay slot: __ gr6 == scaleFactor __
 
 	// if (len <= 0) return nmppsStsSizeErr;
-	if <= delayed goto .LnmppsSqr_xy_Sfs_return;
+	if <= delayed goto .LnmppsSqr_8u_Sfs_return_err;
 	gr7 = nmppsStsSizeErr;
 
-	gr1 = 30;										// min/max value of scaleFactor, more or less is meaningless for 16-bits
+	gr1 = 31;										// max value of positive scaleFactor, more is meaningless for 16-bits
+	gr2 = -15;										// min value of negative scaleFactor, less is meaningless for 16-bits
 	ar2 = nmppsSqr_16u_Sfs_FPCP_Settings;			// fixed point co-processor settings
+	ar6 = Unsigned_Scale_Handlers_Table;
 
-	// try do for 64, 32, 16, 8, 4, 2 elements ...
-	goto .LnmppsSqr_xy_Sfs_implementation;
+	goto .LnmppsSqr_implementation_same_as_for_8u_Sfs;
 /*
 // }
 */
@@ -919,114 +913,12 @@ nmppsSqr_16u_Sfs_FPCP_Settings:
 	.quad 0x8000000080000000
 	.quad 0x0000000300000003
 
-Scale_Strategies_Table:
-	.rept 30
-	.int Scale_Strategy_Left_Shift
+Unsigned_Scale_Handlers_Table:
+	.rept 31
+	.int Scale_Handler_Left_Shift_Unsigned
 	.endr
-	.int Scale_Strategy_No_Scale
-	.rept 30
-	.int Scale_Strategy_Right_Shift
+	.int Scale_Handler_Left_Shift_Unsigned
+	.rept 31
+	.int Scale_Handler_Right_Shift_Unsigned
 	.endr
-
-
-/* /////////////////////////////////////////////////////////////////////////////
-// Module helpers
-*/
-
-	.text
-
-
-	.align 2
-Scale_Strategy_No_Scale:
-	// do nothing just return
-	return;
-
-
-	.align 2
-Scale_Strategy_Left_Shift:
-	push ar1, gr1 with gr2 = -gr6 noflags;
-	push ar3, gr3 with gr1 =  gr7 noflags; 			// store gr7, ar5
-	ar1 = ar5 set;
-
-.Scale_Strategy_Left_Shift_loop:
-	delayed call LShift32;
-	ar2 = [ar3];									// delay slot
-	push ar2,gr2;									// delay slot
-
-	[ar3++] = gr7 with gr3 = gr3 - 1;
-	if > goto .Scale_Strategy_Left_Shift_loop;
-
-	ar5 = ar1 set;
-	pop ar3, gr3 with gr7 = gr1 noflags;
-	pop ar1, gr1;
-	return;
-
-
-	.align 2
-Scale_Strategy_Right_Shift:
-	push ar1, gr1 with gr2 = gr6 noflags;
-	push ar3, gr3 with gr1 = gr7 noflags; 			// store gr7, ar5
-	ar1 = ar5 set;
-
-.Scale_Strategy_Right_Shift_loop:
-	delayed call RShift32;
-	ar2 = [ar3];									// delay slot
-	push ar2,gr2;									// delay slot
-
-	[ar3++] = gr7 with gr3 = gr3 - 1;
-	if > goto .Scale_Strategy_Right_Shift_loop;
-
-	ar5 = ar1 set;
-	pop ar3, gr3 with gr7 = gr1 noflags;
-	pop ar1, gr1;
-	return;
-
-
-	.align 2
-Scale_Strategy_Too_Big:
-	// args:
-	// ar3 - pSrcDst
-	// gr3 - len is even or 1
-	push ar3, gr3;
-	push ar1, gr1;
-
-	gr2 = 0x7FFFFFFF;
-
-.LScale_Strategy_Too_Big_loop:
-	gr1 = [ar3];
-	with gr1;
-	if =0 goto .LScale_Strategy_Too_Big_next;
-	gr1 = gr2 set;
-.LScale_Strategy_Too_Big_next:
-	[ar3++] = gr1 with gr3 = gr3 - 1;
-	if > goto .LScale_Strategy_Too_Big_loop;
-
-.LScale_Strategy_Too_Big_return:
-	pop ar1, gr1;
-	pop ar3, gr3;
-	return;
-
-
-	.align 2
-Scale_Strategy_Wipe_Bits:
-	// args:
-	// ar3 - pSrcDst
-	// gr3 - len is even or 1
-	push ar3, gr3;
-	push ar1, gr1 with gr3 - 1;
-
-	if =0 delayed goto .LScale_Strategy_Wipe_Bits_return;
-	with gr2 = false noflags;						// delay slot
-	[ar2] = gr2 with gr3;							// delay slot
-
-	gr1 = 2;
-
-.LScale_Strategy_Wipe_Bits_next:
-	if > delayed goto .LScale_Strategy_Wipe_Bits_next;
-	[ar3++] = gr2;									// delay slot
-	[ar3++] = gr2 with gr3 = gr3 - gr1;				// delay slot
-
-.LScale_Strategy_Wipe_Bits_return:
-	pop ar1, gr1;
-	pop ar3, gr3;
-	return;
+	.int Scale_Handler_Wipe_Bits
