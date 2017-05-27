@@ -50,10 +50,10 @@ TEST(tests_sqr, nmppsSqr_8u_Sfs_scale_factor_is_pos) {
 TEST(tests_sqr, nmppsSqr_8u_Sfs_scale_factor_is_neg) {
     nmpps8u src[] ALIGNED      = {  4,   8,  30, 200, 255, 128, 0 };
     nmpps8u expected[] ALIGNED = { 32, 128, 255, 255, 255, 255, 0 };
-    nmpps8u dst[4] ALIGNED;
+    nmpps8u dst[7] ALIGNED;
 
-    TEST_ASSERT_EQUAL(nmppsStsNoErr, nmppsSqr_8u_Sfs(src, dst, 4, -1));
-    TEST_ASSERT_EQUAL_UINT_ARRAY(expected, dst, 4);
+    TEST_ASSERT_EQUAL(nmppsStsNoErr, nmppsSqr_8u_Sfs(src, dst, 7, -1));
+    TEST_ASSERT_EQUAL_UINT_ARRAY(expected, dst, 7);
 }
 
 
