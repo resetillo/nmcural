@@ -33,8 +33,8 @@ _nmppsMove_32s:
 
   gr2 = [--ar5]; // len
   //Количестов копируемых элементов должно быть больше 0
-  gr2 - 1;
-  if < delayed goto LExit_8u;
+  gr2;
+  if <= delayed goto LExit_8u;
   gr7 = -6;
   nul;
 
@@ -98,21 +98,28 @@ LDirectLess32_8u:
 // Обратное копирование
 LBackCopy_8u:
   gr3 = 2;
-  gr2 - 1;
 
+
+  gr2 - 1;
   // Нужно скопировать всего один элемент
   if =0 delayed goto LLastElement_8u;
+  ar0 = gr0;
+  ar1 = gr1;
+
   // Сдвигаем указатели на len
   gr0 = gr0 + gr2;
   gr1 = gr1 + gr2;
 
+  ar0 = gr0;
+  ar1 = gr1;
+
   //Определяем четность len
   gr4 = 1;
   gr2 and gr4;
+
   // len четно, переходим к копированию по 32 слова
-  if =0 delayed goto LBackNoLastElement_8u;
-  ar0 = gr0;
-  ar1 = gr1;
+  if =0 goto LBackNoLastElement_8u;
+
 
   //len не четно
   // Двигаемся на один вперед, чтобы скопировать последний элемент
@@ -144,6 +151,8 @@ LBackCopy32_8u:
 
   // Проверяем все ли скопировали
   gr4 = gr0 and gr2;
+
+  gr4 - 1;
 
   if =0 delayed goto LExit_8u;
   gr4 >>= 1;
@@ -198,8 +207,8 @@ _nmppsMove_32sc:
 
   gr2 = [--ar5]; // len
   //Количестов копируемых элемнтов должно быть больше 0
-  gr2 - 1;
-  if < delayed goto LExit_64s;
+  gr2;
+  if <= delayed goto LExit_64s;
   gr7 = -6;
   nul;
 

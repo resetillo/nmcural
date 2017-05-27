@@ -1,15 +1,20 @@
 #include "unity/unity_fixture.h"
 
 void runAllTests(void) {
+
     RUN_TEST_GROUP(tests_old_tests);
-//    RUN_TEST_GROUP(tests_sqr);
+    //RUN_TEST_GROUP(tests_sqr);
     RUN_TEST_GROUP(tests_min);
     RUN_TEST_GROUP(tests_minindx);
     RUN_TEST_GROUP(tests_max);
     RUN_TEST_GROUP(tests_maxindx);
     RUN_TEST_GROUP(tests_minmax);
     RUN_TEST_GROUP(tests_minmaxindx);
+    RUN_TEST_GROUP(tests_move);
     RUN_TEST_GROUP(tests_copy);
+    RUN_TEST_GROUP(tests_set);
+    RUN_TEST_GROUP(tests_zero);
+    RUN_TEST_GROUP(tests_abs);
 }
 
 int main(void) {

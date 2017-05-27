@@ -204,7 +204,7 @@ _nmppsZero_64sc:
   gr1 = [--ar5]; // len
   // Количество инициализируемых элементов должно быть больше 0
   gr1;
-  if < delayed goto Lerror_exit_64sc;
+  if <= delayed goto Lerror_exit_64sc;
   gr7 = -6;
   nul;
 

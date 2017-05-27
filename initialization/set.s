@@ -74,6 +74,7 @@ _nmppsSet_64sc:
   push ar0, gr0;
   push ar1, gr1;
   push ar2, gr2;
+  push ar3, gr3;
 
   ar2 = [--ar5]; // val
 
@@ -93,41 +94,64 @@ _nmppsSet_64sc:
 
   gr7 = 0;
 
+  fpu 0 rep 32 vreg0 = [ar2];
+  ar2 = ar2 + 2;
+  fpu 0 rep 32 vreg1 = [ar2];
+
+  ar3 = ar1;
+  gr3 = 4;
   // Сколько раз можем полностью загрузить регистр
-  gr1 = gr2 >> 4;
+  gr4 = gr2 >> 4;
 
   // Меньше чем 32 слова
-  gr1;
+  gr4;
   if =0 delayed goto Lless32_64sc;
   gr0 = gr2;
   gr0 <<= 1;
 
-  fpu 0 rep 32 vreg0 = [ar2];
+
+  gr1 = 64;
+  gr0 = ar1;
 
 // Инициализация по 32 слова
 Lset32_64sc:
-  fpu 0 rep 32 [ar1++] = vreg0;
-  gr1 = gr1 - 1;
+
+  ar0 = gr0;
+  ar3 = ar0;
+
+  fpu 0 rep 16 [ar3++gr3] = vreg0;
+  ar3 = ar0 + 2;
+  fpu 0 rep 16 [ar3++gr3] = vreg1;
+
+  gr0 = gr0 + gr1;
+
+  gr4 = gr4 - 1;
 
   if > goto Lset32_64sc;
+
+  ar3 = ar3 - 2;
 
   gr1 = 15;
   gr0 = gr2 and gr1;
 
   // Инициализировали все элементы, выходим
   if =0 delayed goto Lexit_64sc;
+  gr0 = gr0 << 1;
   gr0 = gr0 - 1;
-  nul;
 
 // Инициализация меньше 32 слов
 Lless32_64sc:
 
   vlen = gr0;
 
-  fpu 0 rep vlen vreg0 = [ar2];
-  fpu 0 rep vlen [ar1++] = vreg0;
+  ar0 = ar3;
+
+  fpu 0 rep vlen [ar3++gr3] = vreg0;
+  ar3 = ar0 + 2 ;
+  fpu 0 rep vlen [ar3++gr3] = vreg1;
 
 Lexit_64sc:
+  pop ar3, gr3;
   pop ar2, gr2;
   pop ar1, gr1;
   pop ar0, gr0;

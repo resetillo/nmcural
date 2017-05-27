@@ -14,7 +14,7 @@
 					<folderInfo id="ru.mipt.designcenter.configuration.exe.debug.1892294406." name="/" resourcePath="">
 						<toolChain id="ru.mipt.designcenter.toolchain.linux.debug.154313634" name="NM Toolchain" superClass="ru.mipt.designcenter.toolchain.linux.debug">
 							<targetPlatform archList="all" id="ru.mipt.designcenter.toolchain.targetplatform.any.debug.1914311276" isAbstract="false" name="Any Target Platform" osList="all"/>
-							<builder buildPath="${workspace_loc:/nmpps}/Debug" id="ru.mipt.designcenter.toolchain.builder.debug.918382925" keepEnvironmentInBuildfile="false" managedBuildOn="true" name="CDT Internal Builder"/>
+							<builder buildPath="${workspace_loc:/nmpps}/Debug" id="org.eclipse.cdt.build.core.internal.builder.1277800035" keepEnvironmentInBuildfile="false" name="CDT Internal Builder" superClass="org.eclipse.cdt.build.core.internal.builder"/>
 							<tool id="ru.mipt.designcenter.linker.nmgpp.1726933936" name="NM C++ Linker" superClass="ru.mipt.designcenter.linker.nmgpp"/>
 							<tool id="ru.mipt.designcenter.linker.nmgcc.exe.debug.linux.2145736123" name="NM C Linker" superClass="ru.mipt.designcenter.linker.nmgcc.exe.debug.linux">
 								<inputType id="ru.mipt.designcenter.linker.base.input.601413881" superClass="ru.mipt.designcenter.linker.base.input">
@@ -35,7 +35,7 @@
 							<tool id="ru.mipt.designcenter.compiler.nmgpp.exe.debug.linux.418066225" name="NM C++ Compiler" superClass="ru.mipt.designcenter.compiler.nmgpp.exe.debug.linux"/>
 							<tool command="nmc-gcc -I&quot;../include&quot;" commandLinePattern="${COMMAND}  ${FLAGS} ${OUTPUT_FLAG} ${OUTPUT_PREFIX}${OUTPUT} ${INPUTS}" id="ru.mipt.designcenter.assebler.nmgcc.exe.debug.linux.1420011861" name="NM Assembler" superClass="ru.mipt.designcenter.assebler.nmgcc.exe.debug.linux">
 								<option id="ru.mipt.designcenter.compiler.base.category.general.compile.mgas.672444528" name="Use GAS assembler" superClass="ru.mipt.designcenter.compiler.base.category.general.compile.mgas" value="true" valueType="boolean"/>
-								<option id="ru.mipt.designcenter.assembler.base.category.general.other.436636837" superClass="ru.mipt.designcenter.assembler.base.category.general.other" value="-g" valueType="string"/>
+								<option id="ru.mipt.designcenter.assembler.base.category.general.other.436636837" name="Other Flags" superClass="ru.mipt.designcenter.assembler.base.category.general.other" value="-g" valueType="string"/>
 							</tool>
 						</toolChain>
 					</folderInfo>
