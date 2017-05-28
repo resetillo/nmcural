@@ -1,9 +1,8 @@
 #include "unity/unity_fixture.h"
 
 void runAllTests(void) {
-
     RUN_TEST_GROUP(tests_old_tests);
-    //RUN_TEST_GROUP(tests_sqr);
+    RUN_TEST_GROUP(tests_sqr);
     RUN_TEST_GROUP(tests_min);
     RUN_TEST_GROUP(tests_minindx);
     RUN_TEST_GROUP(tests_max);
