@@ -4,13 +4,109 @@
 // Names:      Scale_Handlers
 // Purpose:    Computes scaling for signed and unsigned 8-bit, 16-bit numbers
 // Parameters:
-//   pSrc              (ar2) Pointer to source and destination scalar number
+//   pSrc              (ar2) Pointer to source and destination of pair of scalar
 //   scaleFactor       (gr2) Scale factor
 // Return:
 //   nothing
 */
 
 	.text
+
+
+	.align 2
+Scale_Handler_Left_Shift_Signed: .globl Scale_Handler_Left_Shift_Signed
+	push ar0, gr0 with gr2 = -gr2;
+	push ar1, gr1 with gr0 = gr2;
+
+	ar0 = LShift_OV_Table;
+	gr1 = [ar2];
+	gr0 = [ar0 + gr0] with gr1;
+
+	if < delayed goto .LScale_Handler_Left_Shift_Signed_after_abs_A_neg;
+	ar1 = ar2 with gr1 = -gr1;						// delay slot
+	with gr1 - gr0;									// delay slot
+
+	with gr1 = -gr1;
+	with gr1 - gr0;
+
+	if u>= delayed goto .LScale_Handler_Left_Shift_Signed_try_shift_next;
+	gr7 = 0x7FFFFFFF;								// delay slot (x2)
+
+	delayed call LShift32;
+	ar2 = gr1;										// delay slot
+	push ar2, gr2;									// delay slot
+
+	goto .LScale_Handler_Left_Shift_Signed_try_shift_next;
+
+.LScale_Handler_Left_Shift_Signed_after_abs_A_neg:
+	if u>= delayed goto .LScale_Handler_Left_Shift_Signed_try_shift_next;
+	gr7 = 0x80000000;								// delay slot (x2)
+
+	delayed call LShift32;
+	ar2 = gr1;										// delay slot
+	push ar2, gr2;									// delay slot
+
+	with gr7 = -gr7;								// change sign, cause a source value was negative
+
+.LScale_Handler_Left_Shift_Signed_try_shift_next:
+	[ar1++] = gr7;
+
+	gr1 = [ar1];
+	with gr1;
+
+	if < delayed goto .LScale_Handler_Left_Shift_Signed_after_abs_B_neg;
+	with gr1 = -gr1;								// delay slot
+	with gr1 - gr0;									// delay slot
+
+	with gr1 = -gr1;
+	with gr1 - gr0;
+
+	if u>= delayed goto .LScale_Handler_Left_Shift_Signed_the_end;
+	gr7 = 0x7FFFFFFF;								// delay slot (x2)
+
+	delayed call LShift32;
+	ar2 = gr1;										// delay slot
+	push ar2, gr2;									// delay slot
+
+	goto .LScale_Handler_Left_Shift_Signed_the_end;
+
+.LScale_Handler_Left_Shift_Signed_after_abs_B_neg:
+	if u>= delayed goto .LScale_Handler_Left_Shift_Signed_the_end;
+	gr7 = 0x80000000;								// delay slot (x2)
+
+	delayed call LShift32;
+	ar2 = gr1;										// delay slot
+	push ar2, gr2;									// delay slot
+
+	with gr7 = -gr7;								// change sign, cause a source value was negative
+
+.LScale_Handler_Left_Shift_Signed_the_end:
+	[ar1] = gr7;
+
+	pop ar1, gr1;
+	pop ar0, gr0;
+	return;
+
+
+	.align 2
+Scale_Handler_Right_Shift_Signed: .globl Scale_Handler_Right_Shift_Signed
+	ar5 = [ar2] with gr5 = gr2;
+
+	delayed call ARShift32;
+	push ar5, gr5;									// delay slot
+	nul;											// delay slot
+
+	[ar2++] = gr7;
+
+	ar5 = [ar2] with gr5 = gr2;
+
+	delayed call ARShift32;
+	push ar5, gr5;									// delay slot
+	nul;											// delay slot
+
+	[ar2++] = gr7;
+
+	return;
 
 
 	.align 2
@@ -86,6 +182,6 @@ Scale_Handler_Wipe_Bits: .globl Scale_Handler_Wipe_Bits
 	.align 8
 LShift_OV_Table:
 	.irp sh, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30
-	.long (0x7FFFFFFF >> \sh)
+	.long ((0x7FFFFFFF >> \sh) + 1)
 	.endr
 	.long 0x00000001 // for zero case
