@@ -9,13 +9,13 @@ double right_sqrt(double x);
 #define COUNT_ITERATION (100)
 
 /**
- * @brief �������� �������� ��������
+ * @brief Заполнение значений тестовых векторов
  *
- * @param in ��������� �� ������ ����������
- * @param out ��������� �� ������ ������
- * @param len ����� �������
- * @param bgn ��������� ��������
- * @param step ��� ���������
+ * @param in вектор исходных данных
+ * @param out вектор резултирующих данных
+ * @param len длина векторов
+ * @param bgn начальное значение для вектора исходных данных
+ * @param step шаг инкрементации
  * */
 void create_sqrt_vecs(nmpps64f* in, nmpps64f* out, unsigned int len,
 					  nmpps64f bgn, nmpps64f step)
@@ -41,14 +41,15 @@ void create_sqrtf_vecs(nmpps32f* in, nmpps32f* out, unsigned int len,
 
 
 
-const nmpps64f sqrt_critical_error = 10e-14;//������ ������������� � %
-const nmpps32f sqrtf_critical_error = 10e-05;//������ ������������� � %
+const nmpps64f sqrt_critical_error = 10e-14;//<Значение максимальной погрешности для формата двойной точности в %
+const nmpps32f sqrtf_critical_error = 10e-05;//<Значение максимальной погрешности для формата одинарной точности в %
+
 /**
- * @brief ������������ ���������� ����������� ����� ��� ��������� ��������
+ * @brief Проверка диапазона тестовых значений
  *
- * @param bgn ��������� ��������
- * @param step ��� ���������
- * @param count ���-�� ��������
+ * @param bgn начальное значение
+ * @param step шаг инкрементации
+ * @param count количество проверяемых значений
  * */
 nmppsStatus test_sqrt_diap(nmpps64f bgn, nmpps64f step, int count){
 	nmpps64f in[count];
@@ -57,14 +58,13 @@ nmppsStatus test_sqrt_diap(nmpps64f bgn, nmpps64f step, int count){
 	nmppsStatus stat;
 	double er;
 	double arg = bgn;
-	//double step = 1.3333777e-1;
 	double max_err = 0;
-	//double max_err_arg;
 	int i;
-	//������� ��
+	//Заполнение входных и эталонных данных
 	create_sqrt_vecs(in, kd, count, arg, step);
-	//���������� �������
+	//Расчет проверяемых значений
 	stat = nmppsSqrt_64f(in, res, count);
+	//Проверка полученных данных с эталоном
 	if (stat!=nmppsStsNoErr) return stat;
 	for (i=0; i<count; i++){
 		arg = in[i];
@@ -72,7 +72,6 @@ nmppsStatus test_sqrt_diap(nmpps64f bgn, nmpps64f step, int count){
 		if (kd[i] != 0) er = 100*er/kd[i];
 		if (er > max_err) {
 			max_err = er;
-			//max_err_arg = arg;
 			if (max_err > sqrt_critical_error) {
 				return i+1;
 			}
@@ -92,11 +91,12 @@ nmppsStatus test_sqrtf_diap(nmpps32f bgn, nmpps32f step, int count){
 	nmpps32f max_err = 0;
 	//nmpps32f max_err_arg = 0;
 	int i = 0;
-	//������� ��
+	//Заполнение входных и эталонных данных
 	create_sqrtf_vecs(in, kd, count, arg, step);
-	//���������� �������
+	//Расчет проверяемых значений
 	stat = nmppsSqrt_32f(in, res, count);
 	if (stat!=nmppsStsNoErr) return stat;
+	//Проверка полученных данных с эталоном
 	for(i=0;i<count;i++){
 		arg = in[i];
 		er = fabsf(kd[i]-res[i]);
@@ -142,26 +142,26 @@ int test_sqrt_check_answer(){
 		nmppsSqrt_64f(&data[1], &out[1], i+1);
 		for(k=0; k < sizeof(data)/sizeof(nmpps64f); k++){
 			if (data[k]!=original[k]) {
-				return 3;//������� ������� ������
+				return 3;//Произошло искажение входных данных
 			}
 		}
 		if (out[0]!=0) {
-			return 4;//������������� ����� �������� ��������
+			return 4;//Затерты данные перед выходным вектором
 		}
 		if (out[i+2]!=0) {
-			return 5;//������������� �� �������� ��������� �������
+			return 5;//Затерты данные после выходного вектора
 		}
 	}
 
 
 	if (nmppsSqrt_64f(data, NULL, 1) != nmppsStsNullPtrErr ||
 		nmppsSqrt_64f(NULL, out, 1) != nmppsStsNullPtrErr	){
-		return 6; //�� ��������� �������� �� NULL
+		return 6; //не прошла проверка на NULL
 	}
 
 	if (nmppsSqrt_64f(data, out, 0) != nmppsStsSizeErr ||
 		nmppsSqrt_64f(data, out, -1) != nmppsStsSizeErr	){
-		return 7; //�� ��������� �������� �� ����� �������
+		return 7; //не прошла проверка на некорректную длину вектора
 	}
 
 
@@ -172,7 +172,7 @@ int test_sqrt_check_answer(){
 int test_sqrtf_check_answer(){
 	int i,k;
 	nmppsStatus stat;
-	nmpps32f data[33], original[33], out[33];
+	nmpps32f data[66], original[66], out[66];
 
 	stat = nmppsSqrt_32f(data_sqrtf_neg, data, sizeof(data_sqrtf_neg)/sizeof(nmpps32f));
 	if (stat!=nmppsStsSqrtNegArg) return 1;
@@ -180,36 +180,36 @@ int test_sqrtf_check_answer(){
 			100*fabsf(3-data[1])/3 > sqrtf_critical_error) return 2;
 
 	original[0] = data[0] = out[0] = 0;
-	for(i=1;i<33;i++){
+	for(i=1;i<66;i++){
 		original[i] = i*i;
 		data[i] = original[i];
 		out[i] = 0;
 	}
 
-	for(i=0;i<31;i++){
+	for(i=0;i<63;i++){
 		nmppsSqrt_32f(&data[1], &out[1], i+1);
 		for(k=0; k < sizeof(data)/sizeof(nmpps32f); k++){
 			if (data[k]!=original[k]) {
-				return 3;//������� ������� ������
+				return 3;//Произошло искажение входных данных
 			}
 		}
 		if (out[0]!=0) {
-			return 4;//������������� ����� �������� ��������
+			return 4;//Затерты данные перед выходным вектором
 		}
 		if (out[i+2]!=0) {
-			return 5;//������������� �� �������� ��������� �������
+			return 5;//Затерты данные после выходного вектора
 		}
 	}
 
 
 	if (nmppsSqrt_32f(data, NULL, 1) != nmppsStsNullPtrErr ||
 		nmppsSqrt_32f(NULL, out, 1) != nmppsStsNullPtrErr	){
-		return 6; //�� ��������� �������� �� NULL
+		return 6; //не прошла проверка на NULL
 	}
 
 	if (nmppsSqrt_32f(data, out, 0) != nmppsStsSizeErr ||
 		nmppsSqrt_32f(data, out, -1) != nmppsStsSizeErr	){
-		return 7; //�� ��������� �������� �� ����� �������
+		return 7; //не прошла проверка на некорректную длину вектора
 	}
 
 
@@ -217,7 +217,6 @@ int test_sqrtf_check_answer(){
 }
 
 int test_sqrt(){
-	//fabs(-1);
 	nmppsStatus stat;
 	stat = test_sqrt_diap(0, 0.133377789, COUNT_ITERATION);
 	if (stat!=nmppsStsNoErr) {

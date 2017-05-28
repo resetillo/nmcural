@@ -5,22 +5,22 @@
 
 __asm__(" .align 8");
 
-nmpps64f zero_dbl __attribute__((aligned (2))) = 0.0;
-nmpps64f half_dbl __attribute__((aligned (2))) = 0.5;
-nmpps64f one_dbl  __attribute__((aligned (2))) = 1.0;
-nmpps64f two_dbl  __attribute__((aligned (2))) = 2.0;
-nmpps64f half_pi_dbl __attribute__((aligned (2))) = 1.5707963267948966192313216916398;
-nmpps64f nan_dbl  __attribute__((aligned (2))) =  (((nmpps64f)0.0)/((nmpps64f)0.0));
+nmpps64f zero_dbl __attribute__((aligned(8))) = 0.0;
+nmpps64f half_dbl __attribute__((aligned(8))) = 0.5;
+nmpps64f one_dbl  __attribute__((aligned(8))) = 1.0;
+nmpps64f two_dbl  __attribute__((aligned(8))) = 2.0;
+nmpps64f half_pi_dbl __attribute__((aligned (8))) = 1.5707963267948966192313216916398;
+nmpps64f nan_dbl  __attribute__((aligned (8))) =  (((nmpps64f)0.0)/((nmpps64f)0.0));
 
-nmpps32f zero_flt[2] __attribute__ ((aligned (2))) = {_RPT(0.0)};
-nmpps32f half_flt[2] __attribute__ ((aligned (2))) = {_RPT(0.5)};
-nmpps32f one_flt[2] __attribute__ ((aligned (2))) = {_RPT(1.0)};
-nmpps32f two_flt[2] __attribute__ ((aligned (2))) = {_RPT(2.0)};
-nmpps32f half_pi_flt[2] __attribute__ ((aligned (2))) = {_RPT(1.57079633)};
-nmpps32f nan_flt[2] __attribute__ ((aligned (2))) = {_RPT(((nmpps32f)0.0)/((nmpps32f)0.0))};
+nmpps32f zero_flt[2] __attribute__((aligned (8))) = {_RPT(0.0)};
+nmpps32f half_flt[2] __attribute__((aligned (8))) = {_RPT(0.5)};
+nmpps32f one_flt[2] __attribute__((aligned (8))) = {_RPT(1.0)};
+nmpps32f two_flt[2] __attribute__((aligned (8))) = {_RPT(2.0)};
+nmpps32f half_pi_flt[2] __attribute__((aligned (8))) = {_RPT(1.57079633)};
+nmpps32f nan_flt[2] __attribute__((aligned (8))) = {_RPT(((nmpps32f)0.0)/((nmpps32f)0.0))};
 
 
-nmpps64f tanTable[52] __attribute__ ((aligned (2))) =
+nmpps64f tanTable[52] __attribute__((aligned (8))) =
 {1.0L, 0.41421356237309503L, 0.19891236737965801L, 0.098491403357164248L,
 0.049126849769467254L, 0.024548622108925444L, 0.012272462379566276L, 0.0061360001576234021L,
 0.0030679712014226651L, 0.0015339819910886664L, 0.00076699054434309257L, 0.000383495215771441L,
@@ -35,7 +35,7 @@ nmpps64f tanTable[52] __attribute__ ((aligned (2))) =
 4.4644716774510487e-014L, 2.2322358387255243e-014L, 1.1161179193627622e-014L, 5.5805895968138108e-015L,
 2.7902947984069054e-015L, 1.3951473992034527e-015L, 6.9757369960172635e-016L, 3.4878684980086318e-016L};
 
-nmpps64f angTable[52] __attribute__ ((aligned (2))) =
+nmpps64f angTable[52] __attribute__((aligned (8))) =
 {0.78539816339744828L, 0.39269908169872414L, 0.19634954084936207L, 0.098174770424681035L,
 0.049087385212340517L, 0.024543692606170259L, 0.012271846303085129L, 0.0061359231515425647L,
 0.0030679615757712823L, 0.0015339807878856412L, 0.00076699039394282058L, 0.00038349519697141029L,
@@ -51,7 +51,7 @@ nmpps64f angTable[52] __attribute__ ((aligned (2))) =
 2.7902947984069054e-015L, 1.3951473992034527e-015L, 6.9757369960172635e-016L, 3.4878684980086318e-016L	};
 
 
-nmpps32f tanTableF[46] __attribute__ ((aligned (2))) =
+nmpps32f tanTableF[46] __attribute__((aligned (8))) =
                  {_RPT(1.0),   _RPT(0.414213562),    _RPT(0.198912367),    _RPT(0.0984914034),
 		         _RPT(0.0491268498),   _RPT(0.0245486221),   _RPT(0.0122724624),   _RPT(0.00613600016),
 				 _RPT(0.00306797120),  _RPT(0.00153398199),  _RPT(0.000766990544), _RPT(0.000383495216),
@@ -60,7 +60,7 @@ nmpps32f tanTableF[46] __attribute__ ((aligned (2))) =
 				 _RPT(7.49014057e-007),_RPT(3.74507028e-007),_RPT(1.87253514e-007)};
 
 
-nmpps32f angTableF[46] __attribute__ ((aligned (2))) =
+nmpps32f angTableF[46] __attribute__((aligned (8))) =
 				{_RPT(0.785398163),    _RPT(0.392699082),    _RPT(0.196349541),    _RPT(0.0981747704),
 				 _RPT(0.0490873852),   _RPT(0.0245436926),   _RPT(0.0122718463),   _RPT(0.00613592315),
 				 _RPT(0.00306796157),  _RPT(0.00153398078),  _RPT(0.000766990394), _RPT(0.000383495197),
