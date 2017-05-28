@@ -3,6 +3,7 @@
 #include "nmpps.h"
 
 
+#undef ALIGNED
 #define ALIGNED __attribute__((aligned))
 
 
@@ -84,6 +85,16 @@ TEST(tests_sqr, nmppsSqr_8u_Sfs_scale_factor_for_big) {
     TEST_ASSERT_EQUAL_UINT_ARRAY(expected, dst, 6);
 }
 
+TEST(tests_sqr, nmppsSqr_8u_Sfs_one_element) {
+	nmpps8u src[] ALIGNED  = { 7, };
+	nmpps8u dst[2] ALIGNED = { 0xFF, 0xAA };
+
+	TEST_ASSERT_EQUAL(nmppsStsNoErr, nmppsSqr_8u_Sfs(src, dst, 1, 0));
+
+	TEST_ASSERT_EQUAL_UINT(          49, dst[0]);
+	TEST_ASSERT_EQUAL_UINT_MESSAGE(0xAA, dst[1], "Memory corrupted!");
+}
+
 //
 // nmppsSqr_16s_Sfs
 //
@@ -156,6 +167,16 @@ TEST(tests_sqr, nmppsSqr_16s_Sfs_scale_factor_for_big) {
     TEST_ASSERT_EQUAL_UINT_ARRAY(expected, dst, 3);
 }
 
+TEST(tests_sqr, nmppsSqr_16s_Sfs_one_element) {
+	nmpps16s src[] ALIGNED  = { 123, };
+	nmpps16s dst[2] ALIGNED = { 0x7FFF, 0xAAAA };
+
+	TEST_ASSERT_EQUAL(nmppsStsNoErr, nmppsSqr_16s_Sfs(src, dst, 1, 0));
+
+	TEST_ASSERT_EQUAL_UINT(         15129, dst[0]);
+	TEST_ASSERT_EQUAL_UINT_MESSAGE(0xAAAA, dst[1], "Memory corrupted!");
+}
+
 //
 // nmppsSqr_16u_Sfs
 //
@@ -226,6 +247,16 @@ TEST(tests_sqr, nmppsSqr_16u_Sfs_scale_factor_for_big) {
 
     TEST_ASSERT_EQUAL(nmppsStsNoErr, nmppsSqr_16u_Sfs(src, dst, 3, 16));
     TEST_ASSERT_EQUAL_UINT_ARRAY(expected, dst, 3);
+}
+
+TEST(tests_sqr, nmppsSqr_16u_Sfs_one_element) {
+	nmpps16u src[] ALIGNED  = { 234, };
+	nmpps16u dst[2] ALIGNED = { 0xFFFF, 0xAAAA };
+
+	TEST_ASSERT_EQUAL(nmppsStsNoErr, nmppsSqr_16u_Sfs(src, dst, 1, 0));
+
+	TEST_ASSERT_EQUAL_UINT(         54756, dst[0]);
+	TEST_ASSERT_EQUAL_UINT_MESSAGE(0xAAAA, dst[1], "Memory corrupted!");
 }
 
 //
@@ -441,6 +472,19 @@ TEST(tests_sqr, nmppsSqr_16sc_Sfs_scale_factor_saturating) {
     TEST_ASSERT_EQUAL_INT16(expected[4].im, dst[4].im);
 }
 
+TEST(tests_sqr, nmppsSqr_16sc_Sfs_one_element) {
+	nmpps16sc src[] ALIGNED  = { { +7,  +3}};
+	nmpps16sc dst[2] ALIGNED = { {0x7FFF, 0x7FFF}, {0xAAAA, 0xBBBB} };
+
+	TEST_ASSERT_EQUAL(nmppsStsNoErr, nmppsSqr_16sc_Sfs(src, dst, 1, 0));
+
+	TEST_ASSERT_EQUAL_UINT(            40, dst[0].re);
+	TEST_ASSERT_EQUAL_UINT(            42, dst[0].im);
+
+	TEST_ASSERT_EQUAL_UINT_MESSAGE(0xAAAA, dst[1].re, "Memory corrupted!");
+	TEST_ASSERT_EQUAL_UINT_MESSAGE(0xBBBB, dst[1].im, "Memory corrupted!");
+}
+
 //
 // nmppsSqr_32fc
 //
@@ -580,6 +624,7 @@ TEST_GROUP_RUNNER(tests_sqr) {
     RUN_TEST_CASE(tests_sqr, nmppsSqr_8u_Sfs_scale_factor_is_neg);
     RUN_TEST_CASE(tests_sqr, nmppsSqr_8u_Sfs_scale_factor_saturating);
     RUN_TEST_CASE(tests_sqr, nmppsSqr_8u_Sfs_scale_factor_for_big);
+    RUN_TEST_CASE(tests_sqr, nmppsSqr_8u_Sfs_one_element);
 
     RUN_TEST_CASE(tests_sqr, nmppsSqr_16s_Sfs_nmppsStsSizeErr);
     RUN_TEST_CASE(tests_sqr, nmppsSqr_16s_Sfs_nmppsStsNullPtrErr);
@@ -588,6 +633,7 @@ TEST_GROUP_RUNNER(tests_sqr) {
     RUN_TEST_CASE(tests_sqr, nmppsSqr_16s_Sfs_scale_factor_is_neg);
     RUN_TEST_CASE(tests_sqr, nmppsSqr_16s_Sfs_scale_factor_saturating);
     RUN_TEST_CASE(tests_sqr, nmppsSqr_16s_Sfs_scale_factor_for_big);
+    RUN_TEST_CASE(tests_sqr, nmppsSqr_16s_Sfs_one_element);
 
     RUN_TEST_CASE(tests_sqr, nmppsSqr_16u_Sfs_nmppsStsSizeErr);
     RUN_TEST_CASE(tests_sqr, nmppsSqr_16u_Sfs_nmppsStsNullPtrErr);
@@ -596,6 +642,7 @@ TEST_GROUP_RUNNER(tests_sqr) {
     RUN_TEST_CASE(tests_sqr, nmppsSqr_16u_Sfs_scale_factor_is_neg);
     RUN_TEST_CASE(tests_sqr, nmppsSqr_16u_Sfs_scale_factor_saturating);
     RUN_TEST_CASE(tests_sqr, nmppsSqr_16u_Sfs_scale_factor_for_big);
+    RUN_TEST_CASE(tests_sqr, nmppsSqr_16u_Sfs_one_element);
 
     RUN_TEST_CASE(tests_sqr, nmppsSqr_32f_nmppsStsSizeErr);
     RUN_TEST_CASE(tests_sqr, nmppsSqr_32f_nmppsStsNullPtrErr);
@@ -615,6 +662,7 @@ TEST_GROUP_RUNNER(tests_sqr) {
     RUN_TEST_CASE(tests_sqr, nmppsSqr_16sc_Sfs_scale_factor_is_pos);
     RUN_TEST_CASE(tests_sqr, nmppsSqr_16sc_Sfs_scale_factor_is_neg);
     RUN_TEST_CASE(tests_sqr, nmppsSqr_16sc_Sfs_scale_factor_saturating);
+    RUN_TEST_CASE(tests_sqr, nmppsSqr_16sc_Sfs_one_element);
 
     RUN_TEST_CASE(tests_sqr, nmppsSqr_32fc_nmppsStsSizeErr);
     RUN_TEST_CASE(tests_sqr, nmppsSqr_32fc_nmppsStsNullPtrErr);
