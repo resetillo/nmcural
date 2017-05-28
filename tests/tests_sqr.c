@@ -450,11 +450,11 @@ TEST(tests_sqr, nmppsSqr_16sc_Sfs_scale_factor_is_neg) {
 }
 
 TEST(tests_sqr, nmppsSqr_16sc_Sfs_scale_factor_saturating) {
-    nmpps16sc src[] ALIGNED        = {  { +7,    +3}, {    -3,     +4}, { 2000,   120}, {   120,  -2000}, {   120,   2000}};
-    nmpps16sc expected[] ALIGNED   = {{32767, 32767}, {-32768, -32768}, {32767, 32767}, {-32768, -32768}, {-32768, +32767}};
-    nmpps16sc dst[5] ALIGNED;
+    nmpps16sc src[] ALIGNED        = { { +7,    +3},   {    -3,     +4}, { 2000,   120}, {   120,  -2000}, {   120,   2000}, {0, 0}};
+    nmpps16sc expected[] ALIGNED   = { {32767, 32767}, {-32768, -32768}, {32767, 32767}, {-32768, -32768}, {-32768, +32767}, {0, 0}};
+    nmpps16sc dst[6] ALIGNED;
 
-    TEST_ASSERT_EQUAL(nmppsStsNoErr, nmppsSqr_16sc_Sfs(src, dst, 5, -16));
+    TEST_ASSERT_EQUAL(nmppsStsNoErr, nmppsSqr_16sc_Sfs(src, dst, 6, -16));
 
     TEST_ASSERT_EQUAL_INT16(expected[0].re, dst[0].re);
     TEST_ASSERT_EQUAL_INT16(expected[0].im, dst[0].im);
@@ -470,6 +470,49 @@ TEST(tests_sqr, nmppsSqr_16sc_Sfs_scale_factor_saturating) {
 
     TEST_ASSERT_EQUAL_INT16(expected[4].re, dst[4].re);
     TEST_ASSERT_EQUAL_INT16(expected[4].im, dst[4].im);
+
+    TEST_ASSERT_EQUAL_INT16(expected[5].re, dst[5].re);
+    TEST_ASSERT_EQUAL_INT16(expected[5].im, dst[5].im);
+
+    TEST_ASSERT_EQUAL(nmppsStsNoErr, nmppsSqr_16sc_Sfs(src, dst, 6, -31));
+
+    TEST_ASSERT_EQUAL_INT16(expected[0].re, dst[0].re);
+    TEST_ASSERT_EQUAL_INT16(expected[0].im, dst[0].im);
+
+    TEST_ASSERT_EQUAL_INT16(expected[1].re, dst[1].re);
+    TEST_ASSERT_EQUAL_INT16(expected[1].im, dst[1].im);
+
+    TEST_ASSERT_EQUAL_INT16(expected[2].re, dst[2].re);
+    TEST_ASSERT_EQUAL_INT16(expected[2].im, dst[2].im);
+
+    TEST_ASSERT_EQUAL_INT16(expected[3].re, dst[3].re);
+    TEST_ASSERT_EQUAL_INT16(expected[3].im, dst[3].im);
+
+    TEST_ASSERT_EQUAL_INT16(expected[4].re, dst[4].re);
+    TEST_ASSERT_EQUAL_INT16(expected[4].im, dst[4].im);
+
+    TEST_ASSERT_EQUAL_INT16(expected[5].re, dst[5].re);
+    TEST_ASSERT_EQUAL_INT16(expected[5].im, dst[5].im);
+
+    TEST_ASSERT_EQUAL(nmppsStsNoErr, nmppsSqr_16sc_Sfs(src, dst, 6, -32));
+
+    TEST_ASSERT_EQUAL_INT16(expected[0].re, dst[0].re);
+    TEST_ASSERT_EQUAL_INT16(expected[0].im, dst[0].im);
+
+    TEST_ASSERT_EQUAL_INT16(expected[1].re, dst[1].re);
+    TEST_ASSERT_EQUAL_INT16(expected[1].im, dst[1].im);
+
+    TEST_ASSERT_EQUAL_INT16(expected[2].re, dst[2].re);
+    TEST_ASSERT_EQUAL_INT16(expected[2].im, dst[2].im);
+
+    TEST_ASSERT_EQUAL_INT16(expected[3].re, dst[3].re);
+    TEST_ASSERT_EQUAL_INT16(expected[3].im, dst[3].im);
+
+    TEST_ASSERT_EQUAL_INT16(expected[4].re, dst[4].re);
+    TEST_ASSERT_EQUAL_INT16(expected[4].im, dst[4].im);
+
+    TEST_ASSERT_EQUAL_INT16(expected[5].re, dst[5].re);
+    TEST_ASSERT_EQUAL_INT16(expected[5].im, dst[5].im);
 }
 
 TEST(tests_sqr, nmppsSqr_16sc_Sfs_one_element) {
