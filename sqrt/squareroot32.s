@@ -1,4 +1,3 @@
-//.global _nmppsSqrt_32f
 .global _square_root32f
 .global _half_flt
 .global _two_flt
@@ -23,10 +22,6 @@ DpCode_const:
 	  .quad 0x8100000081000000
 
 .text
-/**
-@function nmppsSqrt_32f
-*/
-//_nmppsSqrt_32f:
 
 _square_root32f:
     //ar4  input data

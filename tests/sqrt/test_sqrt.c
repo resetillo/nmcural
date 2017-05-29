@@ -114,10 +114,10 @@ nmppsStatus test_sqrtf_diap(nmpps32f bgn, nmpps32f step, int count){
 	return nmppsStsNoErr;
 }
 
-nmpps64f data_sqrt_neg[] = {
+nmpps64f data_sqrt_neg[] __attribute__((aligned(8))) = {
 		4,  9, -4, -9
 };
-nmpps32f data_sqrtf_neg[] = {
+nmpps32f data_sqrtf_neg[] __attribute__((aligned(8))) = {
 		4,  9, -4, -9
 };
 

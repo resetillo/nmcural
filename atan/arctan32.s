@@ -10,8 +10,6 @@
 
 .global __macro_change_infinityF32
 
-
-
 .text
 
 _arctan32f:
