@@ -206,7 +206,7 @@ typedef UNITY_FLOAT_TYPE UNITY_FLOAT;
  *-------------------------------------------------------*/
 
 /* unlike float, we DON'T include by default */
-#if defined(UNITY_EXCLUDE_DOUBLE) || !defined(UNITY_INCLUDE_DOUBLE)
+#if defined(UNITY_EXCLUDE_DOUBLE) //|| !defined(UNITY_INCLUDE_DOUBLE)
 
   /* No Floating Point Support */
   #ifndef UNITY_EXCLUDE_DOUBLE

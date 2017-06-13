@@ -3,15 +3,21 @@
 .global _two_dbl
 .global _nan_dbl
 
+
+.global SB_default
+.global NB_default
+.global WB_default
+.global DpCode_const
+.global SIGN_BIT
+
 .data
 
   .align 8
-//nb63: .long 0xC000000000000000L // nb 1-63
-SB:
+SB_default:
 	  .quad 0x00000001 // 1 stroka
-NB:
+NB_default:
       .quad 0x8000000000000000 // 1 stolbets
-WB:
+WB_default:
       .quad 0x00000001
 BIAS:
 	  .quad 0x3ff0000000000000
@@ -56,11 +62,11 @@ _nmppsSqrt_64f:
 
 	//Выделение старших 63 бит
     //sir = [nb63]
-    sir = [NB];
+    sir = [NB_default];
     nb1 = sir;	
-    sir = [SB];
+    sir = [SB_default];
     sb = sir;	
-	ar2 = WB;
+	ar2 = WB_default;
     rep 1 wfifo = [ar2], ftw, wtw; // Загрузка матрицы  весов
 
 main_loop:

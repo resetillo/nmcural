@@ -1,6 +1,8 @@
 #include "unity/unity_fixture.h"
+#include "math.h"
 
 void runAllTests(void) {
+    RUN_TEST_GROUP(tests_div);
     RUN_TEST_GROUP(tests_old_tests);
     RUN_TEST_GROUP(tests_sqr);
     RUN_TEST_GROUP(tests_min);
@@ -15,6 +17,7 @@ void runAllTests(void) {
     RUN_TEST_GROUP(tests_zero);
     RUN_TEST_GROUP(tests_abs);
 }
+
 
 int main(void) {
 	static const char *argv[] = {

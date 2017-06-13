@@ -68,7 +68,7 @@ nmppsStatus test_atan_diap(nmpps64f bgn, nmpps64f step, int count){
 	//Проверка полученных данных с эталоном
 	for(i=0;i<count;i++){
 			arg = in[i];
-			er = fabs(kd[i]-res[i]);
+			er = fabs(fabs(kd[i])-fabs(res[i]));
 			if (er > max_err) {
 				max_err = er;
 				if (max_err > atan_critical_error) {
@@ -96,7 +96,7 @@ nmppsStatus test_atanf_diap(nmpps32f bgn, nmpps32f step, int count){
 	//Проверка полученных данных с эталоном
 	for(i=0;i<count;i++){
 		arg = in[i];
-		er = fabsf(kd[i]-res[i]);
+		er = fabsf(fabsf(kd[i])-fabsf(res[i]));
 		if (er > max_err) {
 			max_err = er;
 			if (max_err > atanf_critical_error) {

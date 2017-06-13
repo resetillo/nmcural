@@ -9,5 +9,7 @@ int test_atanf();
 int test_copysign();
 int test_vec_handler32();
 
+int test_div();
+
 #endif /* __NMPPS_PROTO_TESTS_H__ */
 
