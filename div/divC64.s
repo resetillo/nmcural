@@ -1,4 +1,4 @@
-.global _nmppsDiv_64f
+.global _nmppsDivC_64f
 
 .global _zero_dbl
 .global _two_dbl
@@ -17,7 +17,7 @@
 /**
 @function nmppsDiv_64f
 */
-_nmppsDiv_64f:
+_nmppsDivC_64f:
 
     ar5 = ar7 - 2;
 
@@ -31,12 +31,20 @@ _nmppsDiv_64f:
     push ar6, gr6;
 
     ar1 = [--ar5]; // Divided vector
-    ar2 = [--ar5]; // Divisor vector
+    ar5 = ar5 - 1;
+    gr2 = [--ar5]; // Divisor
+    gr3 = [--ar5];
     ar0 = [--ar5]; // Output vector
 	gr1 = [--ar5]; // Lenght
 
 	ar3 = ar7 + 2; //Технологический массив на 64 слова
-	ar7 = ar7 + 66;
+	ar2 = ar7 + 66; //DivisorAdr
+	ar4 = ar7 + 68; //ObrDivisorAdr
+	ar7 = ar7 + 70;
+
+	[ar2] = gr3;
+	[ar2+1] = gr2;
+
 
 	gr1;
     if <= delayed goto exit;
@@ -48,9 +56,6 @@ _nmppsDiv_64f:
     gr7 = -8;
 
     gr0 = ar1;
-    gr0;
-    if =0 delayed goto exit;
-    gr0 = ar2;
     gr0;
     if =0 goto exit;
 
@@ -66,70 +71,21 @@ _nmppsDiv_64f:
 
 	gr0 = 0;// Здесь будут аккумулироваться признаки делений на 0
 
-	gr3 = 32;
-	gr3 - gr1;
-	if > goto main_loop;
-	/*
-		vreg0 tmp / divided
-		vreg1 divisor
-		vreg2 2.0
-		vreg3 bigest
-		vreg4 zero
-		vreg5 nan
-		vreg6 infinity
-		vreg7 result
-	*/
-	//Загружаем данные, используемые каждую итерацию
+
+calc_obr:
 	ar5 = _two_dbl;
-	fpu 0 rep 32 vreg2 = [ar5]; //2.0
-	ar5 = _bigest_dbl;
-	fpu 0 rep 32 vreg3 = [ar5]; //bigest double
-	ar5 = _zero_dbl;
-	fpu 0 rep 32 vreg4 = [ar5]; //zero double
-	ar5 = _nan_dbl;
-	fpu 0 rep 32 vreg5 = [ar5]; //nan double
-	ar5 = _inf_dbl;
-	fpu 0 rep 32 vreg6 = [ar5]; //infinity double
-	gr3 = 31;
-	vlen = gr3;
-
-
-main_loop:
-	gr3 = 32; //Остаток
-	gr3 - gr1;
-    if <= goto after_correct;
-    //Остаток меньше 32, ограничиваем обрабатываемый размер
-    //Размер вектора меньше 32
-	gr3 = gr1 - 1;
-	vlen = gr3;
-	//Обновляем данные в соответствии с размером вектора
-	ar5 = _two_dbl;
-	fpu 0 rep vlen vreg2 = [ar5]; //2.0
-	ar5 = _bigest_dbl;
-	fpu 0 rep vlen vreg3 = [ar5]; //bigest double
-	ar5 = _zero_dbl;
-	fpu 0 rep vlen vreg4 = [ar5]; //zero double
-	ar5 = _nan_dbl;
-	fpu 0 rep vlen vreg5 = [ar5]; //nan double
-	ar5 = _inf_dbl;
-	fpu 0 rep vlen vreg6 = [ar5]; //infinity double
-
-after_correct:
+	fpu 0 rep 1 vreg2 = [ar5]; //2.0
 
 	//Рассчет приближенного значения ~1/divisor
-	ar5 = ar2;
-	rep 32 data = [ar5++] with not data;
+	rep 1 data = [ar2] with not data;
     ar5 = DpCode_const;
-    rep 32 data = [ar5] with afifo - data; // ~1/divisor ~ допкоду экспоненты divisor
+    rep 1 data = [ar5] with afifo - data; // ~1/divisor ~ допкоду экспоненты divisor
     //Сохранение результата ~1/divisor
-	ar5 = ar3;
-	rep 32 [ar5++] = afifo;
+	rep 1 [ar4] = afifo;
 
 
-	ar5 = ar2;
-	fpu 0 rep vlen vreg1 = [ar5++]; //divisor
-	ar5 = ar3;
-	fpu 0 rep vlen vreg7 = [ar5++]; //~1/divisor
+	fpu 0 rep 1 vreg1 = [ar2]; //divisor
+	fpu 0 rep 1 vreg7 = [ar4]; //~1/divisor
 
 	//Уточняем значение
 	//~1/divisor = (2.0 - (~1/divisor)*divisor)*(~1/divisor);
@@ -151,10 +107,65 @@ after_correct:
 	fpu 0 .double vreg0 = -vreg7*vreg1 + vreg2;
 	fpu 0 .double vreg7 = vreg0*vreg7;
 
+	fpu 0 rep 1 [ar4] = vreg7; //~1/divisor
+
+
+	gr3 = 32;
+	gr3 - gr1;
+	if > goto main_loop;
+	/*
+		vreg0 tmp / divided
+		vreg1 divisor
+		vreg2 2.0 / (~1/divisor)
+		vreg3 bigest
+		vreg4 zero
+		vreg5 nan
+		vreg6 infinity
+		vreg7 result
+	*/
+	//Загружаем данные, используемые каждую итерацию
+	ar5 = _bigest_dbl;
+	fpu 0 rep 32 vreg3 = [ar5]; //bigest double
+	ar5 = _zero_dbl;
+	fpu 0 rep 32 vreg4 = [ar5]; //zero double
+	ar5 = _nan_dbl;
+	fpu 0 rep 32 vreg5 = [ar5]; //nan double
+	ar5 = _inf_dbl;
+	fpu 0 rep 32 vreg6 = [ar5]; //infinity double
+
+	fpu 0 rep 32 vreg1 = [ar2]; // divisor
+	fpu 0 rep 32 vreg2 = [ar4]; //~(1/divisor)
+	gr3 = 31;
+	vlen = gr3;
+
+
+main_loop:
+	gr3 = 32; //Остаток
+	gr3 - gr1;
+    if <= goto after_correct;
+    //Остаток меньше 32, ограничиваем обрабатываемый размер
+    //Размер вектора меньше 32
+	gr3 = gr1 - 1;
+	vlen = gr3;
+	//Обновляем данные в соответствии с размером вектора
+	ar5 = _bigest_dbl;
+	fpu 0 rep vlen vreg3 = [ar5]; //bigest double
+	ar5 = _zero_dbl;
+	fpu 0 rep vlen vreg4 = [ar5]; //zero double
+	ar5 = _nan_dbl;
+	fpu 0 rep vlen vreg5 = [ar5]; //nan double
+	ar5 = _inf_dbl;
+	fpu 0 rep vlen vreg6 = [ar5]; //infinity double
+
+	fpu 0 rep vlen vreg1 = [ar2]; // divisor
+	fpu 0 rep vlen vreg2 = [ar4]; //~(1/divisor)
+
+after_correct:
+
 	//Output = divided*(~1/divisor)
 	ar5 = ar1;
 	fpu 0 rep vlen vreg0 = [ar5++]; //divided
-	fpu 0 .double vreg7 = vreg0*vreg7;
+	fpu 0 .double vreg7 = vreg0*vreg2;
 
 	######################################
 	##   Проверки аргументов
@@ -232,8 +243,7 @@ after_correct:
 	//divided*divisor для определения знака результата
 	ar5 = ar1;
 	rep 32 data = [ar5++] with data;
-	ar5 = ar2;
-	rep 32 data = [ar5++] with data xor afifo; //ксорим биты
+	rep 32 data = [ar2] with data xor afifo; //ксорим биты
 
 	ar5 = SIGN_BIT;
 	rep 32 data = [ar5] with not data and afifo; //Выделяем старший бит
@@ -254,8 +264,6 @@ after_correct:
 	gr5 = gr5 << 1;
 	ar5 = ar1;
 	ar1 = ar5 + gr5;
-	ar5 = ar2;
-	ar2 = ar5 + gr5;
 
 
 
@@ -273,7 +281,7 @@ save_result:
 
 
 exit:
-	ar7 = ar7 - 66;
+	ar7 = ar7 - 70;
     pop ar6, gr6;
     pop ar5, gr5;
     pop ar4, gr4;

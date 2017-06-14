@@ -2,6 +2,7 @@
 #include "math.h"
 
 void runAllTests(void) {
+    RUN_TEST_GROUP(tests_divC);
     RUN_TEST_GROUP(tests_div);
     RUN_TEST_GROUP(tests_old_tests);
     RUN_TEST_GROUP(tests_sqr);
