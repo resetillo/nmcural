@@ -26,9 +26,6 @@ TEST(tests_old_tests, test_atanf) {
 	TEST_ASSERT_EQUAL(0, test_atanf());
 }
 
-TEST(tests_old_tests, test_copysign) {
-	TEST_ASSERT_EQUAL(0, test_copysign());
-}
 
 TEST(tests_old_tests, test_vec_handler32) {
 	TEST_ASSERT_EQUAL(0, test_vec_handler32());
@@ -41,5 +38,4 @@ TEST_GROUP_RUNNER(tests_old_tests) {
     RUN_TEST_CASE(tests_old_tests, test_sqrtf);
     RUN_TEST_CASE(tests_old_tests, test_atan);
     RUN_TEST_CASE(tests_old_tests, test_atanf);
-    //RUN_TEST_CASE(tests_old_tests, test_copysign);
 }

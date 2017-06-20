@@ -1,4 +1,5 @@
 .global _nmppsDivC_64f
+.global nmppsDivC_64f_body
 
 .global _zero_dbl
 .global _two_dbl
@@ -26,25 +27,13 @@ _nmppsDivC_64f:
     push ar1, gr1;
     push ar2, gr2;
     push ar3, gr3;
-    push ar4, gr4;
-    push ar5, gr5;
-    push ar6, gr6;
 
     ar1 = [--ar5]; // Divided vector
     ar5 = ar5 - 1;
-    gr2 = [--ar5]; // Divisor
-    gr3 = [--ar5];
+    gr3 = [--ar5]; // Divisor
+    gr2 = [--ar5];
     ar0 = [--ar5]; // Output vector
 	gr1 = [--ar5]; // Lenght
-
-	ar3 = ar7 + 2; //Технологический массив на 64 слова
-	ar2 = ar7 + 66; //DivisorAdr
-	ar4 = ar7 + 68; //ObrDivisorAdr
-	ar7 = ar7 + 70;
-
-	[ar2] = gr3;
-	[ar2+1] = gr2;
-
 
 	gr1;
     if <= delayed goto exit;
@@ -60,6 +49,40 @@ _nmppsDivC_64f:
     if =0 goto exit;
 
 	gr7 = 0; //Значение по умолчанию
+
+	call nmppsDivC_64f_body;
+
+exit:
+    pop ar3, gr3;
+    pop ar2, gr2;
+    pop ar1, gr1;
+    pop ar0, gr0;
+    return;
+
+
+/*
+	Метка для использования из других функций
+	ar1 Divided vector
+    gr2,gr3 Divisor (low, hi)
+    ar0 Output vector
+	gr1 Lenght
+
+*/
+nmppsDivC_64f_body:
+	push ar0, gr0;
+	push ar2, gr2;
+	push ar3, gr3;
+	push ar4, gr4;
+    push ar5, gr5;
+    push ar6, gr6;
+
+	ar3 = ar7 + 2; //Технологический массив на 64 слова
+	ar2 = ar7 + 66; //DivisorAdr
+	ar4 = ar7 + 68; //ObrDivisorAdr
+	ar7 = ar7 + 70;
+
+	[ar2] = gr2;
+	[ar2+1] = gr3;
 
 	//Настройка векторника
     sir = [NB_default];
@@ -275,26 +298,21 @@ save_result:
     if > goto main_loop;
 
     gr0;
-    if =0 goto exit;
+    if =0 goto exit_macro;
 
     gr7 = -10; //Было деление на 0
 
-
-exit:
+exit_macro:
 	ar7 = ar7 - 70;
+
+
     pop ar6, gr6;
     pop ar5, gr5;
     pop ar4, gr4;
     pop ar3, gr3;
     pop ar2, gr2;
-    pop ar1, gr1;
     pop ar0, gr0;
-    return;
-
-
-
-
-
+	return;
 
 
 

@@ -194,19 +194,11 @@ TEST(tests_div, nmppsDiv_64f_check_answer) {
 }
 
 
-typedef union {
-	double dbl;
-	long long i64;
-	unsigned long long ui64;
-	int i32[2];
-	unsigned int ui32[2];
-} dblint_t;
-
 TEST(tests_div, nmppsDiv_64f_check_rewrite) {
 	int i,k;
 	//nmppsStatus stat;
 	nmpps64f data[33], original[33], out[33];
-	dblint_t t;
+	dblint_t t, t1;
 
 	t.ui64 = 0xDEADBEEFDEADBEEF;
 	original[0] = data[0] = out[0] = t.dbl;
@@ -220,12 +212,16 @@ TEST(tests_div, nmppsDiv_64f_check_rewrite) {
 		nmppsDiv_64f(&data[1], &data[1], &out[1], i+1);
 		for(k=0; k < sizeof(data)/sizeof(nmpps64f); k++){
 			//Перезапись входных векторов
-			TEST_ASSERT_EQUAL(data[k], original[k]);
+			TEST_ASSERT_EQUAL_DOUBLE(data[k], original[k]);
 		}
 		//Запись перед началом
-		TEST_ASSERT_EQUAL(0, out[0]);
+		TEST_ASSERT_EQUAL_DOUBLE(t.dbl, out[0]);
 		//Запись после окончания векторов
-		TEST_ASSERT_EQUAL(0, out[i+2]);
+		//TEST_ASSERT_EQUAL_DOUBLE(t.dbl, out[i+2]);
+		t1.dbl = out[i+2];
+		if (t.ui64 != t1.ui64) {
+			TEST_ASSERT_EQUAL(-1, i);
+		}
 	}
 }
 
@@ -341,7 +337,7 @@ TEST(tests_divC, nmppsDivC_64f_check_rewrite) {
 	int i,k;
 	//nmppsStatus stat;
 	nmpps64f data[33], original[33], out[33];
-	dblint_t t;
+	dblint_t t, t1;
 
 	t.ui64 = 0xDEADBEEFDEADBEEF;
 	original[0] = data[0] = out[0] = t.dbl;
@@ -355,12 +351,16 @@ TEST(tests_divC, nmppsDivC_64f_check_rewrite) {
 		nmppsDivC_64f(&data[1], data[i], &out[1], i+1);
 		for(k=0; k < sizeof(data)/sizeof(nmpps64f); k++){
 			//Перезапись входных векторов
-			TEST_ASSERT_EQUAL(data[k], original[k]);
+			TEST_ASSERT_EQUAL_DOUBLE(data[k], original[k]);
 		}
 		//Запись перед началом
-		TEST_ASSERT_EQUAL(0, out[0]);
+		TEST_ASSERT_EQUAL_DOUBLE(t.dbl, out[0]);
 		//Запись после окончания векторов
-		TEST_ASSERT_EQUAL(0, out[i+2]);
+		//TEST_ASSERT_EQUAL_DOUBLE(t.dbl, out[i+2]);
+		t1.dbl = out[i+2];
+		if (t.ui64 != t1.ui64) {
+			TEST_ASSERT_EQUAL(-1, i);
+		}
 	}
 }
 
