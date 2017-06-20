@@ -4,13 +4,13 @@
 #include "tests/test_math.h"
 #include "math.h"
 
-TEST_GROUP(tests_div);
-TEST_SETUP(tests_div) {}
-TEST_TEAR_DOWN(tests_div) {}
+TEST_GROUP(tests_div64);
+TEST_SETUP(tests_div64) {}
+TEST_TEAR_DOWN(tests_div64) {}
 
-TEST_GROUP(tests_divC);
-TEST_SETUP(tests_divC) {}
-TEST_TEAR_DOWN(tests_divC) {}
+TEST_GROUP(tests_divC64);
+TEST_SETUP(tests_divC64) {}
+TEST_TEAR_DOWN(tests_divC64) {}
 
 
 #define COUNT_ITERATION (100)
@@ -135,7 +135,7 @@ nmppsStatus test_divC_diap(nmpps64f bgnDivided, nmpps64f stepDivided,
 
 
 //Обычные значения
-TEST(tests_div, nmppsDiv_64f_Normal) {
+TEST(tests_div64, nmppsDiv_64f_Normal) {
 	nmppsStatus stat = nmppsStsNoErr;
 	stat = test_div_diap(0, 0.133377789,
 			              1000, 777.456,  COUNT_ITERATION);
@@ -155,7 +155,7 @@ TEST(tests_div, nmppsDiv_64f_Normal) {
 }
 
 //Большие значения
-TEST(tests_div, nmppsDiv_64f_Big) {
+TEST(tests_div64, nmppsDiv_64f_Big) {
 	nmppsStatus stat = nmppsStsNoErr;
 	stat = test_div_diap(1.7789e+300, 13.337e+300,
             1e+157, 777.456e+157,  COUNT_ITERATION);
@@ -164,7 +164,7 @@ TEST(tests_div, nmppsDiv_64f_Big) {
 
 
 //Значения, близкие к 0
-TEST(tests_div, nmppsDiv_64f_Small) {
+TEST(tests_div64, nmppsDiv_64f_Small) {
 	nmppsStatus stat = nmppsStsNoErr;
 	stat = test_div_diap(3.3333e-300, 1.3337e-300,
             1e-157, 777.456e+157,  COUNT_ITERATION);
@@ -173,7 +173,7 @@ TEST(tests_div, nmppsDiv_64f_Small) {
 
 
 //Проверка возвращаемых результатов
-TEST(tests_div, nmppsDiv_64f_check_answer) {
+TEST(tests_div64, nmppsDiv_64f_check_answer) {
 	nmpps64f data_div_zero[] = {
 			4,  -1.37, 6.777, 0
 	};
@@ -194,7 +194,7 @@ TEST(tests_div, nmppsDiv_64f_check_answer) {
 }
 
 
-TEST(tests_div, nmppsDiv_64f_check_rewrite) {
+TEST(tests_div64, nmppsDiv_64f_check_rewrite) {
 	int i,k;
 	//nmppsStatus stat;
 	nmpps64f data[33], original[33], out[33];
@@ -225,7 +225,7 @@ TEST(tests_div, nmppsDiv_64f_check_rewrite) {
 	}
 }
 
-TEST(tests_div, nmppsDiv_64f_subnormal) {
+TEST(tests_div64, nmppsDiv_64f_subnormal) {
 	double divided[29] = {
 	   -NAN,       NAN,       NAN,       1,        NAN, //NaN среди операндов
 	   0.0L,       -0.0L,     -0.0L,     0.0L,          // 0 делим на 0
@@ -264,19 +264,19 @@ TEST(tests_div, nmppsDiv_64f_subnormal) {
 
 }
 
-TEST_GROUP_RUNNER(tests_div){
-    RUN_TEST_CASE(tests_div, nmppsDiv_64f_Normal);
-    RUN_TEST_CASE(tests_div, nmppsDiv_64f_Big);
-    RUN_TEST_CASE(tests_div, nmppsDiv_64f_Small);
-    RUN_TEST_CASE(tests_div, nmppsDiv_64f_check_answer);
-    RUN_TEST_CASE(tests_div, nmppsDiv_64f_check_rewrite);
-    RUN_TEST_CASE(tests_div, nmppsDiv_64f_subnormal);
+TEST_GROUP_RUNNER(tests_div64){
+    RUN_TEST_CASE(tests_div64, nmppsDiv_64f_Normal);
+    RUN_TEST_CASE(tests_div64, nmppsDiv_64f_Big);
+    RUN_TEST_CASE(tests_div64, nmppsDiv_64f_Small);
+    RUN_TEST_CASE(tests_div64, nmppsDiv_64f_check_answer);
+    RUN_TEST_CASE(tests_div64, nmppsDiv_64f_check_rewrite);
+    RUN_TEST_CASE(tests_div64, nmppsDiv_64f_subnormal);
 
 }
 
 
 //Обычные значения
-TEST(tests_divC, nmppsDivC_64f_Normal) {
+TEST(tests_divC64, nmppsDivC_64f_Normal) {
 	nmppsStatus stat = nmppsStsNoErr;
 	stat = test_divC_diap(0, 0.133377789,
 			              1000, 777.456,  COUNT_ITERATION/10);
@@ -296,7 +296,7 @@ TEST(tests_divC, nmppsDivC_64f_Normal) {
 }
 
 //Большие значения
-TEST(tests_divC, nmppsDivC_64f_Big) {
+TEST(tests_divC64, nmppsDivC_64f_Big) {
 	nmppsStatus stat = nmppsStsNoErr;
 	stat = test_divC_diap(1.7789e+300, 13.337e+300,
             1e+157, 777.456e+157,  COUNT_ITERATION/10);
@@ -305,7 +305,7 @@ TEST(tests_divC, nmppsDivC_64f_Big) {
 
 
 //Значения, близкие к 0
-TEST(tests_divC, nmppsDivC_64f_Small) {
+TEST(tests_divC64, nmppsDivC_64f_Small) {
 	nmppsStatus stat = nmppsStsNoErr;
 	stat = test_divC_diap(3.3333e-300, 1.3337e-300,
             1e-157, 777.456e+157,  COUNT_ITERATION/10);
@@ -314,7 +314,7 @@ TEST(tests_divC, nmppsDivC_64f_Small) {
 
 
 //Проверка возвращаемых результатов
-TEST(tests_divC, nmppsDivC_64f_check_answer) {
+TEST(tests_divC64, nmppsDivC_64f_check_answer) {
 	nmpps64f data_divC_zero[] = {
 			4,  -1.37, 6.777, 0
 	};
@@ -333,7 +333,7 @@ TEST(tests_divC, nmppsDivC_64f_check_answer) {
     TEST_ASSERT_EQUAL(nmppsStsSizeErr, nmppsDivC_64f(data, 1, data, -1));
 }
 
-TEST(tests_divC, nmppsDivC_64f_check_rewrite) {
+TEST(tests_divC64, nmppsDivC_64f_check_rewrite) {
 	int i,k;
 	//nmppsStatus stat;
 	nmpps64f data[33], original[33], out[33];
@@ -365,7 +365,7 @@ TEST(tests_divC, nmppsDivC_64f_check_rewrite) {
 }
 
 
-TEST(tests_divC, nmppsDivC_64f_subnormal) {
+TEST(tests_divC64, nmppsDivC_64f_subnormal) {
 	double divided[29] = {
 	   -NAN,       NAN,       NAN,       1,        NAN, //NaN среди операндов
 	   0.0L,       -0.0L,     -0.0L,     0.0L,          // 0 делим на 0
@@ -408,13 +408,13 @@ TEST(tests_divC, nmppsDivC_64f_subnormal) {
 
 
 
-TEST_GROUP_RUNNER(tests_divC){
-    RUN_TEST_CASE(tests_divC, nmppsDivC_64f_Normal);
-    RUN_TEST_CASE(tests_divC, nmppsDivC_64f_Big);
-    RUN_TEST_CASE(tests_divC, nmppsDivC_64f_Small);
-    RUN_TEST_CASE(tests_divC, nmppsDivC_64f_check_answer);
-    RUN_TEST_CASE(tests_divC, nmppsDivC_64f_check_rewrite);
-    RUN_TEST_CASE(tests_divC, nmppsDivC_64f_subnormal);
+TEST_GROUP_RUNNER(tests_divC64){
+    RUN_TEST_CASE(tests_divC64, nmppsDivC_64f_Normal);
+    RUN_TEST_CASE(tests_divC64, nmppsDivC_64f_Big);
+    RUN_TEST_CASE(tests_divC64, nmppsDivC_64f_Small);
+    RUN_TEST_CASE(tests_divC64, nmppsDivC_64f_check_answer);
+    RUN_TEST_CASE(tests_divC64, nmppsDivC_64f_check_rewrite);
+    RUN_TEST_CASE(tests_divC64, nmppsDivC_64f_subnormal);
 
 }
 

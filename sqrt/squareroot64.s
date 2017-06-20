@@ -7,8 +7,8 @@
 .global SB_default
 .global NB_default
 .global WB_default
-.global DpCode_const
-.global SIGN_BIT
+.global DpCode_const_dbl
+.global SIGN_BIT_dbl
 
 .data
 
@@ -21,9 +21,9 @@ WB_default:
       .quad 0x00000001
 BIAS:
 	  .quad 0x3ff0000000000000
-SIGN_BIT:
+SIGN_BIT_dbl:
       .quad 0x7fffffffffffffff
-DpCode_const:
+DpCode_const_dbl:
 	  .quad 0x8020000000000000
 
 .text
@@ -88,7 +88,7 @@ after_correct:
     rep 32 data = [ar2++] with data - ram; //Вычитаем BIAS
     rep 32 with vsum, shift afifo, 0; //Сдвигаем вправо на 1
     rep 32 with afifo + ram; //Прибавляем BIAS
-    ar2 = SIGN_BIT;
+    ar2 = SIGN_BIT_dbl;
     rep 32 data = [ar2] with afifo and data;//Приводим к целому
 
     //Сохранение результата X = ~sqrt(x)
@@ -99,7 +99,7 @@ after_correct:
     //Вычисление приближенного значения Y = 1/~sqrt(x)
     ar2 = ar5;
 	rep 32 data = [ar2++] with not data;
-    ar2 = DpCode_const;
+    ar2 = DpCode_const_dbl;
     rep 32 data = [ar2] with afifo - data; // 1/x ~ допкоду экспоненты x
     //Сохранение результата Y = 1/~sqrt(x)
 	ar2 = ar6;

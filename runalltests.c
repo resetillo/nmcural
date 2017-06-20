@@ -1,9 +1,11 @@
 #include "unity/unity_fixture.h"
-#include "math.h"
+#include "include/nmpps.h"
 
 void runAllTests(void) {
-    RUN_TEST_GROUP(tests_divC);
-    RUN_TEST_GROUP(tests_div);
+    RUN_TEST_GROUP(tests_div32);
+    RUN_TEST_GROUP(tests_div64);
+    RUN_TEST_GROUP(tests_divC64);
+    RUN_TEST_GROUP(tests_normalize);
     RUN_TEST_GROUP(tests_old_tests);
     RUN_TEST_GROUP(tests_sqr);
     RUN_TEST_GROUP(tests_min);
@@ -18,7 +20,6 @@ void runAllTests(void) {
     RUN_TEST_GROUP(tests_zero);
     RUN_TEST_GROUP(tests_abs);
 }
-
 
 int main(void) {
 	static const char *argv[] = {

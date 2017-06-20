@@ -20,5 +20,11 @@ typedef union {
 	unsigned int ui32[2];
 } dblint_t;
 
+typedef union {
+	float flt;
+	int i32;
+	unsigned int ui32;
+} fltint_t;
+
 #endif /* __NMPPS_PROTO_TESTS_H__ */
 

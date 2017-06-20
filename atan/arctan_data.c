@@ -14,6 +14,7 @@ nmpps64f nan_dbl  =  (((nmpps64f)0.0)/((nmpps64f)0.0));
 nmpps64f inf_dbl  =  (((nmpps64f)1.0)/((nmpps64f)0.0));
 
 unsigned long bigest_dbl = 0x7FEFFFFFFFFFFFFF;
+unsigned long bigest_flt = 0x7F7FFFFF7F7FFFFF;
 
 
 nmpps32f zero_flt[2] = {_RPT(0.0)};

@@ -253,7 +253,7 @@ int test_sqrtf(){
 		return 2;
 	}
 
-	stat = test_sqrtf_diap(3.3333e-38, 1.3337e-300, 1000);
+	stat = test_sqrtf_diap(3.3333e-38, 1.3337e-38, 1000);
 	if (stat!=nmppsStsNoErr) {
 		return 3;
 	}

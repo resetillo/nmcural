@@ -6,8 +6,8 @@
 .global _bigest_dbl
 .global _nan_dbl
 .global _inf_dbl
-.global SIGN_BIT
-.global DpCode_const
+.global SIGN_BIT_dbl
+.global DpCode_const_dbl
 
 .global NB_default
 .global SB_default
@@ -101,7 +101,7 @@ calc_obr:
 
 	//Рассчет приближенного значения ~1/divisor
 	rep 1 data = [ar2] with not data;
-    ar5 = DpCode_const;
+    ar5 = DpCode_const_dbl;
     rep 1 data = [ar5] with afifo - data; // ~1/divisor ~ допкоду экспоненты divisor
     //Сохранение результата ~1/divisor
 	rep 1 [ar4] = afifo;
@@ -268,7 +268,7 @@ after_correct:
 	rep 32 data = [ar5++] with data;
 	rep 32 data = [ar2] with data xor afifo; //ксорим биты
 
-	ar5 = SIGN_BIT;
+	ar5 = SIGN_BIT_dbl;
 	rep 32 data = [ar5] with not data and afifo; //Выделяем старший бит
 
 	ar5 = ar3;
