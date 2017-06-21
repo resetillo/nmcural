@@ -1,5 +1,5 @@
 .globl _nmppsFlip_32f
-
+.globl _nmppsFlip_64f
 
 
 .text
@@ -246,11 +246,86 @@ exit_error_32f:
   return;
 
 
+_nmppsFlip_64f:
+  ar5 = ar7 - 2;
+  push ar0, gr0;
+  push ar1, gr1;
+  push ar2, gr2;
 
 
+  gr0 = [--ar5]; // pSrc
+
+  //Проверка на NULL
+  gr0;
+  if =0 goto err_ptr_64f;
+
+  gr1 = [--ar5]; // pDst
+
+  //Проверка на NULL
+  gr1;
+  if =0 goto err_ptr_64f;
+
+  gr2 = [--ar5]; // len
+
+  // Длина должна быть больше нуля
+  gr2;
+  if <= goto err_size_64f;
+
+  gr7 = 0;
+
+  // Перейдем в конец src
+  ar1 = gr1;
+  gr1 = gr2 << 1;
+  gr0 = gr0 + gr1;
+  ar0 = gr0;
 
 
+  // Сколько раз можем полностью загрузить векторный регистр
+  gr1 = gr2 >> 5;
 
+  gr1;
+  if =0 delayed goto less32_64f;
+  gr0 = gr2 - 1 ;
+  vlen = gr0;
+
+// Переворачиваем по 32 слова
+over32_64f:
+  fpu 0 rep 32 vreg0 = [--ar0];
+  fpu 0 rep 32 [ar1++] = vreg0;
+
+  gr1 = gr1 - 1;
+  if > goto over32_64f;
+
+  // Проверим все ли скопировали
+  gr0 = 31;
+  gr1 = gr2 and gr0;
+
+  if =0 delayed goto exit_64f;
+  gr1 = gr1 - 1;
+  vlen = gr1;
+
+// Копирование меньше 32 слов
+less32_64f:
+
+  fpu 0 rep vlen vreg0 = [--ar0];
+  fpu 0 rep vlen [ar1++] = vreg0;
+
+  goto exit_64f;
+// Нулевой указатель на вектор
+err_ptr_64f:
+  gr7 = -8;
+  goto exit_64f;
+
+// Некорректное значение длины вектора
+err_size_64f:
+  gr7 = -6;
+
+exit_64f:
+  pop ar2, gr2;
+  pop ar1, gr1;
+  pop ar0, gr0;
+
+  return;
 
 
 

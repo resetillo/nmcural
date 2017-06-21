@@ -3,9 +3,6 @@
 .globl _nmppsCopy_64sc
 .globl _nmppsCopy_1u
 
-.data
-INVERSION:
-  .quad 0xFFFFFFFF
 
 .text
 

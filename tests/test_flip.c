@@ -11,6 +11,7 @@ TEST_TEAR_DOWN(tests_flip){}
 
 //nmppsFlip_32f
 
+// Нулевые указатели
 TEST(tests_flip, test_nmppsFlip_32f_null_ptr){
 
 	nmpps32f vec;
@@ -19,6 +20,7 @@ TEST(tests_flip, test_nmppsFlip_32f_null_ptr){
     TEST_ASSERT_EQUAL(nmppsStsNullPtrErr, nmppsFlip_32f(&vec, NULL, 1));
 }
 
+// Некорректное знаечение длины вектора
 TEST(tests_flip, test_nmppsFlip_32f_len){
     nmpps32f vector[10];
 
@@ -37,7 +39,7 @@ TEST(tests_flip, test_nmppsFlip_32f_less_64_non_parity){
 	TEST_ASSERT_EQUAL(nmppsStsNoErr, nmppsFlip_32f(src, dst, 63));
 
 	for(i = 0; i < 63; i++){
-		TEST_ASSERT_EQUAL(src[i], dst[62 - i]);
+		TEST_ASSERT_EQUAL_FLOAT(src[i], dst[62 - i]);
 	}
 }
 
@@ -52,7 +54,7 @@ TEST(tests_flip, test_nmppsFlip_32f_less_64_parity){
 	TEST_ASSERT_EQUAL(nmppsStsNoErr, nmppsFlip_32f(src, dst, 62));
 
 	for(i = 0; i < 62; i++){
-		TEST_ASSERT_EQUAL(src[i], dst[61 - i]);
+		TEST_ASSERT_EQUAL_FLOAT(src[i], dst[61 - i]);
 	}
 }
 
@@ -67,7 +69,7 @@ TEST(tests_flip, test_nmppsFlip_32f_over_64_non_parity_1){
 	TEST_ASSERT_EQUAL(nmppsStsNoErr, nmppsFlip_32f(src, dst, 449));
 
 	for(i = 0; i < 449; i++){
-		TEST_ASSERT_EQUAL(src[i], dst[448 - i]);
+		TEST_ASSERT_EQUAL_FLOAT(src[i], dst[448 - i]);
 	}
 }
 
@@ -83,7 +85,7 @@ TEST(tests_flip, test_nmppsFlip_32f_over_64_non_parity_2){
 	TEST_ASSERT_EQUAL(nmppsStsNoErr, nmppsFlip_32f(src, dst, 127));
 
 	for(i = 0; i < 127; i++){
-		TEST_ASSERT_EQUAL(src[i], dst[126 - i]);
+		TEST_ASSERT_EQUAL_FLOAT(src[i], dst[126 - i]);
 	}
 }
 
@@ -101,7 +103,7 @@ TEST(tests_flip, test_nmppsFlip_32f_over_64_parity_1){
 	TEST_ASSERT_EQUAL(nmppsStsNoErr, nmppsFlip_32f(src, dst, 192));
 
 	for(i = 0; i < 192; i++){
-		TEST_ASSERT_EQUAL(src[i], dst[191 - i]);
+		TEST_ASSERT_EQUAL_FLOAT(src[i], dst[191 - i]);
 	}
 }
 
@@ -117,7 +119,86 @@ TEST(tests_flip, test_nmppsFlip_32f_over_64_parity_2){
 	TEST_ASSERT_EQUAL(nmppsStsNoErr, nmppsFlip_32f(src, dst, 190));
 
 	for(i = 0; i < 190; i++){
-		TEST_ASSERT_EQUAL(src[i], dst[189 - i]);
+		TEST_ASSERT_EQUAL_FLOAT(src[i], dst[189 - i]);
+	}
+}
+
+
+//nmppsFlip_64f
+
+// Нулевые указатели
+TEST(tests_flip, test_nmppsFlip_64f_null_ptr){
+
+	nmpps64f vec;
+
+    TEST_ASSERT_EQUAL(nmppsStsNullPtrErr, nmppsFlip_64f(NULL, &vec, 1));
+    TEST_ASSERT_EQUAL(nmppsStsNullPtrErr, nmppsFlip_64f(&vec, NULL, 1));
+}
+
+// Некорректное значение длины вектора
+TEST(tests_flip, test_nmppsFlip_64f_len){
+    nmpps64f vector[10];
+
+    TEST_ASSERT_EQUAL(nmppsStsSizeErr, nmppsFlip_64f(vector, vector, 0));
+    TEST_ASSERT_EQUAL(nmppsStsSizeErr, nmppsFlip_64f(vector, vector, -1));
+}
+
+// Длина меньше 32
+TEST(tests_flip, test_nmppsFlip_64f_less_32){
+	nmpps64f src[31]  __attribute__ ((aligned (2)));
+	nmpps64f dst[31]  __attribute__ ((aligned (2)));
+	int i = 0;
+
+	init_vector_64f(src, 31);
+
+	TEST_ASSERT_EQUAL(nmppsStsNoErr, nmppsFlip_64f(src, dst, 31));
+
+	for(i = 0; i < 31; i++){
+		TEST_ASSERT_EQUAL_DOUBLE(src[i], dst[30 - i]);
+	}
+}
+
+// Длина кратна 64
+TEST(tests_flip, test_nmppsFlip_64f_x64){
+	nmpps64f src[192]  __attribute__ ((aligned (2)));
+	nmpps64f dst[192]  __attribute__ ((aligned (2)));
+	int i = 0;
+
+	init_vector_64f(src, 192);
+
+	TEST_ASSERT_EQUAL(nmppsStsNoErr, nmppsFlip_64f(src, dst, 192));
+
+	for(i = 0; i < 192; i++){
+		TEST_ASSERT_EQUAL_DOUBLE(src[i], dst[191 - i]);
+	}
+}
+
+// Длина кратна 64 + некратный остаток
+TEST(tests_flip, test_nmppsFlip_64f_over64_1){
+	nmpps64f src[193]  __attribute__ ((aligned (2)));
+	nmpps64f dst[193]  __attribute__ ((aligned (2)));
+	int i = 0;
+
+	init_vector_64f(src, 193);
+
+	TEST_ASSERT_EQUAL(nmppsStsNoErr, nmppsFlip_64f(src, dst, 193));
+
+	for(i = 0; i < 193; i++){
+		TEST_ASSERT_EQUAL_DOUBLE(src[i], dst[192 - i]);
+	}
+}
+
+TEST(tests_flip, test_nmppsFlip_64f_over64_2){
+	nmpps64f src[191]  __attribute__ ((aligned (2)));
+	nmpps64f dst[191]  __attribute__ ((aligned (2)));
+	int i = 0;
+
+	init_vector_64f(src, 191);
+
+	TEST_ASSERT_EQUAL(nmppsStsNoErr, nmppsFlip_64f(src, dst, 191));
+
+	for(i = 0; i < 191; i++){
+		TEST_ASSERT_EQUAL_DOUBLE(src[i], dst[190 - i]);
 	}
 }
 
@@ -131,6 +212,12 @@ TEST_GROUP_RUNNER(tests_flip){
 	RUN_TEST_CASE(tests_flip, test_nmppsFlip_32f_over_64_non_parity_2);
 	RUN_TEST_CASE(tests_flip, test_nmppsFlip_32f_over_64_parity_1);
     RUN_TEST_CASE(tests_flip, test_nmppsFlip_32f_over_64_parity_2);
+
+    RUN_TEST_CASE(tests_flip, test_nmppsFlip_64f_null_ptr);
+    RUN_TEST_CASE(tests_flip, test_nmppsFlip_64f_len);
+    RUN_TEST_CASE(tests_flip, test_nmppsFlip_64f_less_32);
+    RUN_TEST_CASE(tests_flip, test_nmppsFlip_64f_x64);
+    RUN_TEST_CASE(tests_flip, test_nmppsFlip_64f_over64_1);
+    RUN_TEST_CASE(tests_flip, test_nmppsFlip_64f_over64_2);
+
 }
-
-
