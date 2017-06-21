@@ -1,4 +1,7 @@
 #include "unity/unity_fixture.h"
+#include "nmpps.h"
+
+
 
 void runAllTests(void) {
     RUN_TEST_GROUP(tests_old_tests);
@@ -14,6 +17,8 @@ void runAllTests(void) {
     RUN_TEST_GROUP(tests_set);
     RUN_TEST_GROUP(tests_zero);
     RUN_TEST_GROUP(tests_abs);
+    RUN_TEST_GROUP(tests_flip);
+
 }
 
 int main(void) {
@@ -30,4 +35,6 @@ int main(void) {
 	static const int argc = sizeof(argv) / sizeof(char*);
 
     return UnityMain(argc, argv, runAllTests);
+
+
 }

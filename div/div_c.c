@@ -108,12 +108,12 @@ nmppsStatus c_nmppsSqrt_64f (const nmpps64f*  pSrc, nmpps64f*  pDst,    int len)
 }
 */
 
-int main(){
-	double f = 3.1416;
-	double g;
-	g = obr(f);
-	//return g;
-	return 100;
-}
+//int main(){
+//	double f = 3.1416;
+//	double g;
+//	g = obr(f);
+//	//return g;
+//	return 100;
+//}
 
 

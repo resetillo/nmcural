@@ -79,15 +79,6 @@
 	<storageModule moduleId="cdtBuildSystem" version="4.0.0">
 		<project id="nmpps.ru.mipt.designcenter.configuration.project.exe.1785664955" name="Executable"/>
 	</storageModule>
-	<storageModule moduleId="scannerConfiguration">
-		<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>
-		<scannerConfigBuildInfo instanceId="ru.mipt.designcenter.configuration.exe.debug.1892294406;ru.mipt.designcenter.configuration.exe.debug.1892294406.;ru.mipt.designcenter.compiler.nmgcc.exe.debug.1184507360;ru.mipt.designcenter.compiler.nmgcc.input.1305400036">
-			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>
-		</scannerConfigBuildInfo>
-		<scannerConfigBuildInfo instanceId="ru.mipt.designcenter.configuration.exe.release.1737228058;ru.mipt.designcenter.configuration.exe.release.1737228058.;ru.mipt.designcenter.compiler.nmgcc.exe.release.1135515129;ru.mipt.designcenter.compiler.nmgcc.input.335702673">
-			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>
-		</scannerConfigBuildInfo>
-	</storageModule>
 	<storageModule moduleId="org.eclipse.cdt.core.LanguageSettingsProviders"/>
 	<storageModule moduleId="refreshScope" versionNumber="2">
 		<configuration configurationName="Debug">
@@ -98,4 +89,16 @@
 		</configuration>
 	</storageModule>
 	<storageModule moduleId="org.eclipse.cdt.make.core.buildtargets"/>
+	<storageModule moduleId="scannerConfiguration">
+		<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>
+		<scannerConfigBuildInfo instanceId="ru.mipt.designcenter.configuration.exe.debug.1892294406;ru.mipt.designcenter.configuration.exe.debug.1892294406.;ru.mipt.designcenter.compiler.nmgcc.exe.debug.1184507360;ru.mipt.designcenter.compiler.nmgcc.input.1305400036">
+			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>
+		</scannerConfigBuildInfo>
+		<scannerConfigBuildInfo instanceId="ru.mipt.designcenter.configuration.exe.release.1737228058;ru.mipt.designcenter.configuration.exe.release.1737228058.;ru.mipt.designcenter.compiler.nmgcc.exe.release.1135515129;ru.mipt.designcenter.compiler.nmgcc.input.335702673">
+			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>
+		</scannerConfigBuildInfo>
+		<scannerConfigBuildInfo instanceId="ru.mipt.designcenter.configuration.exe.debug.1892294406;ru.mipt.designcenter.configuration.exe.debug.1892294406.;ru.mipt.designcenter.compiler.nmgcc.exe.debug.linux.2003678426;ru.mipt.designcenter.compiler.nmgcc.input.227285355">
+			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId="org.eclipse.cdt.make.core.GCCStandardMakePerFileProfile"/>
+		</scannerConfigBuildInfo>
+	</storageModule>
 </cproject>
