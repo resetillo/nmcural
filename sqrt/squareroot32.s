@@ -3,6 +3,12 @@
 .global _two_flt
 .global _nan_flt
 
+.global SBx2
+.global NBx2
+.global WB2x2
+.global SIGN_BIT_flt
+.global DpCode_const_flt
+
 .data
 
   .align 8
@@ -16,9 +22,9 @@ WB2x2:
       .quad 0x0000000100000000
 BIAS:
 	  .quad 0x3f8000003f800000
-SIGN_BIT:
+SIGN_BIT_flt:
       .quad 0x7fffffff7fffffff
-DpCode_const:
+DpCode_const_flt:
 	  .quad 0x8100000081000000
 
 .text
@@ -69,7 +75,7 @@ after_correct:
 
     rep 32 with vsum, shift afifo, 0; //Сдвигаем вправо на 1
     rep 32 with afifo + ram; //Прибавляем BIAS
-    ar3 = SIGN_BIT;
+    ar3 = SIGN_BIT_flt;
     rep 32 data = [ar3] with afifo and data;//Приводим к положительному
 
     //Сохранение результата X = ~sqrt(x)
@@ -80,7 +86,7 @@ after_correct:
     //Вычисление приближенного значения Y = 1/~sqrt(x)
     ar3 = ar5;
 	rep 32 data = [ar3++] with not data;
-    ar3 = DpCode_const;
+    ar3 = DpCode_const_flt;
     rep 32 data = [ar3] with afifo - data; // 1/x ~ допкоду экспоненты x
     //Сохранение результата Y = 1/~sqrt(x)
 	ar3 = ar6;

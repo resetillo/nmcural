@@ -68,8 +68,8 @@ nmppsStatus test_sqrt_diap(nmpps64f bgn, nmpps64f step, int count){
 	if (stat!=nmppsStsNoErr) return stat;
 	for (i=0; i<count; i++){
 		arg = in[i];
-		er = fabs(kd[i]-res[i]);
-		if (kd[i] != 0) er = 100*er/kd[i];
+		er = fabs(fabs(kd[i])-fabs(res[i]));
+		if (kd[i] != 0) er = fabs(100*er/kd[i]);
 		if (er > max_err) {
 			max_err = er;
 			if (max_err > sqrt_critical_error) {
@@ -87,9 +87,7 @@ nmppsStatus test_sqrtf_diap(nmpps32f bgn, nmpps32f step, int count){
 	nmppsStatus stat;
 	nmpps32f er;
 	nmpps32f arg = bgn;
-	//double step = 1.3333777e-1;
 	nmpps32f max_err = 0;
-	//nmpps32f max_err_arg = 0;
 	int i = 0;
 	//Заполнение входных и эталонных данных
 	create_sqrtf_vecs(in, kd, count, arg, step);
@@ -99,8 +97,8 @@ nmppsStatus test_sqrtf_diap(nmpps32f bgn, nmpps32f step, int count){
 	//Проверка полученных данных с эталоном
 	for(i=0;i<count;i++){
 		arg = in[i];
-		er = fabsf(kd[i]-res[i]);
-		if (kd[i] != 0) er = 100*er/kd[i];
+		er = fabsf(fabsf(kd[i])-fabsf(res[i]));
+		if (kd[i] != 0) er = fabsf(100*er/kd[i]);
 		if (er > max_err) {
 			max_err = er;
 			//max_err_arg = arg;
@@ -223,7 +221,7 @@ int test_sqrt(){
 		return 1;
 	}
 
-	stat = test_sqrt_diap(1.7789e+300, 13.337, COUNT_ITERATION);
+	stat = test_sqrt_diap(1.7789e+300, 13.337e+300, COUNT_ITERATION);
 	if (stat!=nmppsStsNoErr) {
 		return 2;
 	}
@@ -255,7 +253,7 @@ int test_sqrtf(){
 		return 2;
 	}
 
-	stat = test_sqrtf_diap(3.3333e-38, 1.3337e-300, 1000);
+	stat = test_sqrtf_diap(3.3333e-38, 1.3337e-38, 1000);
 	if (stat!=nmppsStsNoErr) {
 		return 3;
 	}

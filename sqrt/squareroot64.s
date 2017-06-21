@@ -3,21 +3,27 @@
 .global _two_dbl
 .global _nan_dbl
 
+
+.global SB_default
+.global NB_default
+.global WB_default
+.global DpCode_const_dbl
+.global SIGN_BIT_dbl
+
 .data
 
   .align 8
-//nb63: .long 0xC000000000000000L // nb 1-63
-SB:
+SB_default:
 	  .quad 0x00000001 // 1 stroka
-NB:
+NB_default:
       .quad 0x8000000000000000 // 1 stolbets
-WB:
+WB_default:
       .quad 0x00000001
 BIAS:
 	  .quad 0x3ff0000000000000
-SIGN_BIT:
+SIGN_BIT_dbl:
       .quad 0x7fffffffffffffff
-DpCode_const:
+DpCode_const_dbl:
 	  .quad 0x8020000000000000
 
 .text
@@ -56,11 +62,11 @@ _nmppsSqrt_64f:
 
 	//Выделение старших 63 бит
     //sir = [nb63]
-    sir = [NB];
+    sir = [NB_default];
     nb1 = sir;	
-    sir = [SB];
+    sir = [SB_default];
     sb = sir;	
-	ar2 = WB;
+	ar2 = WB_default;
     rep 1 wfifo = [ar2], ftw, wtw; // Загрузка матрицы  весов
 
 main_loop:
@@ -82,7 +88,7 @@ after_correct:
     rep 32 data = [ar2++] with data - ram; //Вычитаем BIAS
     rep 32 with vsum, shift afifo, 0; //Сдвигаем вправо на 1
     rep 32 with afifo + ram; //Прибавляем BIAS
-    ar2 = SIGN_BIT;
+    ar2 = SIGN_BIT_dbl;
     rep 32 data = [ar2] with afifo and data;//Приводим к целому
 
     //Сохранение результата X = ~sqrt(x)
@@ -93,7 +99,7 @@ after_correct:
     //Вычисление приближенного значения Y = 1/~sqrt(x)
     ar2 = ar5;
 	rep 32 data = [ar2++] with not data;
-    ar2 = DpCode_const;
+    ar2 = DpCode_const_dbl;
     rep 32 data = [ar2] with afifo - data; // 1/x ~ допкоду экспоненты x
     //Сохранение результата Y = 1/~sqrt(x)
 	ar2 = ar6;

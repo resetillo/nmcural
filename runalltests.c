@@ -1,9 +1,13 @@
 #include "unity/unity_fixture.h"
-#include "nmpps.h"
+#include "include/nmpps.h"
 
 
 
 void runAllTests(void) {
+    RUN_TEST_GROUP(tests_div32);
+    RUN_TEST_GROUP(tests_div64);
+    RUN_TEST_GROUP(tests_divC64);
+    RUN_TEST_GROUP(tests_normalize);
     RUN_TEST_GROUP(tests_old_tests);
     RUN_TEST_GROUP(tests_sqr);
     RUN_TEST_GROUP(tests_min);
