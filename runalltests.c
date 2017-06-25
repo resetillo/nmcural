@@ -11,7 +11,9 @@ void runAllTests(void) {
     RUN_TEST_GROUP(tests_old_tests);
     RUN_TEST_GROUP(tests_sqr);
     RUN_TEST_GROUP(tests_min);
+    RUN_TEST_GROUP(tests_minabs);
     RUN_TEST_GROUP(tests_minindx);
+    RUN_TEST_GROUP(tests_minabsindx);
     RUN_TEST_GROUP(tests_max);
     RUN_TEST_GROUP(tests_maxindx);
     RUN_TEST_GROUP(tests_minmax);
