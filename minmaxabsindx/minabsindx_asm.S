@@ -18,7 +18,7 @@
 
 
 /* /////////////////////////////////////////////////////////////////////////////
-// nmppsStatus nmppsMinAbs_16s(const nmpps16s* pSrc, int len, nmpps16s* pMinAbs, int* pIndx) {
+// nmppsStatus nmppsMinAbsIndx_16s(const nmpps16s* pSrc, int len, nmpps16s* pMinAbs, int* pIndx) {
 */
 	.align 8
 _nmppsMinAbsIndx_16s: .globl _nmppsMinAbsIndx_16s
@@ -88,7 +88,7 @@ _nmppsMinAbsIndx_16s: .globl _nmppsMinAbsIndx_16s
 
 
 /* /////////////////////////////////////////////////////////////////////////////
-// nmppsStatus nmppsMinAbs_32s(const nmpps32s* pSrc, int len, nmpps32s* pMinAbs, int* pIndx) {
+// nmppsStatus nmppsMinAbsIndx_32s(const nmpps32s* pSrc, int len, nmpps32s* pMinAbs, int* pIndx) {
 */
 	.align 8
 _nmppsMinAbsIndx_32s: .globl _nmppsMinAbsIndx_32s
