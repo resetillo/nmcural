@@ -78,6 +78,7 @@ _vec_handler32:
     push ar2, gr2;
     push ar3, gr3;
     push ar4, gr4;
+    push ar5, gr5;
     push ar6, gr6;
     
     ar0 = [--ar5]; // function
@@ -323,6 +324,7 @@ err_ptr:
 exit:
     ar7 = ar7 - 134;
     pop ar6, gr6;
+    pop ar5, gr5;
     pop ar4, gr4;
     pop ar3, gr3;
     pop ar2, gr2;

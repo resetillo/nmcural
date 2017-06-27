@@ -92,7 +92,9 @@ nmppsStatus test_atanf_diap(nmpps32f bgn, nmpps32f step, int count){
 	create_atanf_vecs(in, kd, count, arg, step);
 	//Расчет проверяемых значений
 	stat = nmppsArctan_32f(in, res, count);
-	if (stat!=nmppsStsNoErr) return stat;
+	if (stat!=nmppsStsNoErr) {
+		return stat;
+	}
 	//Проверка полученных данных с эталоном
 	for(i=0;i<count;i++){
 		arg = in[i];
