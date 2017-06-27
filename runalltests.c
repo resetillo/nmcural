@@ -2,6 +2,7 @@
 #include "include/nmpps.h"
 
 void runAllTests(void) {
+    RUN_TEST_GROUP(tests_divC32);
     RUN_TEST_GROUP(tests_div32);
     RUN_TEST_GROUP(tests_div64);
     RUN_TEST_GROUP(tests_divC64);

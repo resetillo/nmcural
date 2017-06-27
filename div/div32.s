@@ -7,6 +7,7 @@
 .global _inf_flt
 .global SIGN_BIT_flt
 .global DpCode_const_flt
+.global _bitfill
 
 .global NB_default
 .global SB_default
@@ -166,12 +167,12 @@ after_correct:
 	fpu 0 .float vreg0 = -vreg7*vreg1 + vreg2;
 	fpu 0 .float vreg7 = vreg0*vreg7;
 	//5
-	fpu 0 .float vreg0 = -vreg7*vreg1 + vreg2;
+	/*fpu 0 .float vreg0 = -vreg7*vreg1 + vreg2;
 	fpu 0 .float vreg7 = vreg0*vreg7;
 	//6
 	fpu 0 .float vreg0 = -vreg7*vreg1 + vreg2;
 	fpu 0 .float vreg7 = vreg0*vreg7;
-
+*/
 	//Output = divided*(~1/divisor)
 	ar5 = ar1;
 	fpu 0 rep vlen vreg0 = [ar5++]; //divided
@@ -235,9 +236,17 @@ after_correct:
 	fpu 0 .float vreg7 = mask ? vreg5 : vreg7; //divided =0, divisor = infinity => out = NAN
 
 
+	//Обнуление масок
+	//Выяснилось, что при изменении масок меняются только те биты, которые соответствуют данныи в векторном регистре
+	//Т.е. если раньше использовались вектора длиной 64 члена, то при использовании векторов меньшей длины
+	//в масках может остаться мусор, так что маски необходимо обнулять перед использованием данных из них
+	//в скалярном операциях (в данном случае они используются для определения факта деления на 0)
+	sir = gr0; //Вместо 0 можно использовать накопительный регистр, т.к. все регистры уже задействованы
+	fp0_lmask = sir;
+	fp0_hmask = sir;
 
     fpu 0 .float vreg1 + vreg1, set mask if =0;
-   sir = fp0_lmask;
+    sir = fp0_lmask;
     gr5 = sir;
     sir = fp0_hmask;
     gr6 = sir;//маска с divisor = 0
@@ -370,6 +379,15 @@ check_zero_div:
     gr7 = -10; //Было деление на 0
 
 exit:
+
+	//Настройка векторника
+   /* sir = [NB_default];
+    nb1 = sir;
+    sir = [SB_default];
+    sb = sir;
+	ar5 = WB_default;
+    rep 1 wfifo = [ar5], ftw, wtw; // Загрузка матрицы  весов
+*/
 	ar7 = ar7 - 130;
     pop ar6, gr6;
     pop ar5, gr5;

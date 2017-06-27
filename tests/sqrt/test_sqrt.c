@@ -93,11 +93,13 @@ nmppsStatus test_sqrtf_diap(nmpps32f bgn, nmpps32f step, int count){
 	create_sqrtf_vecs(in, kd, count, arg, step);
 	//Расчет проверяемых значений
 	stat = nmppsSqrt_32f(in, res, count);
-	if (stat!=nmppsStsNoErr) return stat;
+	if (stat!=nmppsStsNoErr) {
+		return stat;
+	}
 	//Проверка полученных данных с эталоном
 	for(i=0;i<count;i++){
 		arg = in[i];
-		er = fabsf(fabsf(kd[i])-fabsf(res[i]));
+		er = fabsf(kd[i]-res[i]);
 		if (kd[i] != 0) er = fabsf(100*er/kd[i]);
 		if (er > max_err) {
 			max_err = er;
