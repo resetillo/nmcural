@@ -16,16 +16,16 @@ TEST_TEAR_DOWN(tests_divC32) {}
 #define COUNT_ITERATION (100)
 
 /**
- * @brief Создание тестовых для деления векторов
+ * @brief РЎРѕР·РґР°РЅРёРµ С‚РµСЃС‚РѕРІС‹С… РґР»СЏ РґРµР»РµРЅРёСЏ РІРµРєС‚РѕСЂРѕРІ
  *
- * @param Divided Входной вектор, делимое
- * @param bgnDivided Начальное значение для делимых
- * @param stepDivided Приращение для делимых
- * @param Divisor Входной вектор, делитель
- * @param bgnDivisor Начальное значение для делителей
- * @param stepDivisor Приращение для делителей
- * @param out Выходной вектор
- * @param len Длина векторов
+ * @param Divided Р’С…РѕРґРЅРѕР№ РІРµРєС‚РѕСЂ, РґРµР»РёРјРѕРµ
+ * @param bgnDivided РќР°С‡Р°Р»СЊРЅРѕРµ Р·РЅР°С‡РµРЅРёРµ РґР»СЏ РґРµР»РёРјС‹С…
+ * @param stepDivided РџСЂРёСЂР°С‰РµРЅРёРµ РґР»СЏ РґРµР»РёРјС‹С…
+ * @param Divisor Р’С…РѕРґРЅРѕР№ РІРµРєС‚РѕСЂ, РґРµР»РёС‚РµР»СЊ
+ * @param bgnDivisor РќР°С‡Р°Р»СЊРЅРѕРµ Р·РЅР°С‡РµРЅРёРµ РґР»СЏ РґРµР»РёС‚РµР»РµР№
+ * @param stepDivisor РџСЂРёСЂР°С‰РµРЅРёРµ РґР»СЏ РґРµР»РёС‚РµР»РµР№
+ * @param out Р’С‹С…РѕРґРЅРѕР№ РІРµРєС‚РѕСЂ
+ * @param len Р”Р»РёРЅР° РІРµРєС‚РѕСЂРѕРІ
  * */
 void create_div32_vecs(nmpps32f* Divided, nmpps32f bgnDivided, nmpps32f stepDivided,
 		             nmpps32f* Divisor,  nmpps32f bgnDivisor, nmpps32f stepDivisor,
@@ -55,13 +55,13 @@ void create_divC32_vecs(nmpps32f* Divided, nmpps32f bgnDivided, nmpps32f stepDiv
 const nmpps32f div32_critical_error = 1e-04;
 
 /**
- * @brief Тестирование деление диапазонов
+ * @brief РўРµСЃС‚РёСЂРѕРІР°РЅРёРµ РґРµР»РµРЅРёРµ РґРёР°РїР°Р·РѕРЅРѕРІ
  *
- * @param bgnDivided Начальное значение для делимых
- * @param stepDivided Приращение для делимых
- * @param bgnDivisor Начальное значение для делителей
- * @param stepDivisor Приращение для делителей
- * @param count Длина тестируемых векторов
+ * @param bgnDivided РќР°С‡Р°Р»СЊРЅРѕРµ Р·РЅР°С‡РµРЅРёРµ РґР»СЏ РґРµР»РёРјС‹С…
+ * @param stepDivided РџСЂРёСЂР°С‰РµРЅРёРµ РґР»СЏ РґРµР»РёРјС‹С…
+ * @param bgnDivisor РќР°С‡Р°Р»СЊРЅРѕРµ Р·РЅР°С‡РµРЅРёРµ РґР»СЏ РґРµР»РёС‚РµР»РµР№
+ * @param stepDivisor РџСЂРёСЂР°С‰РµРЅРёРµ РґР»СЏ РґРµР»РёС‚РµР»РµР№
+ * @param count Р”Р»РёРЅР° С‚РµСЃС‚РёСЂСѓРµРјС‹С… РІРµРєС‚РѕСЂРѕРІ
  * */
 
 float max_errf = 0;
@@ -75,13 +75,13 @@ nmppsStatus test_div32_diap(nmpps32f bgnDivided, nmpps32f stepDivided,
 	nmppsStatus stat;
 	float er;
 	int i;
-	//Создаем эталонные значения
+	//РЎРѕР·РґР°РµРј СЌС‚Р°Р»РѕРЅРЅС‹Рµ Р·РЅР°С‡РµРЅРёСЏ
 	create_div32_vecs(Divided, bgnDivided, stepDivided,
 					Divisor, bgnDivisor, stepDivisor,
 					kd, count);
-	//Производим рассчеты
+	//РџСЂРѕРёР·РІРѕРґРёРј СЂР°СЃСЃС‡РµС‚С‹
 	stat = nmppsDiv_32f(Divided, Divisor, res, count);
-	//Проверяем результат
+	//РџСЂРѕРІРµСЂСЏРµРј СЂРµР·СѓР»СЊС‚Р°С‚
 	if (stat!=nmppsStsNoErr) {
 		return stat;
 	}
@@ -111,12 +111,12 @@ nmppsStatus test_divC32_diap(nmpps32f bgnDivided, nmpps32f stepDivided,
 	float max_err;
 	int i, k;
 	for (k=0; k < count; k++) {
-		//Создаем эталонные значения
+		//РЎРѕР·РґР°РµРј СЌС‚Р°Р»РѕРЅРЅС‹Рµ Р·РЅР°С‡РµРЅРёСЏ
 		create_divC32_vecs(Divided, bgnDivided, stepDivided,
 						bgnDivisor, kd, count);
-		//Производим рассчеты
+		//РџСЂРѕРёР·РІРѕРґРёРј СЂР°СЃСЃС‡РµС‚С‹
 		stat = nmppsDivC_32f(Divided, bgnDivisor, res, count);
-		//Проверяем результат
+		//РџСЂРѕРІРµСЂСЏРµРј СЂРµР·СѓР»СЊС‚Р°С‚
 		if (stat!=nmppsStsNoErr) {
 			return stat;
 		}
@@ -152,7 +152,7 @@ TEST(tests_div32, nmppsDiv_32f_small_vecs) {
 
 }
 
-//Обычные значения
+//РћР±С‹С‡РЅС‹Рµ Р·РЅР°С‡РµРЅРёСЏ
 TEST(tests_div32, nmppsDiv_32f_Normal) {
 	nmppsStatus stat = nmppsStsNoErr;
 	stat = test_div32_diap(0, 0.133377789,
@@ -172,7 +172,7 @@ TEST(tests_div32, nmppsDiv_32f_Normal) {
     TEST_ASSERT_EQUAL(nmppsStsNoErr, stat);
 }
 
-//Большие значения
+//Р‘РѕР»СЊС€РёРµ Р·РЅР°С‡РµРЅРёСЏ
 TEST(tests_div32, nmppsDiv_32f_Big) {
 	nmppsStatus stat = nmppsStsNoErr;
 	stat = test_div32_diap(1.7789e+38, 13.337e+35,
@@ -181,7 +181,7 @@ TEST(tests_div32, nmppsDiv_32f_Big) {
 }
 
 
-//Значения, близкие к 0
+//Р—РЅР°С‡РµРЅРёСЏ, Р±Р»РёР·РєРёРµ Рє 0
 TEST(tests_div32, nmppsDiv_32f_Small) {
 	nmppsStatus stat = nmppsStsNoErr;
 	stat = test_div32_diap(3.3333e-38, 1.3337e-35,
@@ -190,7 +190,7 @@ TEST(tests_div32, nmppsDiv_32f_Small) {
 }
 
 
-//Проверка возвращаемых результатов
+//РџСЂРѕРІРµСЂРєР° РІРѕР·РІСЂР°С‰Р°РµРјС‹С… СЂРµР·СѓР»СЊС‚Р°С‚РѕРІ
 TEST(tests_div32, nmppsDiv_32f_check_answer) {
 	nmpps32f data_div_zero[] = {
 			4,  -1.37, 6.777, 0
@@ -201,12 +201,12 @@ TEST(tests_div32, nmppsDiv_32f_check_answer) {
 	stat = nmppsDiv_32f(data_div_zero, data_div_zero, data, sizeof(data_div_zero)/sizeof(nmpps32f));
     TEST_ASSERT_EQUAL(nmppsStsDivByZeroErr, stat);
 
-    //Проверка на NULL
+    //РџСЂРѕРІРµСЂРєР° РЅР° NULL
     TEST_ASSERT_EQUAL(nmppsStsNullPtrErr, nmppsDiv_32f(data, data, NULL, 1));
     TEST_ASSERT_EQUAL(nmppsStsNullPtrErr, nmppsDiv_32f(data, NULL, data, 1));
     TEST_ASSERT_EQUAL(nmppsStsNullPtrErr, nmppsDiv_32f(NULL, data, data, 1));
 
-    //Проверка реакции на некорректный размер
+    //РџСЂРѕРІРµСЂРєР° СЂРµР°РєС†РёРё РЅР° РЅРµРєРѕСЂСЂРµРєС‚РЅС‹Р№ СЂР°Р·РјРµСЂ
     TEST_ASSERT_EQUAL(nmppsStsSizeErr, nmppsDiv_32f(data, data, data, 0));
     TEST_ASSERT_EQUAL(nmppsStsSizeErr, nmppsDiv_32f(data, data, data, -1));
 }
@@ -230,13 +230,13 @@ TEST(tests_div32, nmppsDiv_32f_check_rewrite) {
 	for(i=0;i<64;i++){
 		nmppsDiv_32f(&data[2], &data[2], &out[2], i+1);
 		for(k=0; k < sizeof(data)/sizeof(nmpps32f); k++){
-			//Перезапись входных векторов
+			//РџРµСЂРµР·Р°РїРёСЃСЊ РІС…РѕРґРЅС‹С… РІРµРєС‚РѕСЂРѕРІ
 			TEST_ASSERT_EQUAL_FLOAT(data[k], original[k]);
 		}
-		//Запись перед началом
+		//Р—Р°РїРёСЃСЊ РїРµСЂРµРґ РЅР°С‡Р°Р»РѕРј
 		TEST_ASSERT_EQUAL_FLOAT(t.flt, out[0]);
 		TEST_ASSERT_EQUAL_FLOAT(t.flt, out[1]);
-		//Запись после окончания векторов
+		//Р—Р°РїРёСЃСЊ РїРѕСЃР»Рµ РѕРєРѕРЅС‡Р°РЅРёСЏ РІРµРєС‚РѕСЂРѕРІ
 		//TEST_ASSERT_EQUAL_float(t.flt, out[i+2]);
 		t1.flt = out[i+3];
 		if (t.ui32 != t1.ui32) {
@@ -247,13 +247,13 @@ TEST(tests_div32, nmppsDiv_32f_check_rewrite) {
 
 TEST(tests_div32, nmppsDiv_32f_subnormal) {
 	float divided[29] = {
-	   -NAN,       NAN,       NAN,       1,        NAN, //NaN среди операндов
-	   0.0L,       -0.0L,     -0.0L,     0.0L,          // 0 делим на 0
-	   1,          -1,        1,         -1,            // число делим на 0
-	   0,          -0.0L,     0,         -0.0L,         // 0 делим на бесконечность
-	   1,          -1,        1,         -1,            // число делим на бесконечность
-	   INFINITY,   INFINITY,  -INFINITY, -INFINITY,     // бесконечность делим на число
-	   INFINITY,   -INFINITY,  INFINITY, -INFINITY     // бесконечность делим на бесконечность
+	   -NAN,       NAN,       NAN,       1,        NAN, //NaN СЃСЂРµРґРё РѕРїРµСЂР°РЅРґРѕРІ
+	   0.0L,       -0.0L,     -0.0L,     0.0L,          // 0 РґРµР»РёРј РЅР° 0
+	   1,          -1,        1,         -1,            // С‡РёСЃР»Рѕ РґРµР»РёРј РЅР° 0
+	   0,          -0.0L,     0,         -0.0L,         // 0 РґРµР»РёРј РЅР° Р±РµСЃРєРѕРЅРµС‡РЅРѕСЃС‚СЊ
+	   1,          -1,        1,         -1,            // С‡РёСЃР»Рѕ РґРµР»РёРј РЅР° Р±РµСЃРєРѕРЅРµС‡РЅРѕСЃС‚СЊ
+	   INFINITY,   INFINITY,  -INFINITY, -INFINITY,     // Р±РµСЃРєРѕРЅРµС‡РЅРѕСЃС‚СЊ РґРµР»РёРј РЅР° С‡РёСЃР»Рѕ
+	   INFINITY,   -INFINITY,  INFINITY, -INFINITY     // Р±РµСЃРєРѕРЅРµС‡РЅРѕСЃС‚СЊ РґРµР»РёРј РЅР° Р±РµСЃРєРѕРЅРµС‡РЅРѕСЃС‚СЊ
 	};
 	float divisor[29] = {
 	   NAN,        -NAN,      NAN,       NAN,      -1,
@@ -314,7 +314,7 @@ TEST(tests_divC32, nmppsDivC_32f_small_vecs) {
 
 }
 
-//Обычные значения
+//РћР±С‹С‡РЅС‹Рµ Р·РЅР°С‡РµРЅРёСЏ
 TEST(tests_divC32, nmppsDivC_32f_Normal) {
 	nmppsStatus stat = nmppsStsNoErr;
 	stat = test_divC32_diap(0, 0.133377789,
@@ -334,7 +334,7 @@ TEST(tests_divC32, nmppsDivC_32f_Normal) {
     TEST_ASSERT_EQUAL(nmppsStsNoErr, stat);
 }
 
-//Большие значения
+//Р‘РѕР»СЊС€РёРµ Р·РЅР°С‡РµРЅРёСЏ
 TEST(tests_divC32, nmppsDivC_32f_Big) {
 	nmppsStatus stat = nmppsStsNoErr;
 	stat = test_divC32_diap(1.7789e+38, 13.337e+35,
@@ -343,7 +343,7 @@ TEST(tests_divC32, nmppsDivC_32f_Big) {
 }
 
 
-//Значения, близкие к 0
+//Р—РЅР°С‡РµРЅРёСЏ, Р±Р»РёР·РєРёРµ Рє 0
 TEST(tests_divC32, nmppsDivC_32f_Small) {
 	nmppsStatus stat = nmppsStsNoErr;
 	stat = test_divC32_diap(3.3333e-38, 1.3337e-35,
@@ -352,7 +352,7 @@ TEST(tests_divC32, nmppsDivC_32f_Small) {
 }
 
 
-//Проверка возвращаемых результатов
+//РџСЂРѕРІРµСЂРєР° РІРѕР·РІСЂР°С‰Р°РµРјС‹С… СЂРµР·СѓР»СЊС‚Р°С‚РѕРІ
 TEST(tests_divC32, nmppsDivC_32f_check_answer) {
 	nmpps32f data_div_zero[] = {
 			4,  -1.37, 6.777, 0
@@ -363,11 +363,11 @@ TEST(tests_divC32, nmppsDivC_32f_check_answer) {
 	stat = nmppsDivC_32f(data_div_zero, 0, data, sizeof(data_div_zero)/sizeof(nmpps32f));
     TEST_ASSERT_EQUAL(nmppsStsDivByZeroErr, stat);
 
-    //Проверка на NULL
+    //РџСЂРѕРІРµСЂРєР° РЅР° NULL
     TEST_ASSERT_EQUAL(nmppsStsNullPtrErr, nmppsDivC_32f(data, 1, NULL, 1));
     TEST_ASSERT_EQUAL(nmppsStsNullPtrErr, nmppsDivC_32f(NULL, 1, data, 1));
 
-    //Проверка реакции на некорректный размер
+    //РџСЂРѕРІРµСЂРєР° СЂРµР°РєС†РёРё РЅР° РЅРµРєРѕСЂСЂРµРєС‚РЅС‹Р№ СЂР°Р·РјРµСЂ
     TEST_ASSERT_EQUAL(nmppsStsSizeErr, nmppsDivC_32f(data, 1, data, 0));
     TEST_ASSERT_EQUAL(nmppsStsSizeErr, nmppsDivC_32f(data, 1, data, -1));
 }
@@ -390,13 +390,13 @@ TEST(tests_divC32, nmppsDivC_32f_check_rewrite) {
 	for(i=0;i<64;i++){
 		nmppsDivC_32f(&data[2], 1, &out[2], i+1);
 		for(k=0; k < sizeof(data)/sizeof(nmpps32f); k++){
-			//Перезапись входных векторов
+			//РџРµСЂРµР·Р°РїРёСЃСЊ РІС…РѕРґРЅС‹С… РІРµРєС‚РѕСЂРѕРІ
 			TEST_ASSERT_EQUAL_FLOAT(data[k], original[k]);
 		}
-		//Запись перед началом
+		//Р—Р°РїРёСЃСЊ РїРµСЂРµРґ РЅР°С‡Р°Р»РѕРј
 		TEST_ASSERT_EQUAL_FLOAT(t.flt, out[0]);
 		TEST_ASSERT_EQUAL_FLOAT(t.flt, out[1]);
-		//Запись после окончания векторов
+		//Р—Р°РїРёСЃСЊ РїРѕСЃР»Рµ РѕРєРѕРЅС‡Р°РЅРёСЏ РІРµРєС‚РѕСЂРѕРІ
 		//TEST_ASSERT_EQUAL_float(t.flt, out[i+2]);
 		t1.flt = out[i+3];
 		if (t.ui32 != t1.ui32) {
@@ -408,13 +408,13 @@ TEST(tests_divC32, nmppsDivC_32f_check_rewrite) {
 
 TEST(tests_divC32, nmppsDivC_32f_subnormal) {
 	float divided[29] = {
-	   -NAN,       NAN,       NAN,       1,        NAN, //NaN среди операндов
-	   0.0L,       -0.0L,     -0.0L,     0.0L,          // 0 делим на 0
-	   1,          -1,        1,         -1,            // число делим на 0
-	   0,          -0.0L,     0,         -0.0L,         // 0 делим на бесконечность
-	   1,          -1,        1,         -1,            // число делим на бесконечность
-	   INFINITY,   INFINITY,  -INFINITY, -INFINITY,     // бесконечность делим на число
-	   INFINITY,   -INFINITY,  INFINITY, -INFINITY     // бесконечность делим на бесконечность
+	   -NAN,       NAN,       NAN,       1,        NAN, //NaN СЃСЂРµРґРё РѕРїРµСЂР°РЅРґРѕРІ
+	   0.0L,       -0.0L,     -0.0L,     0.0L,          // 0 РґРµР»РёРј РЅР° 0
+	   1,          -1,        1,         -1,            // С‡РёСЃР»Рѕ РґРµР»РёРј РЅР° 0
+	   0,          -0.0L,     0,         -0.0L,         // 0 РґРµР»РёРј РЅР° Р±РµСЃРєРѕРЅРµС‡РЅРѕСЃС‚СЊ
+	   1,          -1,        1,         -1,            // С‡РёСЃР»Рѕ РґРµР»РёРј РЅР° Р±РµСЃРєРѕРЅРµС‡РЅРѕСЃС‚СЊ
+	   INFINITY,   INFINITY,  -INFINITY, -INFINITY,     // Р±РµСЃРєРѕРЅРµС‡РЅРѕСЃС‚СЊ РґРµР»РёРј РЅР° С‡РёСЃР»Рѕ
+	   INFINITY,   -INFINITY,  INFINITY, -INFINITY     // Р±РµСЃРєРѕРЅРµС‡РЅРѕСЃС‚СЊ РґРµР»РёРј РЅР° Р±РµСЃРєРѕРЅРµС‡РЅРѕСЃС‚СЊ
 	};
 	float divisor[29] = {
 	   NAN,        -NAN,      NAN,       NAN,      -1,

@@ -24,7 +24,7 @@ void init_mass(int* one, int* two, int size){
 }
 
 int subtest_vh32(int* vec, int* result, int size){
-	//Инитим массивы
+	//РРЅРёС‚РёРј РјР°СЃСЃРёРІС‹
 	init_mass(vec, result, size);
 
 	vec_handler32((nmppsStatus*)_test_func_vh32, &vec[1], &result[1], size);
@@ -79,7 +79,7 @@ int subtest2_vh32(int* vec, int* outvector, int size){
 int test_vec_handler32(){
 	int res = 0;
 
-	//Портим стэк
+	//РџРѕСЂС‚РёРј СЃС‚СЌРє
 	fuck_stack();
 
 	res = subtest2_vh32(vec, outvector, 1);

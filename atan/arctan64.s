@@ -20,7 +20,7 @@ _nmppsArctan_64f:
     push ar1, gr1;
     push ar2, gr2;
     push ar3, gr3;
-    gr7 = 0;//По умолчанию возвращаем 0
+    gr7 = 0;//РџРѕ СѓРјРѕР»С‡Р°РЅРёСЋ РІРѕР·РІСЂР°С‰Р°РµРј 0
     ar2 = [--ar5];//pSrc
     ar3 = [--ar5];//pDst
     gr1 = [--ar5];//len
@@ -43,7 +43,7 @@ main_loop:
 after_correct:
     gr0 = true;
     gr3 = gr2 + gr0; //gr2 -1
-    vlen = gr3;//Загрузим длину
+    vlen = gr3;//Р—Р°РіСЂСѓР·РёРј РґР»РёРЅСѓ
     //0
     ar0 = _zero_dbl;
     fpu 0  rep  vlen  vreg0 = [ar0];
@@ -53,23 +53,23 @@ after_correct:
 
 	//X = 1
 	fpu 1  vreg1 = fpu 0 vreg1;
-	//Входное значение Y
+	//Р’С…РѕРґРЅРѕРµ Р·РЅР°С‡РµРЅРёРµ Y
     ar0 = ar2;
-    fpu 1  rep  vlen  vreg5 = [ar0++];//Оригинальный Y для восстановления знака результата
-    fpu 1  .double vreg2 = /vreg5/;//Модуль Y для расчетов
+    fpu 1  rep  vlen  vreg5 = [ar0++];//РћСЂРёРіРёРЅР°Р»СЊРЅС‹Р№ Y РґР»СЏ РІРѕСЃСЃС‚Р°РЅРѕРІР»РµРЅРёСЏ Р·РЅР°РєР° СЂРµР·СѓР»СЊС‚Р°С‚Р°
+    fpu 1  .double vreg2 = /vreg5/;//РњРѕРґСѓР»СЊ Y РґР»СЏ СЂР°СЃС‡РµС‚РѕРІ
     
     //sum_angle = 0
-    fpu 0  vreg7 = vreg0;//Выходной вектор
+    fpu 0  vreg7 = vreg0;//Р’С‹С…РѕРґРЅРѕР№ РІРµРєС‚РѕСЂ
     
-    //ЦИКЛ
+    //Р¦РРљР›
     gr0 = 52;//52;
-    ar0 = _tanTable;//Таблица тангенсов
-    ar1 = _angTable;//Таблица углов
+    ar0 = _tanTable;//РўР°Р±Р»РёС†Р° С‚Р°РЅРіРµРЅСЃРѕРІ
+    ar1 = _angTable;//РўР°Р±Р»РёС†Р° СѓРіР»РѕРІ
 arctan_cycle:
     fpu 0  rep vlen vreg2 = [ar0];
-    ar0+=2; //адрес double
+    ar0+=2; //Р°РґСЂРµСЃ double
     fpu 0  rep vlen vreg3 = [ar1];
-    ar1+=2; //адрес double
+    ar1+=2; //Р°РґСЂРµСЃ double
 
 
     //s = copysign(1, y)
@@ -104,12 +104,12 @@ arctan_cycle:
 	gr0 = gr0 - 1;
 	if > goto arctan_cycle;
 
-	//Обработаем NAN и INF
-	fpu 0 vreg5 = fpu 1 vreg5;//Оригинальный вектор
+	//РћР±СЂР°Р±РѕС‚Р°РµРј NAN Рё INF
+	fpu 0 vreg5 = fpu 1 vreg5;//РћСЂРёРіРёРЅР°Р»СЊРЅС‹Р№ РІРµРєС‚РѕСЂ
     fpu 0 .double vreg5 - vreg5, set mask if <>0;
-    fpu 0 .double vreg7 = mask ? vreg5 : vreg7; //Для nan & inf восстановим изначальные значения
+    fpu 0 .double vreg7 = mask ? vreg5 : vreg7; //Р”Р»СЏ nan & inf РІРѕСЃСЃС‚Р°РЅРѕРІРёРј РёР·РЅР°С‡Р°Р»СЊРЅС‹Рµ Р·РЅР°С‡РµРЅРёСЏ
 
-	//Бесконечности обработаем используя функцию замены на значение
+	//Р‘РµСЃРєРѕРЅРµС‡РЅРѕСЃС‚Рё РѕР±СЂР°Р±РѕС‚Р°РµРј РёСЃРїРѕР»СЊР·СѓСЏ С„СѓРЅРєС†РёСЋ Р·Р°РјРµРЅС‹ РЅР° Р·РЅР°С‡РµРЅРёРµ
 	/*	ar0 - input vector
 		ar1 - changing value
 		gr0 - length of vector
@@ -121,7 +121,7 @@ arctan_cycle:
     gr0 = gr2;
 	call __macro_change_infinity;
 
-    //Восстановим исходный знак
+    //Р’РѕСЃСЃС‚Р°РЅРѕРІРёРј РёСЃС…РѕРґРЅС‹Р№ Р·РЅР°Рє
     fpu 0 vreg6 = fpu 1 vreg5;
     fpu 0 .double vreg6 + vreg6, set mask if <;
     fpu 0 .double vreg7 = mask ? -vreg7 : vreg7;
@@ -131,8 +131,8 @@ arctan_cycle:
     gr0 = 32;
     gr1 = gr1 - gr0;
     if > delayed goto main_loop;
-    //Коррекция адреса входного вектора
-    gr2 = gr2 << 1; //Смещение в double
+    //РљРѕСЂСЂРµРєС†РёСЏ Р°РґСЂРµСЃР° РІС…РѕРґРЅРѕРіРѕ РІРµРєС‚РѕСЂР°
+    gr2 = gr2 << 1; //РЎРјРµС‰РµРЅРёРµ РІ double
     ar2 = ar2 + gr2;
 
     goto exit;

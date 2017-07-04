@@ -46,7 +46,7 @@ __macro_change_infinity:
 	gr1 = gr0 - 1;
 	vlen = gr1;
 
-	//Выделим мантиссу
+	//Р’С‹РґРµР»РёРј РјР°РЅС‚РёСЃСЃСѓ
 	ar3 = mantis_dbl;
 	##FIX_ME
 	rep 32 ram = [ar3];
@@ -61,7 +61,7 @@ __macro_change_infinity:
 	sir = fp0_dmask;
 	gr1 = sir;
 
-	//Выделим экспоненту
+	//Р’С‹РґРµР»РёРј СЌРєСЃРїРѕРЅРµРЅС‚Сѓ
 	ar3 = exp_dbl;
 	rep 32 ram = [ar3];
 	ar3 = ar0;
@@ -168,7 +168,7 @@ __macro_change_nan:
 	gr1 = gr0 - 1;
 	vlen = gr1;
 
-	//Выделим мантиссу
+	//Р’С‹РґРµР»РёРј РјР°РЅС‚РёСЃСЃСѓ
 	ar3 = mantis_dbl;
 	##FIX_ME
 	rep 32 ram = [ar3];
@@ -183,7 +183,7 @@ __macro_change_nan:
 	sir = fp0_dmask;
 	gr1 = sir;
 
-	//Выделим экспоненту
+	//Р’С‹РґРµР»РёРј СЌРєСЃРїРѕРЅРµРЅС‚Сѓ
 	ar3 = exp_dbl;
 	rep 32 ram = [ar3];
 	ar3 = ar0;
@@ -291,7 +291,7 @@ __macro_change_infinityF32:
 	ar2 = ar7 + 2;
 	ar7 = ar7 + 66;
 
-	//Выделим мантиссу
+	//Р’С‹РґРµР»РёРј РјР°РЅС‚РёСЃСЃСѓ
 	ar3 = mantis_flt;
 	##FIX_ME
 	rep 32 ram = [ar3];
@@ -308,7 +308,7 @@ __macro_change_infinityF32:
 	sir = fp0_hmask;
 	gr2 = sir;
 
-	//Выделим экспоненту
+	//Р’С‹РґРµР»РёРј СЌРєСЃРїРѕРЅРµРЅС‚Сѓ
 	ar3 = exp_flt;
 	rep 32 ram = [ar3];
 	ar3 = ar0;

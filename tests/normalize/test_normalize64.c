@@ -46,12 +46,12 @@ nmppsStatus test_normalize64_diap(nmpps64f bgnIn, nmpps64f stepIn,
 	nmppsStatus stat;
 	double er, max_err;
 	int i;
-	//Создаем эталонные значения
+	//РЎРѕР·РґР°РµРј СЌС‚Р°Р»РѕРЅРЅС‹Рµ Р·РЅР°С‡РµРЅРёСЏ
 	create_normalize64_vecs(input, bgnIn, stepIn,
 						 kd, size, vSub, vDiv);
-	//Производим рассчеты
+	//РџСЂРѕРёР·РІРѕРґРёРј СЂР°СЃСЃС‡РµС‚С‹
 	stat = nmppsNormalize_64f(input, output, size, vSub, vDiv);
-	//Проверяем результат
+	//РџСЂРѕРІРµСЂСЏРµРј СЂРµР·СѓР»СЊС‚Р°С‚
 	if (stat!=nmppsStsNoErr) return stat;
 	for (i=0; i<size; i++){
 		er = fabs(kd[i]-output[i]);
@@ -75,12 +75,12 @@ nmppsStatus test_normalize64fc_diap(nmpps64fc bgnIn, nmpps64fc stepIn,
 	nmpps64fc* inputfc = (nmpps64fc*)input;
 	nmpps64fc* outputfc = (nmpps64fc*)output;
 	nmpps64fc* kdfc = (nmpps64fc*)kd;
-	//Создаем эталонные значения
+	//РЎРѕР·РґР°РµРј СЌС‚Р°Р»РѕРЅРЅС‹Рµ Р·РЅР°С‡РµРЅРёСЏ
 	create_normalize64fc_vecs(inputfc, bgnIn, stepIn,
 						 kdfc, size, vSub, vDiv);
-	//Производим рассчеты
+	//РџСЂРѕРёР·РІРѕРґРёРј СЂР°СЃСЃС‡РµС‚С‹
 	stat = nmppsNormalize_64fc(inputfc, outputfc, size, vSub, vDiv);
-	//Проверяем результат
+	//РџСЂРѕРІРµСЂСЏРµРј СЂРµР·СѓР»СЊС‚Р°С‚
 	if (stat!=nmppsStsNoErr) return stat;
 	for (i=0; i<size; i++){
 		er.re = fabs(kdfc[i].re-outputfc[i].re);
@@ -109,7 +109,7 @@ nmppsStatus test_normalize64fc_diap(nmpps64fc bgnIn, nmpps64fc stepIn,
 }
 
 
-//Обычные значения
+//РћР±С‹С‡РЅС‹Рµ Р·РЅР°С‡РµРЅРёСЏ
 TEST(tests_normalize64, nmppsNormalize_64f_Calculation) {
 	TEST_ASSERT_EQUAL(nmppsStsNoErr,  test_normalize64_diap(1.3, 0.01234567,
 			COUNT_ITERATION, 0.777, 0.1937));
@@ -132,18 +132,18 @@ TEST(tests_normalize64, nmppsNormalize_64fc_Calculation) {
 }
 
 
-//Проверка возвращаемых результатов
+//РџСЂРѕРІРµСЂРєР° РІРѕР·РІСЂР°С‰Р°РµРјС‹С… СЂРµР·СѓР»СЊС‚Р°С‚РѕРІ
 TEST(tests_normalize64, nmppsNormalize_64f_check_answer) {
 	nmppsStatus stat;
 
 	stat = nmppsNormalize_64f(input, output, sizeof(input)/sizeof(nmpps64f), 3.14, 0);
     TEST_ASSERT_EQUAL(nmppsStsDivByZeroErr, stat);
 
-    //Проверка на NULL
+    //РџСЂРѕРІРµСЂРєР° РЅР° NULL
     TEST_ASSERT_EQUAL(nmppsStsNullPtrErr, nmppsNormalize_64f(NULL, output, 1, 0, 1));
     TEST_ASSERT_EQUAL(nmppsStsNullPtrErr, nmppsNormalize_64f(input, NULL, 1, 0, 1));
 
-    //Проверка реакции на некорректный размер
+    //РџСЂРѕРІРµСЂРєР° СЂРµР°РєС†РёРё РЅР° РЅРµРєРѕСЂСЂРµРєС‚РЅС‹Р№ СЂР°Р·РјРµСЂ
     TEST_ASSERT_EQUAL(nmppsStsSizeErr, nmppsNormalize_64f(input, output, 0, 0, 1));
     TEST_ASSERT_EQUAL(nmppsStsSizeErr, nmppsNormalize_64f(input, output, -1, 0, 1));
 }
@@ -157,11 +157,11 @@ TEST(tests_normalize64, nmppsNormalize_64fc_check_answer) {
 	stat = nmppsNormalize_64fc(inputfc, outputfc, sizeof(input)/sizeof(nmpps64fc), vSub, 0);
     TEST_ASSERT_EQUAL(nmppsStsDivByZeroErr, stat);
 
-    //Проверка на NULL
+    //РџСЂРѕРІРµСЂРєР° РЅР° NULL
     TEST_ASSERT_EQUAL(nmppsStsNullPtrErr, nmppsNormalize_64fc(NULL, outputfc, 1, vSub, 1));
     TEST_ASSERT_EQUAL(nmppsStsNullPtrErr, nmppsNormalize_64fc(inputfc, NULL, 1, vSub, 1));
 
-    //Проверка реакции на некорректный размер
+    //РџСЂРѕРІРµСЂРєР° СЂРµР°РєС†РёРё РЅР° РЅРµРєРѕСЂСЂРµРєС‚РЅС‹Р№ СЂР°Р·РјРµСЂ
     TEST_ASSERT_EQUAL(nmppsStsSizeErr, nmppsNormalize_64fc(inputfc, outputfc, 0, vSub, 1));
     TEST_ASSERT_EQUAL(nmppsStsSizeErr, nmppsNormalize_64fc(inputfc, outputfc, -1, vSub, 1));
 }
@@ -182,13 +182,13 @@ TEST(tests_normalize64, nmppsNormalize_64f_check_rewrite) {
 	for(i=0;i < (sizeof(output) / sizeof(nmpps64f))-2;i++){
 		nmppsNormalize_64f(&input[1], &output[1], i+1, 1, 777);
 		/*for(k=0; k < (sizeof(output) / sizeof(nmpps64f)); k++){
-			//Перезапись входных векторов
+			//РџРµСЂРµР·Р°РїРёСЃСЊ РІС…РѕРґРЅС‹С… РІРµРєС‚РѕСЂРѕРІ
 			TEST_ASSERT_EQUAL_DOUBLE(input[k], kd[k]);
 		}*/
 		TEST_ASSERT_EQUAL_DOUBLE_ARRAY(input, kd, sizeof(output) / sizeof(nmpps64f));
-		//Запись перед началом
+		//Р—Р°РїРёСЃСЊ РїРµСЂРµРґ РЅР°С‡Р°Р»РѕРј
 		TEST_ASSERT_EQUAL_DOUBLE(t.dbl, output[0]);
-		//Запись после окончания векторов
+		//Р—Р°РїРёСЃСЊ РїРѕСЃР»Рµ РѕРєРѕРЅС‡Р°РЅРёСЏ РІРµРєС‚РѕСЂРѕРІ
 		t1.dbl = output[i+2];
 		if (t.ui64 != t1.ui64) {
 			TEST_ASSERT_EQUAL(-1, i);
@@ -216,14 +216,14 @@ TEST(tests_normalize64, nmppsNormalize_64fc_check_rewrite) {
 	for(i=0;i < (sizeof(output) / sizeof(nmpps64fc))-2;i++){
 		nmppsNormalize_64fc(&inputfc[1], &outputfc[1], i+1, vSub, 777);
 		/*for(k=0; k < (sizeof(output) / sizeof(nmpps64f)); k++){
-			//Перезапись входных векторов
+			//РџРµСЂРµР·Р°РїРёСЃСЊ РІС…РѕРґРЅС‹С… РІРµРєС‚РѕСЂРѕРІ
 			TEST_ASSERT_EQUAL_DOUBLE(input[k], kd[k]);
 		}*/
 		TEST_ASSERT_EQUAL_DOUBLE_ARRAY(inputfc, kdfc, sizeof(output) / sizeof(nmpps64f));
-		//Запись перед началом
+		//Р—Р°РїРёСЃСЊ РїРµСЂРµРґ РЅР°С‡Р°Р»РѕРј
 		TEST_ASSERT_EQUAL_DOUBLE(t.dbl, outputfc[0].re);
 		TEST_ASSERT_EQUAL_DOUBLE(t.dbl, outputfc[0].im);
-		//Запись после окончания векторов
+		//Р—Р°РїРёСЃСЊ РїРѕСЃР»Рµ РѕРєРѕРЅС‡Р°РЅРёСЏ РІРµРєС‚РѕСЂРѕРІ
 		t1.dbl = outputfc[i+2].re;
 		t2.dbl = outputfc[i+2].im;
 		if (t.ui64 != t1.ui64 || t.ui64 != t2.ui64) {

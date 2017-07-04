@@ -17,9 +17,9 @@
   .align 8
 
 SBx2:
-	  .quad 0x200000002 // 2 строки
+	  .quad 0x200000002 // 2 СЃС‚СЂРѕРєРё
 NBx2:
-      .quad 0x80000000 // 2 столбца
+      .quad 0x80000000 // 2 СЃС‚РѕР»Р±С†Р°
 WB2x2:
       .quad 0x0000000000000001
       .quad 0x0000000100000000
@@ -41,9 +41,9 @@ _nmppsSqrt_32f:
 	push ar0, gr0;
 	push ar1, gr1;
 
-    ar0 = [--ar5]; // Входящий вектор
-    ar1 = [--ar5]; // Результирующий вектор
-	gr0 = [--ar5]; // Размер
+    ar0 = [--ar5]; // Р’С…РѕРґСЏС‰РёР№ РІРµРєС‚РѕСЂ
+    ar1 = [--ar5]; // Р РµР·СѓР»СЊС‚РёСЂСѓСЋС‰РёР№ РІРµРєС‚РѕСЂ
+	gr0 = [--ar5]; // Р Р°Р·РјРµСЂ
 
 	call _square_root32f;
 
@@ -60,7 +60,7 @@ _nmppsSqrt_32f:
 */
 
 _square_root32f:
-    // Сохранение в стеке регистров, чтобы исключить их повреждение
+    // РЎРѕС…СЂР°РЅРµРЅРёРµ РІ СЃС‚РµРєРµ СЂРµРіРёСЃС‚СЂРѕРІ, С‡С‚РѕР±С‹ РёСЃРєР»СЋС‡РёС‚СЊ РёС… РїРѕРІСЂРµР¶РґРµРЅРёРµ
     push ar4, gr4;
     push ar5, gr5;
     push ar6, gr6;
@@ -86,10 +86,10 @@ _square_root32f:
 	gr7 = nmppsStsSizeErr;
 	nul;
 
-	gr7 = nmppsStsNoErr; //0 по умолчанию
+	gr7 = nmppsStsNoErr; //0 РїРѕ СѓРјРѕР»С‡Р°РЅРёСЋ
 
 
-	//Выделение старших 63 бит
+	//Р’С‹РґРµР»РµРЅРёРµ СЃС‚Р°СЂС€РёС… 63 Р±РёС‚
     sir = [NBx2];
     nb1l = sir;
     nb1h = sir;
@@ -97,9 +97,9 @@ _square_root32f:
     sbl = sir;
     sbh = sir;
 	ar5 = WB2x2;
-    rep 2 wfifo = [ar5++], ftw, wtw; // Загрузка матрицы  весов
+    rep 2 wfifo = [ar5++], ftw, wtw; // Р—Р°РіСЂСѓР·РєР° РјР°С‚СЂРёС†С‹  РІРµСЃРѕРІ
 
-	//Разовая загрузка
+	//Р Р°Р·РѕРІР°СЏ Р·Р°РіСЂСѓР·РєР°
 	gr4 = 64;
 	gr4 - gr0;
 	if > goto main_loop;
@@ -115,15 +115,15 @@ _square_root32f:
 main_loop:
 	gr4 - gr0;
 	if < goto after_correct;
-		//Размер меньше 64
+		//Р Р°Р·РјРµСЂ РјРµРЅСЊС€Рµ 64
 		gr6 = gr0 >> 1;
 		gr5 = 1;
 		gr0 and gr5;
 		if =0 delayed goto M1;
 		gr6 = gr6 - 1;
 		vlen = gr6;
-			//Размер нечетный, надо убедиться, что в лишнем загружаемом слове не было мусора
-			//Для этого копируем через буфер
+			//Р Р°Р·РјРµСЂ РЅРµС‡РµС‚РЅС‹Р№, РЅР°РґРѕ СѓР±РµРґРёС‚СЊСЃСЏ, С‡С‚Рѕ РІ Р»РёС€РЅРµРј Р·Р°РіСЂСѓР¶Р°РµРјРѕРј СЃР»РѕРІРµ РЅРµ Р±С‹Р»Рѕ РјСѓСЃРѕСЂР°
+			//Р”Р»СЏ СЌС‚РѕРіРѕ РєРѕРїРёСЂСѓРµРј С‡РµСЂРµР· Р±СѓС„РµСЂ
 			gr0 - gr5; //len ? 1
 			if =0 delayed goto L1_last_word;
 			ar5 = mass2;
@@ -134,9 +134,9 @@ main_loop:
 				gr5 = [ar0];
 				[ar5++] = gr5;
 				gr5 = false;
-				[ar5] = gr5; //Зануляем лишнее слово
-				ar0 = mass2; //Подмена адреса
-				//Обновлеям размер
+				[ar5] = gr5; //Р—Р°РЅСѓР»СЏРµРј Р»РёС€РЅРµРµ СЃР»РѕРІРѕ
+				ar0 = mass2; //РџРѕРґРјРµРЅР° Р°РґСЂРµСЃР°
+				//РћР±РЅРѕРІР»РµСЏРј СЂР°Р·РјРµСЂ
 				gr6 = gr0 >> 1;
 				vlen = gr6;
 		M1:
@@ -155,18 +155,18 @@ main_loop:
 
 after_correct:
 
-    //Вычисление приближенного значения X = ~sqrt(x)
+    //Р’С‹С‡РёСЃР»РµРЅРёРµ РїСЂРёР±Р»РёР¶РµРЅРЅРѕРіРѕ Р·РЅР°С‡РµРЅРёСЏ X = ~sqrt(x)
 	ar5 = BIAS;
 	rep 32 ram = [ar5];
-	ar5 = ar0; //Входной адрес
-    rep 32 data = [ar5++] with data - ram; //Вычитаем BIAS
+	ar5 = ar0; //Р’С…РѕРґРЅРѕР№ Р°РґСЂРµСЃ
+    rep 32 data = [ar5++] with data - ram; //Р’С‹С‡РёС‚Р°РµРј BIAS
 
-    rep 32 with vsum, shift afifo, 0; //Сдвигаем вправо на 1
-    rep 32 with afifo + ram; //Прибавляем BIAS
+    rep 32 with vsum, shift afifo, 0; //РЎРґРІРёРіР°РµРј РІРїСЂР°РІРѕ РЅР° 1
+    rep 32 with afifo + ram; //РџСЂРёР±Р°РІР»СЏРµРј BIAS
     ar5 = SIGN_BIT_flt;
-    rep 32 data = [ar5] with afifo and data;//Приводим к положительному
+    rep 32 data = [ar5] with afifo and data;//РџСЂРёРІРѕРґРёРј Рє РїРѕР»РѕР¶РёС‚РµР»СЊРЅРѕРјСѓ
 
-    //Сохранение результата X = ~sqrt(x), он нам понадобится дальше
+    //РЎРѕС…СЂР°РЅРµРЅРёРµ СЂРµР·СѓР»СЊС‚Р°С‚Р° X = ~sqrt(x), РѕРЅ РЅР°Рј РїРѕРЅР°РґРѕР±РёС‚СЃСЏ РґР°Р»СЊС€Рµ
 	ar5 = mass1;
     rep 32 [ar5++] = afifo;
 	ar5 = mass1;
@@ -175,12 +175,12 @@ after_correct:
 	########################################
 
 
-    //Вычисление приближенного значения Y = 1/~sqrt(x)
+    //Р’С‹С‡РёСЃР»РµРЅРёРµ РїСЂРёР±Р»РёР¶РµРЅРЅРѕРіРѕ Р·РЅР°С‡РµРЅРёСЏ Y = 1/~sqrt(x)
 	ar5 = mass1;
 	rep 32 data = [ar5++] with not data;
     ar5 = DpCode_const_flt;
-    rep 32 data = [ar5] with afifo - data; // 1/x ~ допкоду экспоненты x
-    //Сохранение результата Y = 1/~sqrt(x)
+    rep 32 data = [ar5] with afifo - data; // 1/x ~ РґРѕРїРєРѕРґСѓ СЌРєСЃРїРѕРЅРµРЅС‚С‹ x
+    //РЎРѕС…СЂР°РЅРµРЅРёРµ СЂРµР·СѓР»СЊС‚Р°С‚Р° Y = 1/~sqrt(x)
 	ar5 = mass1;
 	rep 32 [ar5++] = afifo;
 
@@ -191,16 +191,16 @@ after_correct:
 	fpu 0 rep vlen vreg0 = [ar0++];//A
 
 
-	//Уточним значение
+	//РЈС‚РѕС‡РЅРёРј Р·РЅР°С‡РµРЅРёРµ
 	//Y0 = (2.0 - X0*Y)*Y
 	fpu 0 .float vreg3 = -vreg1*vreg2 + vreg6;
 	fpu 0 .float vreg2 = vreg3*vreg2;
 	
-	//Первая итерация
+	//РџРµСЂРІР°СЏ РёС‚РµСЂР°С†РёСЏ
 	//X1 = 0.5*(X0 + A*Y0)
 	fpu 0 .float vreg3 = vreg0*vreg2 + vreg1;
 	fpu 0 .float vreg1 = vreg5*vreg3;
-	//Уточним значение Y1 = 1/X1
+	//РЈС‚РѕС‡РЅРёРј Р·РЅР°С‡РµРЅРёРµ Y1 = 1/X1
 	//Y1_ = (2.0 - X1*Y0)*Y0
 	fpu 0 .float vreg3 = -vreg1*vreg2 + vreg6;
 	fpu 0 .float vreg2 = vreg3*vreg2;
@@ -209,44 +209,44 @@ after_correct:
 	fpu 0 .float vreg2 = vreg3*vreg2;
 
 
-	//Вторая итерация
+	//Р’С‚РѕСЂР°СЏ РёС‚РµСЂР°С†РёСЏ
 	//X2 = 0.5*(X1 + A*Y1)
 	fpu 0 .float vreg3 = vreg0*vreg2 + vreg1;
 	fpu 0 .float vreg1 = vreg5*vreg3;
-	//Уточним значение Y2 = 1/X2
+	//РЈС‚РѕС‡РЅРёРј Р·РЅР°С‡РµРЅРёРµ Y2 = 1/X2
 	fpu 0 .float vreg3 = -vreg1*vreg2 + vreg6;
 	fpu 0 .float vreg2 = vreg3*vreg2;
 
 	fpu 0 .float vreg3 = -vreg1*vreg2 + vreg6;
 	fpu 0 .float vreg2 = vreg3*vreg2;
 
-	//3я итерация
+	//3СЏ РёС‚РµСЂР°С†РёСЏ
 	//X3 = 0.5*(X2 + A*Y2)
 	fpu 0 .float vreg3 = vreg0*vreg2 + vreg1;
 	fpu 0 .float vreg1 = vreg5*vreg3;
-	//Уточним значение Y3 = 1/X3
+	//РЈС‚РѕС‡РЅРёРј Р·РЅР°С‡РµРЅРёРµ Y3 = 1/X3
 	fpu 0 .float vreg3 = -vreg1*vreg2 + vreg6;
 	fpu 0 .float vreg2 = vreg3*vreg2;
 
 	fpu 0 .float vreg3 = -vreg1*vreg2 + vreg6;
 	fpu 0 .float vreg2 = vreg3*vreg2;
 
-	//4я итерация
+	//4СЏ РёС‚РµСЂР°С†РёСЏ
 	//RESULT = 0.5*(X3 + A*Y3)
 	fpu 0 .float vreg3 = vreg0*vreg2 + vreg1;
 	fpu 0 .float vreg7 = vreg5*vreg3;
 
-	//Анализ входного вектора
+	//РђРЅР°Р»РёР· РІС…РѕРґРЅРѕРіРѕ РІРµРєС‚РѕСЂР°
 
-    //проверка на nan & inf
+    //РїСЂРѕРІРµСЂРєР° РЅР° nan & inf
     fpu 0 .float vreg0 - vreg0, set mask if <>0;
     fpu 0 .float vreg7 = mask ? /vreg0/ : vreg7;
 
-	//проверка на 0
+	//РїСЂРѕРІРµСЂРєР° РЅР° 0
     fpu 0 .float vreg0 + vreg0, set mask if =0;
     fpu 0 .float vreg7 = mask ? vreg0 : vreg7;
 
-	//проверка на отрицательные
+	//РїСЂРѕРІРµСЂРєР° РЅР° РѕС‚СЂРёС†Р°С‚РµР»СЊРЅС‹Рµ
     fpu 0 .float vreg0 + vreg0, set mask if <;
     sir = fp0_lmask;
     gr5 = sir;
@@ -255,9 +255,9 @@ after_correct:
     fpu 0 .float vreg7 = mask ? vreg4 : vreg7;
     gr5 or gr6;
     if =0 goto save_result;
-	gr7 = nmppsStsSqrtNegArg; //Отрицательное число
+	gr7 = nmppsStsSqrtNegArg; //РћС‚СЂРёС†Р°С‚РµР»СЊРЅРѕРµ С‡РёСЃР»Рѕ
 save_result:
-	//Результат в vreg7
+	//Р РµР·СѓР»СЊС‚Р°С‚ РІ vreg7
 	gr0 - gr4;
 	if > delayed goto save_result_normal;
 		ar5 = mass1;
@@ -266,12 +266,12 @@ save_result:
 		gr5 = 1;
 		gr0 and gr5;
 		if =0 goto save_result_normal;
-		//Размер нечетный, надо извращаться, дабы не потереть лишнее слово в выходном буфере
+		//Р Р°Р·РјРµСЂ РЅРµС‡РµС‚РЅС‹Р№, РЅР°РґРѕ РёР·РІСЂР°С‰Р°С‚СЊСЃСЏ, РґР°Р±С‹ РЅРµ РїРѕС‚РµСЂРµС‚СЊ Р»РёС€РЅРµРµ СЃР»РѕРІРѕ РІ РІС‹С…РѕРґРЅРѕРј Р±СѓС„РµСЂРµ
 		gr0 - gr5;
 		if =0 delayed goto save_last_word;
 			ar5 = mass1;
 			nul;
-			//Копируем через буфер
+			//РљРѕРїРёСЂСѓРµРј С‡РµСЂРµР· Р±СѓС„РµСЂ
 			gr6 = gr0 >> 1;
 			gr6 = gr6 - 1;
 			vlen = gr6;
@@ -281,7 +281,7 @@ save_result:
 		save_last_word:
 			gr5 = [ar5];
 			[ar1] = gr5;
-			goto exit; //Копирование последнего куска информации, можно выходить
+			goto exit; //РљРѕРїРёСЂРѕРІР°РЅРёРµ РїРѕСЃР»РµРґРЅРµРіРѕ РєСѓСЃРєР° РёРЅС„РѕСЂРјР°С†РёРё, РјРѕР¶РЅРѕ РІС‹С…РѕРґРёС‚СЊ
 
 
 save_result_normal:

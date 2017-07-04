@@ -33,7 +33,7 @@ DpCode_const_dbl:
 _nmppsSqrt_64f:
     ar5 = ar7 - 2;
     
-    // Сохранение в стеке регистров, чтобы исключить их повреждение
+    // РЎРѕС…СЂР°РЅРµРЅРёРµ РІ СЃС‚РµРєРµ СЂРµРіРёСЃС‚СЂРѕРІ, С‡С‚РѕР±С‹ РёСЃРєР»СЋС‡РёС‚СЊ РёС… РїРѕРІСЂРµР¶РґРµРЅРёРµ
     push ar0, gr0;
     push ar1, gr1;
     push ar2, gr2;
@@ -42,15 +42,15 @@ _nmppsSqrt_64f:
     push ar6, gr6;
 
     
-    ar1 = [--ar5]; // Входящий вектор
-    ar0 = [--ar5]; // Результирующий вектор
-	gr1 = [--ar5]; // Размер
+    ar1 = [--ar5]; // Р’С…РѕРґСЏС‰РёР№ РІРµРєС‚РѕСЂ
+    ar0 = [--ar5]; // Р РµР·СѓР»СЊС‚РёСЂСѓСЋС‰РёР№ РІРµРєС‚РѕСЂ
+	gr1 = [--ar5]; // Р Р°Р·РјРµСЂ
 				
 	ar5 = ar7 + 2;
 	ar6 = ar5 + 64;
 	ar7 = ar7 + 130;
 
-	gr7 = 0; //Значение по умолчанию
+	gr7 = 0; //Р—РЅР°С‡РµРЅРёРµ РїРѕ СѓРјРѕР»С‡Р°РЅРёСЋ
 	gr1;
     if <= goto err_size;
     gr0 = ar0;
@@ -60,14 +60,14 @@ _nmppsSqrt_64f:
     gr0;
     if =0 goto err_ptr;
 
-	//Выделение старших 63 бит
+	//Р’С‹РґРµР»РµРЅРёРµ СЃС‚Р°СЂС€РёС… 63 Р±РёС‚
     //sir = [nb63]
     sir = [NB_default];
     nb1 = sir;	
     sir = [SB_default];
     sb = sir;	
 	ar2 = WB_default;
-    rep 1 wfifo = [ar2], ftw, wtw; // Загрузка матрицы  весов
+    rep 1 wfifo = [ar2], ftw, wtw; // Р—Р°РіСЂСѓР·РєР° РјР°С‚СЂРёС†С‹  РІРµСЃРѕРІ
 
 main_loop:
 	gr3 = gr1;
@@ -81,27 +81,27 @@ after_correct:
 	gr3 = gr2 + gr3;
 	vlen = gr3;
 
-    //Вычисление приближенного значения X = ~sqrt(x)
+    //Р’С‹С‡РёСЃР»РµРЅРёРµ РїСЂРёР±Р»РёР¶РµРЅРЅРѕРіРѕ Р·РЅР°С‡РµРЅРёСЏ X = ~sqrt(x)
 	ar2 = BIAS;
 	rep 32 ram = [ar2];
 	ar2 = ar1;
-    rep 32 data = [ar2++] with data - ram; //Вычитаем BIAS
-    rep 32 with vsum, shift afifo, 0; //Сдвигаем вправо на 1
-    rep 32 with afifo + ram; //Прибавляем BIAS
+    rep 32 data = [ar2++] with data - ram; //Р’С‹С‡РёС‚Р°РµРј BIAS
+    rep 32 with vsum, shift afifo, 0; //РЎРґРІРёРіР°РµРј РІРїСЂР°РІРѕ РЅР° 1
+    rep 32 with afifo + ram; //РџСЂРёР±Р°РІР»СЏРµРј BIAS
     ar2 = SIGN_BIT_dbl;
-    rep 32 data = [ar2] with afifo and data;//Приводим к целому
+    rep 32 data = [ar2] with afifo and data;//РџСЂРёРІРѕРґРёРј Рє С†РµР»РѕРјСѓ
 
-    //Сохранение результата X = ~sqrt(x)
+    //РЎРѕС…СЂР°РЅРµРЅРёРµ СЂРµР·СѓР»СЊС‚Р°С‚Р° X = ~sqrt(x)
 	ar2 = ar5;
     rep 32 [ar2++] = afifo;
 
 
-    //Вычисление приближенного значения Y = 1/~sqrt(x)
+    //Р’С‹С‡РёСЃР»РµРЅРёРµ РїСЂРёР±Р»РёР¶РµРЅРЅРѕРіРѕ Р·РЅР°С‡РµРЅРёСЏ Y = 1/~sqrt(x)
     ar2 = ar5;
 	rep 32 data = [ar2++] with not data;
     ar2 = DpCode_const_dbl;
-    rep 32 data = [ar2] with afifo - data; // 1/x ~ допкоду экспоненты x
-    //Сохранение результата Y = 1/~sqrt(x)
+    rep 32 data = [ar2] with afifo - data; // 1/x ~ РґРѕРїРєРѕРґСѓ СЌРєСЃРїРѕРЅРµРЅС‚С‹ x
+    //РЎРѕС…СЂР°РЅРµРЅРёРµ СЂРµР·СѓР»СЊС‚Р°С‚Р° Y = 1/~sqrt(x)
 	ar2 = ar6;
 	rep 32 [ar2++] = afifo;
 /*    goto continue;
@@ -126,16 +126,16 @@ continue:*/
 
 	ar2 = _half_dbl;
 	fpu 0 rep vlen vreg5 = [ar2];//0.5
-	//Уточним значение
+	//РЈС‚РѕС‡РЅРёРј Р·РЅР°С‡РµРЅРёРµ
 	//Y0 = (2.0 - X0*Y)*Y
 	fpu 0 .double vreg3 = -vreg1*vreg2 + vreg6;
 	fpu 0 .double vreg2 = vreg3*vreg2;
 	
-	//Первая итерация
+	//РџРµСЂРІР°СЏ РёС‚РµСЂР°С†РёСЏ
 	//X1 = 0.5*(X0 + A*Y0)
 	fpu 0 .double vreg3 = vreg0*vreg2 + vreg1;
 	fpu 0 .double vreg1 = vreg5*vreg3;
-	//Уточним значение Y1 = 1/X1
+	//РЈС‚РѕС‡РЅРёРј Р·РЅР°С‡РµРЅРёРµ Y1 = 1/X1
 	//Y1_ = (2.0 - X1*Y0)*Y0
 	fpu 0 .double vreg3 = -vreg1*vreg2 + vreg6;
 	fpu 0 .double vreg2 = vreg3*vreg2;
@@ -144,48 +144,48 @@ continue:*/
 	fpu 0 .double vreg2 = vreg3*vreg2;
 
 
-	//Вторая итерация
+	//Р’С‚РѕСЂР°СЏ РёС‚РµСЂР°С†РёСЏ
 	//X2 = 0.5*(X1 + A*Y1)
 	fpu 0 .double vreg3 = vreg0*vreg2 + vreg1;
 	fpu 0 .double vreg1 = vreg5*vreg3;
-	//Уточним значение Y2 = 1/X2
+	//РЈС‚РѕС‡РЅРёРј Р·РЅР°С‡РµРЅРёРµ Y2 = 1/X2
 	fpu 0 .double vreg3 = -vreg1*vreg2 + vreg6;
 	fpu 0 .double vreg2 = vreg3*vreg2;
 
 	fpu 0 .double vreg3 = -vreg1*vreg2 + vreg6;
 	fpu 0 .double vreg2 = vreg3*vreg2;
 
-	//3я итерация
+	//3СЏ РёС‚РµСЂР°С†РёСЏ
 	//X3 = 0.5*(X2 + A*Y2)
 	fpu 0 .double vreg3 = vreg0*vreg2 + vreg1;
 	fpu 0 .double vreg1 = vreg5*vreg3;
-	//Уточним значение Y3 = 1/X3
+	//РЈС‚РѕС‡РЅРёРј Р·РЅР°С‡РµРЅРёРµ Y3 = 1/X3
 	fpu 0 .double vreg3 = -vreg1*vreg2 + vreg6;
 	fpu 0 .double vreg2 = vreg3*vreg2;
 
 	fpu 0 .double vreg3 = -vreg1*vreg2 + vreg6;
 	fpu 0 .double vreg2 = vreg3*vreg2;
 
-	//4я итерация
+	//4СЏ РёС‚РµСЂР°С†РёСЏ
 	//RESULT = 0.5*(X3 + A*Y3)
 	fpu 0 .double vreg3 = vreg0*vreg2 + vreg1;
 	fpu 0 .double vreg1 = vreg5*vreg3;
 
-	//Анализ входного вектора
+	//РђРЅР°Р»РёР· РІС…РѕРґРЅРѕРіРѕ РІРµРєС‚РѕСЂР°
 	ar2 = _nan_dbl;
     fpu 0 rep vlen vreg6 = [ar2];
 	//ar2 = ar1;
-    fpu 0 rep vlen vreg5 = [ar1++];//Входной вектор
+    fpu 0 rep vlen vreg5 = [ar1++];//Р’С…РѕРґРЅРѕР№ РІРµРєС‚РѕСЂ
 
-    //проверка на nan & inf
+    //РїСЂРѕРІРµСЂРєР° РЅР° nan & inf
     fpu 0 .double vreg5 - vreg5, set mask if <>0;
     fpu 0 .double vreg1 = mask ? /vreg5/ : vreg1;
 
-	//проверка на 0
+	//РїСЂРѕРІРµСЂРєР° РЅР° 0
     fpu 0 .double vreg5 + vreg5, set mask if =0;
     fpu 0 .double vreg1 = mask ? vreg5 : vreg1;
 
-	//проверка на отрицательные
+	//РїСЂРѕРІРµСЂРєР° РЅР° РѕС‚СЂРёС†Р°С‚РµР»СЊРЅС‹Рµ
     fpu 0 .double vreg5 + vreg5, set mask if <;
     sir = fp0_dmask;
     fpu 0 .double vreg1 = mask ? vreg6 : vreg1;
