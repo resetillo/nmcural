@@ -1,3 +1,4 @@
+#include "unity/unity_fixture.h"
 #include "nmpps.h"
 #include "tests/test_proto.h"
 #include "tests/test_math.h"
@@ -5,6 +6,15 @@
 
 float right_sqrtf(float x);
 double right_sqrt(double x);
+
+TEST_GROUP(tests_sqrt32f);
+TEST_SETUP(tests_sqrt32f) {}
+TEST_TEAR_DOWN(tests_sqrt32f) {}
+
+TEST_GROUP(tests_sqrt64f);
+TEST_SETUP(tests_sqrt64f) {}
+TEST_TEAR_DOWN(tests_sqrt64f) {}
+
 
 #define COUNT_ITERATION (100)
 
@@ -114,22 +124,89 @@ nmppsStatus test_sqrtf_diap(nmpps32f bgn, nmpps32f step, int count){
 	return nmppsStsNoErr;
 }
 
-nmpps64f data_sqrt_neg[] __attribute__((aligned(8))) = {
-		4,  9, -4, -9
-};
-nmpps32f data_sqrtf_neg[] __attribute__((aligned(8))) = {
+
+TEST(tests_sqrt64f, nmppsSqrt64f_small_vecs) {
+	TEST_ASSERT_EQUAL(nmppsStsNoErr, test_sqrt_diap(0.133377,
+			              0.123, 1));
+	TEST_ASSERT_EQUAL(nmppsStsNoErr, test_sqrt_diap(133.377,
+			              12.3, 2));
+	TEST_ASSERT_EQUAL(nmppsStsNoErr, test_sqrt_diap(1.77789,
+			              0.197, 3));
+	TEST_ASSERT_EQUAL(nmppsStsNoErr, test_sqrt_diap(337.7789,
+			              12.3, 32));
+	TEST_ASSERT_EQUAL(nmppsStsNoErr, test_sqrt_diap(189.133,
+			              0.123, 33));
+}
+
+TEST(tests_sqrt32f, nmppsSqrt32f_small_vecs) {
+	TEST_ASSERT_EQUAL(nmppsStsNoErr, test_sqrtf_diap(1.77789,
+			              0.197, 3));
+	TEST_ASSERT_EQUAL(nmppsStsNoErr, test_sqrtf_diap(0.133377,
+			              0.123, 1));
+	TEST_ASSERT_EQUAL(nmppsStsNoErr, test_sqrtf_diap(133.377,
+			              12.3, 2));
+	TEST_ASSERT_EQUAL(nmppsStsNoErr, test_sqrtf_diap(337.7789,
+			              12.3, 64));
+	TEST_ASSERT_EQUAL(nmppsStsNoErr, test_sqrtf_diap(189.133,
+			              0.123, 65));
+}
+
+
+TEST(tests_sqrt64f, nmppsSqrt64f_calculation){
+	TEST_ASSERT_EQUAL(nmppsStsNoErr, test_sqrt_diap(0, 0.133377789, COUNT_ITERATION));
+
+	TEST_ASSERT_EQUAL(nmppsStsNoErr, test_sqrt_diap(1.7789e+300, 13.337e+300, COUNT_ITERATION));
+
+	TEST_ASSERT_EQUAL(nmppsStsNoErr, test_sqrt_diap(3.3333e-300, 1.3337e-300, COUNT_ITERATION));
+}
+
+TEST(tests_sqrt32f, nmppsSqrt32f_calculation){
+	TEST_ASSERT_EQUAL(nmppsStsNoErr, test_sqrtf_diap(0, 0.133377789, COUNT_ITERATION));
+
+	TEST_ASSERT_EQUAL(nmppsStsNoErr, test_sqrtf_diap(1.7789e+38, -1.3337e+38*(1/COUNT_ITERATION), COUNT_ITERATION));
+
+	TEST_ASSERT_EQUAL(nmppsStsNoErr, test_sqrtf_diap(3.3333e-38, -1.7777e-38*(1/COUNT_ITERATION), COUNT_ITERATION));
+}
+
+
+nmpps64f data_sqrt_neg[] = {
 		4,  9, -4, -9
 };
 
-int test_sqrt_check_answer(){
+TEST(tests_sqrt64f, nmppsSqrt64f_check_answer){
+	nmpps64f data[sizeof(data_sqrt_neg)/sizeof(nmpps64f)];
+	TEST_ASSERT_EQUAL(nmppsStsSqrtNegArg, nmppsSqrt_64f(data_sqrt_neg, data, sizeof(data_sqrt_neg)/sizeof(nmpps64f)));
+
+	//не прошла проверка на NULL
+	TEST_ASSERT_EQUAL(nmppsStsNullPtrErr, nmppsSqrt_64f(data, NULL, 1));
+	TEST_ASSERT_EQUAL(nmppsStsNullPtrErr, nmppsSqrt_64f(NULL, data, 1));
+
+	//не прошла проверка на некорректную длину вектора
+	TEST_ASSERT_EQUAL(nmppsStsSizeErr, nmppsSqrt_64f(data, data, 0));
+	TEST_ASSERT_EQUAL(nmppsStsSizeErr, nmppsSqrt_64f(data, data, -1));
+}
+
+nmpps32f data_sqrtf_neg[] = {
+		4,  9, -4, -9
+};
+
+TEST(tests_sqrt32f, nmppsSqrt32f_check_answer){
+	nmpps32f data[sizeof(data_sqrtf_neg)/sizeof(nmpps32f)];
+	TEST_ASSERT_EQUAL(nmppsStsSqrtNegArg, nmppsSqrt_32f(data_sqrtf_neg, data, sizeof(data_sqrtf_neg)/sizeof(nmpps32f)));
+
+	//не прошла проверка на NULL
+	TEST_ASSERT_EQUAL(nmppsStsNullPtrErr, nmppsSqrt_32f(data, NULL, 1));
+	TEST_ASSERT_EQUAL(nmppsStsNullPtrErr, nmppsSqrt_32f(NULL, data, 1));
+
+	//не прошла проверка на некорректную длину вектора
+	TEST_ASSERT_EQUAL(nmppsStsSizeErr, nmppsSqrt_32f(data, data, 0));
+	TEST_ASSERT_EQUAL(nmppsStsSizeErr, nmppsSqrt_32f(data, data, -1));
+}
+
+
+TEST(tests_sqrt64f, nmppsSqrt64f_check_rewrite){
 	int i,k;
-	nmppsStatus stat;
 	nmpps64f data[33], original[33], out[33];
-
-	stat = nmppsSqrt_64f(data_sqrt_neg, data, sizeof(data_sqrt_neg)/sizeof(nmpps64f));
-	if (stat!=nmppsStsSqrtNegArg) return 1;
-	if (100*fabs(2-data[0])/2 > sqrt_critical_error ||
-			100*fabs(3-data[1])/3 > sqrt_critical_error) return 2;
 
 	original[0] = data[0] = out[0] = 0;
 	for(i=1;i<33;i++){
@@ -142,126 +219,67 @@ int test_sqrt_check_answer(){
 		nmppsSqrt_64f(&data[1], &out[1], i+1);
 		for(k=0; k < sizeof(data)/sizeof(nmpps64f); k++){
 			if (data[k]!=original[k]) {
-				return 3;//Произошло искажение входных данных
+				//Произошло искажение входных данных
+				TEST_ASSERT_EQUAL_DOUBLE(data[k], original[k]);
 			}
 		}
 		if (out[0]!=0) {
-			return 4;//Затерты данные перед выходным вектором
+			//Затерты данные перед выходным вектором
+			TEST_ASSERT_EQUAL_DOUBLE(out[0], 0);
 		}
 		if (out[i+2]!=0) {
-			return 5;//Затерты данные после выходного вектора
+			//Затерты данные после выходного вектора
+			TEST_ASSERT_EQUAL_DOUBLE(out[i+2], 0);
 		}
 	}
 
-
-	if (nmppsSqrt_64f(data, NULL, 1) != nmppsStsNullPtrErr ||
-		nmppsSqrt_64f(NULL, out, 1) != nmppsStsNullPtrErr	){
-		return 6; //не прошла проверка на NULL
-	}
-
-	if (nmppsSqrt_64f(data, out, 0) != nmppsStsSizeErr ||
-		nmppsSqrt_64f(data, out, -1) != nmppsStsSizeErr	){
-		return 7; //не прошла проверка на некорректную длину вектора
-	}
-
-
-	return 0;
 }
 
 
-int test_sqrtf_check_answer(){
+TEST(tests_sqrt32f, nmppsSqrt32f_check_rewrite){
 	int i,k;
-	nmppsStatus stat;
-	nmpps32f data[66], original[66], out[66];
-
-	stat = nmppsSqrt_32f(data_sqrtf_neg, data, sizeof(data_sqrtf_neg)/sizeof(nmpps32f));
-	if (stat!=nmppsStsSqrtNegArg) return 1;
-	if (100*fabsf(2-data[0])/2 > sqrtf_critical_error ||
-			100*fabsf(3-data[1])/3 > sqrtf_critical_error) return 2;
-
-	original[0] = data[0] = out[0] = 0;
-	for(i=1;i<66;i++){
+	nmpps32f data[68], original[68], out[68];
+	fltint_t t;
+	t.ui32 = 0xDEADBEEF;
+	original[0] = data[0] = out[0] = t.flt;
+	for(i=1;i<68;i++){
 		original[i] = i*i;
 		data[i] = original[i];
-		out[i] = 0;
+		out[i] = t.flt;
 	}
 
-	for(i=0;i<63;i++){
-		nmppsSqrt_32f(&data[1], &out[1], i+1);
+	for(i=1;i<65;i++){
+		nmppsSqrt_32f(&data[2], &out[2], i);
 		for(k=0; k < sizeof(data)/sizeof(nmpps32f); k++){
 			if (data[k]!=original[k]) {
-				return 3;//Произошло искажение входных данных
+				//Произошло искажение входных данных
+				TEST_ASSERT_EQUAL_FLOAT(data[k], original[k]);
 			}
 		}
-		if (out[0]!=0) {
-			return 4;//Затерты данные перед выходным вектором
+		if (out[0]!=t.flt) {
+			//Затерты данные перед выходным вектором
+			TEST_ASSERT_EQUAL(i, -1);
 		}
-		if (out[i+2]!=0) {
-			return 5;//Затерты данные после выходного вектора
+		if (out[i+2]!=t.flt) {
+			//Затерты данные после выходного вектора
+			TEST_ASSERT_EQUAL(i, -1);
 		}
 	}
 
-
-	if (nmppsSqrt_32f(data, NULL, 1) != nmppsStsNullPtrErr ||
-		nmppsSqrt_32f(NULL, out, 1) != nmppsStsNullPtrErr	){
-		return 6; //не прошла проверка на NULL
-	}
-
-	if (nmppsSqrt_32f(data, out, 0) != nmppsStsSizeErr ||
-		nmppsSqrt_32f(data, out, -1) != nmppsStsSizeErr	){
-		return 7; //не прошла проверка на некорректную длину вектора
-	}
-
-
-	return 0;
 }
 
-int test_sqrt(){
-	nmppsStatus stat;
-	stat = test_sqrt_diap(0, 0.133377789, COUNT_ITERATION);
-	if (stat!=nmppsStsNoErr) {
-		return 1;
-	}
-
-	stat = test_sqrt_diap(1.7789e+300, 13.337e+300, COUNT_ITERATION);
-	if (stat!=nmppsStsNoErr) {
-		return 2;
-	}
-
-	stat = test_sqrt_diap(3.3333e-300, 1.3337e-300, COUNT_ITERATION);
-	if (stat!=nmppsStsNoErr) {
-		return 3;
-	}
-
-	stat = test_sqrt_check_answer();
-	if (stat != 0) {
-		return 4;
-	}
-
-	return 0;
+TEST_GROUP_RUNNER(tests_sqrt64f){
+    RUN_TEST_CASE(tests_sqrt64f, nmppsSqrt64f_small_vecs);
+    RUN_TEST_CASE(tests_sqrt64f, nmppsSqrt64f_calculation);
+    RUN_TEST_CASE(tests_sqrt64f, nmppsSqrt64f_check_answer);
+    RUN_TEST_CASE(tests_sqrt64f, nmppsSqrt64f_check_rewrite);
 }
 
-
-int test_sqrtf(){
-
-	nmppsStatus stat;
-	stat = test_sqrtf_diap(0, 0.133377789, 1000);
-	if (stat!=nmppsStsNoErr) {
-		return 1;
-	}
-
-	stat = test_sqrtf_diap(1.7789e+38, -13.337, 1000);
-	if (stat!=nmppsStsNoErr) {
-		return 2;
-	}
-
-	stat = test_sqrtf_diap(3.3333e-38, 1.3337e-38, 1000);
-	if (stat!=nmppsStsNoErr) {
-		return 3;
-	}
-
-	if (test_sqrtf_check_answer()!=0) return 4;
-
-	return 0;
+TEST_GROUP_RUNNER(tests_sqrt32f){
+    RUN_TEST_CASE(tests_sqrt32f, nmppsSqrt32f_small_vecs);
+    RUN_TEST_CASE(tests_sqrt32f, nmppsSqrt32f_calculation);
+    RUN_TEST_CASE(tests_sqrt32f, nmppsSqrt32f_check_answer);
+    RUN_TEST_CASE(tests_sqrt32f, nmppsSqrt32f_check_rewrite);
 }
+
 

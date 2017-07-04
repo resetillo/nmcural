@@ -10,13 +10,6 @@ TEST_SETUP(tests_old_tests) {}
 TEST_TEAR_DOWN(tests_old_tests) {}
 
 
-TEST(tests_old_tests, test_sqrt) {
-	TEST_ASSERT_EQUAL(0, test_sqrt());
-}
-
-TEST(tests_old_tests, test_sqrtf) {
-	TEST_ASSERT_EQUAL(0, test_sqrtf());
-}
 
 TEST(tests_old_tests, test_atan) {
 	TEST_ASSERT_EQUAL(0, test_atan());
@@ -34,8 +27,6 @@ TEST(tests_old_tests, test_vec_handler32) {
 
 TEST_GROUP_RUNNER(tests_old_tests) {
     RUN_TEST_CASE(tests_old_tests, test_vec_handler32);
-    RUN_TEST_CASE(tests_old_tests, test_sqrt);
-    RUN_TEST_CASE(tests_old_tests, test_sqrtf);
     RUN_TEST_CASE(tests_old_tests, test_atan);
     RUN_TEST_CASE(tests_old_tests, test_atanf);
 }

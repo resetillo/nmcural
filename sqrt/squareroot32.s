@@ -1,4 +1,7 @@
+.global _nmppsSqrt_32f
 .global _square_root32f
+
+
 .global _half_flt
 .global _two_flt
 .global _nan_flt
@@ -29,21 +32,62 @@ DpCode_const_flt:
 
 .text
 
+
+#include <nmpps_asm_defs.h>
+
+_nmppsSqrt_32f:
+
+    ar5 = ar7 - 2;
+	push ar0, gr0;
+	push ar1, gr1;
+
+    ar0 = [--ar5]; // Входящий вектор
+    ar1 = [--ar5]; // Результирующий вектор
+	gr0 = [--ar5]; // Размер
+
+	call _square_root32f;
+
+	pop ar1, gr1;
+	pop ar0, gr0;
+
+	return;
+
+
+/*
+	ar0 input adr
+	ar1 output adr
+	gr0 lenght
+*/
+
 _square_root32f:
-    //ar4  input data
-	//gr2  lenght
-    
     // Сохранение в стеке регистров, чтобы исключить их повреждение
-    push ar2, gr2;
-    push ar3, gr3;
-    push ar5, gr5;
     push ar4, gr4;
+    push ar5, gr5;
     push ar6, gr6;
 
 
-	ar5 = ar7 + 2;
-	ar6 = ar5 + 64;
+	ar6 = ar7 + 2;
+	#define mass1  ar6
+	#define mass2  ar6 + 64
 	ar7 = ar7 + 130;
+
+	gr5 = ar0;
+	gr5;
+	if =0 delayed goto exit;
+	gr7 = nmppsStsNullPtrErr;
+	gr5 = ar1;
+
+	gr5;
+	if =0 delayed goto exit;
+	gr0;
+	nul;
+
+	if <= delayed goto exit;
+	gr7 = nmppsStsSizeErr;
+	nul;
+
+	gr7 = nmppsStsNoErr; //0 по умолчанию
+
 
 	//Выделение старших 63 бит
     sir = [NBx2];
@@ -52,59 +96,101 @@ _square_root32f:
     sir = [SBx2];
     sbl = sir;
     sbh = sir;
-	ar2 = WB2x2;
-    rep 2 wfifo = [ar2++], ftw, wtw; // Загрузка матрицы  весов
+	ar5 = WB2x2;
+    rep 2 wfifo = [ar5++], ftw, wtw; // Загрузка матрицы  весов
 
-	gr3 = 1;
-	gr3 and gr2;
-	if =0 delayed goto after_correct;
-	gr3 = gr2 >> 1;//В двойные слова
-	nul;
+	//Разовая загрузка
+	gr4 = 64;
+	gr4 - gr0;
+	if > goto main_loop;
+		gr5 = 31;
+		vlen = gr5;
+		ar5 = _two_flt;
+		fpu 0 rep vlen vreg6 = [ar5];//2
+		ar5 = _half_flt;
+		fpu 0 rep vlen vreg5 = [ar5];//0.5
+		ar5 = _nan_flt;
+	    fpu 0 rep vlen vreg4 = [ar5];
 
-	gr3 = gr3 + 1; //Если размер нечетный, увеличим на 1
+main_loop:
+	gr4 - gr0;
+	if < goto after_correct;
+		//Размер меньше 64
+		gr6 = gr0 >> 1;
+		gr5 = 1;
+		gr0 and gr5;
+		if =0 delayed goto M1;
+		gr6 = gr6 - 1;
+		vlen = gr6;
+			//Размер нечетный, надо убедиться, что в лишнем загружаемом слове не было мусора
+			//Для этого копируем через буфер
+			gr0 - gr5; //len ? 1
+			if =0 delayed goto L1_last_word;
+			ar5 = mass2;
+			nul;
+				rep vlen vreg0 = [ar0++];
+				rep vlen [ar5++] = vreg0;
+			L1_last_word:
+				gr5 = [ar0];
+				[ar5++] = gr5;
+				gr5 = false;
+				[ar5] = gr5; //Зануляем лишнее слово
+				ar0 = mass2; //Подмена адреса
+				//Обновлеям размер
+				gr6 = gr0 >> 1;
+				vlen = gr6;
+		M1:
+		ar5 = _two_flt;
+		fpu 0 rep vlen vreg6 = [ar5];//2
+		ar5 = _half_flt;
+		fpu 0 rep vlen vreg5 = [ar5];//0.5
+		ar5 = _nan_flt;
+	    fpu 0 rep vlen vreg4 = [ar5];//nan
+
+	    gr5 = 0;
+	    sir = gr5;
+	    fp0_lmask = sir;
+	    fp0_hmask = sir;
+
 
 after_correct:
-	gr3 = gr3 - 1;
-	vlen = gr3;
 
     //Вычисление приближенного значения X = ~sqrt(x)
-	ar3 = BIAS;
-	rep 32 ram = [ar3];
-	ar3 = ar4; //Входной адрес
-    rep 32 data = [ar3++] with data - ram; //Вычитаем BIAS
+	ar5 = BIAS;
+	rep 32 ram = [ar5];
+	ar5 = ar0; //Входной адрес
+    rep 32 data = [ar5++] with data - ram; //Вычитаем BIAS
 
     rep 32 with vsum, shift afifo, 0; //Сдвигаем вправо на 1
     rep 32 with afifo + ram; //Прибавляем BIAS
-    ar3 = SIGN_BIT_flt;
-    rep 32 data = [ar3] with afifo and data;//Приводим к положительному
+    ar5 = SIGN_BIT_flt;
+    rep 32 data = [ar5] with afifo and data;//Приводим к положительному
 
-    //Сохранение результата X = ~sqrt(x)
-	ar3 = ar5;
-    rep 32 [ar3++] = afifo;
+    //Сохранение результата X = ~sqrt(x), он нам понадобится дальше
+	ar5 = mass1;
+    rep 32 [ar5++] = afifo;
+	ar5 = mass1;
+	########################################
+	fpu 0 rep vlen vreg1 = [ar5++];//X0
+	########################################
 
 
     //Вычисление приближенного значения Y = 1/~sqrt(x)
-    ar3 = ar5;
-	rep 32 data = [ar3++] with not data;
-    ar3 = DpCode_const_flt;
-    rep 32 data = [ar3] with afifo - data; // 1/x ~ допкоду экспоненты x
+	ar5 = mass1;
+	rep 32 data = [ar5++] with not data;
+    ar5 = DpCode_const_flt;
+    rep 32 data = [ar5] with afifo - data; // 1/x ~ допкоду экспоненты x
     //Сохранение результата Y = 1/~sqrt(x)
-	ar3 = ar6;
-	rep 32 [ar3++] = afifo;
+	ar5 = mass1;
+	rep 32 [ar5++] = afifo;
 
-	#########################################
-	ar3 = ar4;
-	fpu 0 rep vlen vreg0 = [ar3++];//A
-	fpu 0 rep vlen vreg1 = [ar5++];//X0
+	########################################
+	ar5 = mass1;
+	fpu 0 rep vlen vreg2 = [ar5++];//Y
 
-	fpu 0 rep vlen vreg2 = [ar6++];//Y
-
-	ar3 = _two_flt;
-	fpu 0 rep vlen vreg6 = [ar3];//2
+	fpu 0 rep vlen vreg0 = [ar0++];//A
 
 
-	ar3 = _half_flt;
-	fpu 0 rep vlen vreg5 = [ar3];//0.5
 	//Уточним значение
 	//Y0 = (2.0 - X0*Y)*Y
 	fpu 0 .float vreg3 = -vreg1*vreg2 + vreg6;
@@ -151,37 +237,61 @@ after_correct:
 	fpu 0 .float vreg7 = vreg5*vreg3;
 
 	//Анализ входного вектора
-	ar3 = _nan_flt;
-    fpu 0 rep vlen vreg6 = [ar3];
-    fpu 0 rep vlen vreg5 = [ar4++];//Входной вектор
 
     //проверка на nan & inf
-    fpu 0 .float vreg5 - vreg5, set mask if <>0;
-    fpu 0 .float vreg7 = mask ? /vreg5/ : vreg7;
+    fpu 0 .float vreg0 - vreg0, set mask if <>0;
+    fpu 0 .float vreg7 = mask ? /vreg0/ : vreg7;
 
 	//проверка на 0
-    fpu 0 .float vreg5 + vreg5, set mask if =0;
-    fpu 0 .float vreg7 = mask ? vreg5 : vreg7;
+    fpu 0 .float vreg0 + vreg0, set mask if =0;
+    fpu 0 .float vreg7 = mask ? vreg0 : vreg7;
 
 	//проверка на отрицательные
-    fpu 0 .float vreg5 + vreg5, set mask if <;
+    fpu 0 .float vreg0 + vreg0, set mask if <;
     sir = fp0_lmask;
-    gr4 = sir;
+    gr5 = sir;
     sir = fp0_hmask;
-    gr3 = sir;
-    fpu 0 .float vreg7 = mask ? vreg6 : vreg7;
-    gr4 or gr3;
+    gr6 = sir;
+    fpu 0 .float vreg7 = mask ? vreg4 : vreg7;
+    gr5 or gr6;
     if =0 goto save_result;
-	gr7 = 3;
+	gr7 = nmppsStsSqrtNegArg; //Отрицательное число
 save_result:
-	//fpu 0 rep vlen [ar2++] = vreg7;
 	//Результат в vreg7
+	gr0 - gr4;
+	if > delayed goto save_result_normal;
+		ar5 = mass1;
+		fpu 0 rep vlen [ar5++] = vreg7;
+
+		gr5 = 1;
+		gr0 and gr5;
+		if =0 goto save_result_normal;
+		//Размер нечетный, надо извращаться, дабы не потереть лишнее слово в выходном буфере
+		gr0 - gr5;
+		if =0 delayed goto save_last_word;
+			ar5 = mass1;
+			nul;
+			//Копируем через буфер
+			gr6 = gr0 >> 1;
+			gr6 = gr6 - 1;
+			vlen = gr6;
+			fpu 0 rep vlen vreg7 = [ar5++];
+			fpu 0 rep vlen [ar1++] = vreg7;
+
+		save_last_word:
+			gr5 = [ar5];
+			[ar1] = gr5;
+			goto exit; //Копирование последнего куска информации, можно выходить
+
+
+save_result_normal:
+	fpu 0 rep vlen [ar1++] = vreg7;
+	gr0 = gr0 - gr4;
+	if > goto main_loop;
 	
 exit:
 	ar7 = ar7 - 130;
     pop ar6, gr6;
     pop ar5, gr5;
     pop ar4, gr4;
-    pop ar3, gr3;
-    pop ar2, gr2;
     return; 

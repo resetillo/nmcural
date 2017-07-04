@@ -4,6 +4,8 @@
 
 
 void runAllTests(void) {
+    RUN_TEST_GROUP(tests_sqrt32f);
+    RUN_TEST_GROUP(tests_sqrt64f);
     RUN_TEST_GROUP(tests_normalize32);
     RUN_TEST_GROUP(tests_normalize64);
     RUN_TEST_GROUP(tests_div32);

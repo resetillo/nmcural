@@ -487,12 +487,9 @@ NMPPSAPI(nmppsStatus, nmppsSqr_64fc,      (const nmpps64fc* pSrc, nmpps64fc* pDs
 //   nmppsStsSqrtNegArg        negative value in real sequence
 //   nmppsStsNoErr             otherwise
 */
-nmppsStatus square_root32f(); //Вызывается через обработчик vec_handler32
 NMPPSAPI(nmppsStatus, vec_handler32,       (nmppsStatus* func, const nmpps32f*  pSrc, nmpps32f*  pDst,    int len))
 
-#define nmppsSqrt_32f(arg...)   vec_handler32( (nmppsStatus*)square_root32f, arg)
-
-//NMPPSAPI(nmppsStatus, nmppsSqrt_32f,       (const nmpps32f*  pSrc, nmpps32f*  pDst,    int len))
+NMPPSAPI(nmppsStatus, nmppsSqrt_32f,       (const nmpps32f*  pSrc, nmpps32f*  pDst,    int len))
 NMPPSAPI(nmppsStatus, nmppsSqrt_64f,       (const nmpps64f*  pSrc, nmpps64f*  pDst,    int len))
 
 /* /////////////////////////////////////////////////////////////////////////////
