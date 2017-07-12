@@ -2,12 +2,9 @@
 #ifndef __NMPPS_PROTO_TESTS_H__
 #define __NMPPS_PROTO_TESTS_H__
 
-int test_atan();
-int test_atanf();
 int test_copysign();
 int test_vec_handler32();
 
-int test_div();
 
 
 typedef union {

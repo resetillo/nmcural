@@ -509,9 +509,7 @@ NMPPSAPI(nmppsStatus, nmppsSqrt_64f,       (const nmpps64f*  pSrc, nmpps64f*  pD
 //   len                a length of the array
 //
 */
-nmppsStatus arctan32f(); //Вызывается через обработчик vec_handler32
-#define nmppsArctan_32f(arg...)   vec_handler32( (nmppsStatus*)arctan32f, arg)
-//NMPPSAPI(nmppsStatus, nmppsArctan_32f,   (const nmpps32f* pSrc, nmpps32f* pDst,    int len))
+NMPPSAPI(nmppsStatus, nmppsArctan_32f,   (const nmpps32f* pSrc, nmpps32f* pDst,    int len))
 NMPPSAPI(nmppsStatus, nmppsArctan_64f,   (const nmpps64f* pSrc, nmpps64f* pDst,    int len))
 
 /* /////////////////////////////////////////////////////////////////////////////

@@ -206,30 +206,32 @@ TEST(tests_sqrt32f, nmppsSqrt32f_check_answer){
 
 TEST(tests_sqrt64f, nmppsSqrt64f_check_rewrite){
 	int i,k;
-	nmpps64f data[33], original[33], out[33];
+	nmpps64f data[35], original[35], out[35];
+	dblint_t t;
+	t.ui64 = 0xDEADBEEFDEADBEEF;
 
-	original[0] = data[0] = out[0] = 0;
-	for(i=1;i<33;i++){
+	original[0] = data[0] = out[0] = t.dbl;
+	for(i=1;i<35;i++){
 		original[i] = i*i;
 		data[i] = original[i];
-		out[i] = 0;
+		out[i] = t.dbl;
 	}
 
-	for(i=0;i<31;i++){
-		nmppsSqrt_64f(&data[1], &out[1], i+1);
+	for(i=1;i<34;i++){
+		nmppsSqrt_64f(&data[1], &out[1], i);
 		for(k=0; k < sizeof(data)/sizeof(nmpps64f); k++){
 			if (data[k]!=original[k]) {
 				//Произошло искажение входных данных
 				TEST_ASSERT_EQUAL_DOUBLE(data[k], original[k]);
 			}
 		}
-		if (out[0]!=0) {
+		if (out[0]!=t.dbl) {
 			//Затерты данные перед выходным вектором
-			TEST_ASSERT_EQUAL_DOUBLE(out[0], 0);
+			TEST_ASSERT_EQUAL_DOUBLE(0, i);
 		}
-		if (out[i+2]!=0) {
+		if (out[i+1]!=t.dbl) {
 			//Затерты данные после выходного вектора
-			TEST_ASSERT_EQUAL_DOUBLE(out[i+2], 0);
+			TEST_ASSERT_EQUAL_DOUBLE(0, i);
 		}
 	}
 
@@ -242,13 +244,14 @@ TEST(tests_sqrt32f, nmppsSqrt32f_check_rewrite){
 	fltint_t t;
 	t.ui32 = 0xDEADBEEF;
 	original[0] = data[0] = out[0] = t.flt;
+	original[1] = data[1] = out[1] = t.flt;
 	for(i=1;i<68;i++){
 		original[i] = i*i;
 		data[i] = original[i];
 		out[i] = t.flt;
 	}
 
-	for(i=1;i<65;i++){
+	for(i=1;i<=65;i++){
 		nmppsSqrt_32f(&data[2], &out[2], i);
 		for(k=0; k < sizeof(data)/sizeof(nmpps32f); k++){
 			if (data[k]!=original[k]) {
@@ -256,7 +259,7 @@ TEST(tests_sqrt32f, nmppsSqrt32f_check_rewrite){
 				TEST_ASSERT_EQUAL_FLOAT(data[k], original[k]);
 			}
 		}
-		if (out[0]!=t.flt) {
+		if (out[0]!=t.flt || out[1]!=t.flt) {
 			//Затерты данные перед выходным вектором
 			TEST_ASSERT_EQUAL(i, -1);
 		}
@@ -269,17 +272,17 @@ TEST(tests_sqrt32f, nmppsSqrt32f_check_rewrite){
 }
 
 TEST_GROUP_RUNNER(tests_sqrt64f){
-    RUN_TEST_CASE(tests_sqrt64f, nmppsSqrt64f_small_vecs);
-    RUN_TEST_CASE(tests_sqrt64f, nmppsSqrt64f_calculation);
     RUN_TEST_CASE(tests_sqrt64f, nmppsSqrt64f_check_answer);
     RUN_TEST_CASE(tests_sqrt64f, nmppsSqrt64f_check_rewrite);
+    RUN_TEST_CASE(tests_sqrt64f, nmppsSqrt64f_small_vecs);
+    RUN_TEST_CASE(tests_sqrt64f, nmppsSqrt64f_calculation);
 }
 
 TEST_GROUP_RUNNER(tests_sqrt32f){
-    RUN_TEST_CASE(tests_sqrt32f, nmppsSqrt32f_small_vecs);
-    RUN_TEST_CASE(tests_sqrt32f, nmppsSqrt32f_calculation);
     RUN_TEST_CASE(tests_sqrt32f, nmppsSqrt32f_check_answer);
     RUN_TEST_CASE(tests_sqrt32f, nmppsSqrt32f_check_rewrite);
+    RUN_TEST_CASE(tests_sqrt32f, nmppsSqrt32f_small_vecs);
+    RUN_TEST_CASE(tests_sqrt32f, nmppsSqrt32f_calculation);
 }
 
 

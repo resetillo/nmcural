@@ -1,6 +1,17 @@
+#include "unity/unity_fixture.h"
 #include "nmpps.h"
 #include "tests/test_proto.h"
 #include "tests/test_math.h"
+#include "math.h"
+
+TEST_GROUP(tests_atan32f);
+TEST_SETUP(tests_atan32f) {}
+TEST_TEAR_DOWN(tests_atan32f) {}
+
+TEST_GROUP(tests_atan64f);
+TEST_SETUP(tests_atan64f) {}
+TEST_TEAR_DOWN(tests_atan64f) {}
+
 
 #define COUNT_ITERATION (100)
 
@@ -112,162 +123,188 @@ nmppsStatus test_atanf_diap(nmpps32f bgn, nmpps32f step, int count){
 }
 
 
+TEST(tests_atan64f, nmppsArctan64f_check_answer){
+	nmpps64f data[1];
+	TEST_ASSERT_EQUAL(nmppsStsNullPtrErr, nmppsArctan_64f(data, NULL, 1));
+	TEST_ASSERT_EQUAL(nmppsStsNullPtrErr, nmppsArctan_64f(NULL, data, 1));
 
-int test_atan_check_answer(){
+	TEST_ASSERT_EQUAL(nmppsStsSizeErr, nmppsArctan_64f(data, data, 0));
+	TEST_ASSERT_EQUAL(nmppsStsSizeErr, nmppsArctan_64f(data, data, -1));
+
+}
+
+TEST(tests_atan32f, nmppsArctan32f_check_answer){
+	nmpps32f data[1];
+	TEST_ASSERT_EQUAL(nmppsStsNullPtrErr, nmppsArctan_32f(data, NULL, 1));
+	TEST_ASSERT_EQUAL(nmppsStsNullPtrErr, nmppsArctan_32f(NULL, data, 1));
+
+	TEST_ASSERT_EQUAL(nmppsStsSizeErr, nmppsArctan_32f(data, data, 0));
+	TEST_ASSERT_EQUAL(nmppsStsSizeErr, nmppsArctan_32f(data, data, -1));
+
+}
+
+TEST(tests_atan64f, nmppsArctan64f_check_rewrite){
 	int i,k;
-	nmpps64f data[33], original[33], out[33];
+	nmpps64f data[35], original[35], out[35];
+	dblint_t t;
+	t.ui64 = 0xDEADBEEFDEADBEEF;
 
-	original[0] = data[0] = out[0] = 0;
-	for(i=1;i<33;i++){
+	original[0] = data[0] = out[0] = t.dbl;
+	for(i=1;i<35;i++){
 		original[i] = i*i;
 		data[i] = original[i];
-		out[i] = 0;
+		out[i] = t.dbl;
 	}
 
-	for(i=0;i<31;i++){
-		nmppsArctan_64f(&data[1], &out[1], i+1);
+	for(i=1;i<34;i++){
+		nmppsArctan_64f(&data[1], &out[1], i);
 		for(k=0; k < sizeof(data)/sizeof(nmpps64f); k++){
 			if (data[k]!=original[k]) {
-				return 3;//Произошло искажение входных данных
+				//Произошло искажение входных данных
+				TEST_ASSERT_EQUAL(0, i);
 			}
 		}
-		if (out[0]!=0) {
-			return 4;//Затерты данные перед выходным вектором
+		if (out[0]!=t.dbl) {
+			//Затерты данные перед выходным вектором
+			TEST_ASSERT_EQUAL(0, i);
 		}
-		if (out[i+2]!=0) {
-			return 5;//Затерты данные после выходного вектора
+		if (out[i+1]!=t.dbl) {
+			//Затерты данные после выходного вектора
+			TEST_ASSERT_EQUAL(0, i);
 		}
 	}
-
-
-	if (nmppsArctan_64f(data, NULL, 1) != nmppsStsNullPtrErr ||
-			nmppsArctan_64f(NULL, out, 1) != nmppsStsNullPtrErr	){
-		return 6; //не прошла проверка на NULL
-	}
-
-	if (nmppsArctan_64f(data, out, 0) != nmppsStsSizeErr ||
-			nmppsArctan_64f(data, out, -1) != nmppsStsSizeErr	){
-		return 7; //не прошла проверка на некорректную длину вектора
-	}
-
-
-	return 0;
 }
 
 
 
-int test_atanf_check_answer(){
+TEST(tests_atan32f, nmppsArctan32f_check_rewrite){
 	int i,k;
-	nmpps32f data[66], original[66], out[66];
-
-	original[0] = data[0] = out[0] = 0;
-	for(i=1;i<66;i++){
+	nmpps32f data[70], original[70], out[70];
+	fltint_t t;
+	t.ui32 = 0xDEADBEEF;
+	original[0] = data[0] = out[0] = t.flt;
+	original[1] = data[1] = out[1] = t.flt;
+	for(i=2;i<sizeof(data)/sizeof(nmpps32f);i++){
 		original[i] = i*i;
 		data[i] = original[i];
-		out[i] = 0;
+		out[i] = t.flt;
 	}
 
-	for(i=0;i<63;i++){
-		nmppsArctan_32f(&data[1], &out[1], i+1);
+	for(i=1;i<66;i++){
+		nmppsArctan_32f(&data[2], &out[2], i);
 		for(k=0; k < sizeof(data)/sizeof(nmpps32f); k++){
 			if (data[k]!=original[k]) {
-				return 3;//Произошло искажение входных данных
+				//Произошло искажение входных данных
+				TEST_ASSERT_EQUAL(0,i);
 			}
 		}
-		if (out[0]!=0) {
-			return 4;//Затерты данные перед выходным вектором
+		if (out[0]!=t.flt || out[1]!=t.flt) {
+			//Затерты данные перед выходным вектором
+			TEST_ASSERT_EQUAL(0,i);
 		}
-		if (out[i+2]!=0) {
-			return 5;//Затерты данные после выходного вектора
+		if (out[i+2]!=t.flt) {
+			//Затерты данные после выходного вектора
+			TEST_ASSERT_EQUAL(0,i);
 		}
 	}
 
-
-	if (nmppsArctan_32f(data, NULL, 1) != nmppsStsNullPtrErr ||
-			nmppsArctan_32f(NULL, out, 1) != nmppsStsNullPtrErr	){
-		return 6; //не прошла проверка на NULL
-	}
-
-	if (nmppsArctan_32f(data, out, 0) != nmppsStsSizeErr ||
-			nmppsArctan_32f(data, out, -1) != nmppsStsSizeErr	){
-		return 7; //не прошла проверка на некорректную длину вектора
-	}
-
-
-	return 0;
 }
 
-int test_atan(){
-	nmppsStatus stat;
+TEST(tests_atan64f, nmppsArctan64f_small_vecs){
+	TEST_ASSERT_EQUAL(nmppsStsNoErr, test_atan_diap(0, 1, 1));
+	TEST_ASSERT_EQUAL(nmppsStsNoErr, test_atan_diap(0, 0.1, 2));
+	TEST_ASSERT_EQUAL(nmppsStsNoErr, test_atan_diap(0, 0.01, 3));
+	TEST_ASSERT_EQUAL(nmppsStsNoErr, test_atan_diap(0, 0.001, 32));
+	TEST_ASSERT_EQUAL(nmppsStsNoErr, test_atan_diap(0, 0.0001, 33));
+}
+
+TEST(tests_atan32f, nmppsArctan32f_small_vecs){
+	TEST_ASSERT_EQUAL(nmppsStsNoErr, test_atanf_diap(0, 1, 1));
+	TEST_ASSERT_EQUAL(nmppsStsNoErr, test_atanf_diap(0, 0.1, 2));
+	TEST_ASSERT_EQUAL(nmppsStsNoErr, test_atanf_diap(0, 0.01, 3));
+	TEST_ASSERT_EQUAL(nmppsStsNoErr, test_atanf_diap(0, 0.001, 64));
+	TEST_ASSERT_EQUAL(nmppsStsNoErr, test_atanf_diap(0, 0.0001, 65));
+}
+
+TEST(tests_atan64f, nmppsArctan64f_calculation){
 	//Проверка нормальных значений
-	stat = test_atan_diap(-40, ((double)87/(double)COUNT_ITERATION), COUNT_ITERATION);
-	if (stat!=nmppsStsNoErr) {
-		return 1;
-	}
+	TEST_ASSERT_EQUAL(nmppsStsNoErr, test_atan_diap(-40, ((double)87/(double)COUNT_ITERATION), COUNT_ITERATION));
 
 	//Проверка больших значений
-	stat = test_atan_diap(1.9875e+300, 17.937, COUNT_ITERATION);
-	if (stat!=nmppsStsNoErr) {
-		return 2;
-	}
-	stat = test_atan_diap(-1.7789e+300, -13.337, COUNT_ITERATION);
-	if (stat!=nmppsStsNoErr) {
-		return 3;
-	}
+	TEST_ASSERT_EQUAL(nmppsStsNoErr, test_atan_diap(1.9875e+300, 17.937, COUNT_ITERATION));
+	TEST_ASSERT_EQUAL(nmppsStsNoErr, test_atan_diap(-1.7789e+300, -13.337, COUNT_ITERATION));
 
 	//Проверка близких к 0 значений
-	stat = test_atan_diap(3.3333e-300, 1.3337e-300, COUNT_ITERATION);
-	if (stat!=nmppsStsNoErr) {
-		return 4;
-	}
-	stat = test_atan_diap(-7.7777e-300, -1.7777e-300, COUNT_ITERATION);
-	if (stat!=nmppsStsNoErr) {
-		return 5;
-	}
-
-	stat = test_atan_check_answer();
-	if (stat!=0){
-		return 6;
-	}
-
-	return 0;
+	TEST_ASSERT_EQUAL(nmppsStsNoErr, test_atan_diap(3.3333e-300, 1.3337e-300, COUNT_ITERATION));
+	TEST_ASSERT_EQUAL(nmppsStsNoErr, test_atan_diap(-7.7777e-300, -1.7777e-300, COUNT_ITERATION));
 }
 
-int test_atanf(){
-	nmppsStatus stat;
-
+TEST(tests_atan32f, nmppsArctan32f_calculation){
 	//Проверка нормальных значений
-	stat = test_atanf_diap(-50, ((float)87/(float)COUNT_ITERATION), COUNT_ITERATION);
-	if (stat!=nmppsStsNoErr) {
-		return 1;
-	}
+	TEST_ASSERT_EQUAL(nmppsStsNoErr, test_atanf_diap(-50, ((float)87/(float)COUNT_ITERATION), COUNT_ITERATION));
 
 	//Проверка больших значений
-	stat = test_atanf_diap(1.9875e+38, 17.937, COUNT_ITERATION);
-	if (stat!=nmppsStsNoErr) {
-		return 2;
-	}
-	stat = test_atanf_diap(-1.7789e+38, -13.337, COUNT_ITERATION);
-	if (stat!=nmppsStsNoErr) {
-		return 3;
-	}
+	TEST_ASSERT_EQUAL(nmppsStsNoErr, test_atanf_diap(1.9875e+38, 17.937, COUNT_ITERATION));
+	TEST_ASSERT_EQUAL(nmppsStsNoErr, test_atanf_diap(-1.7789e+38, -13.337, COUNT_ITERATION));
 
 	//Проверка близких к 0 значений
-	stat = test_atanf_diap(3.3333e-38, 1.3337e-38, COUNT_ITERATION);
-	if (stat!=nmppsStsNoErr) {
-		return 4;
-	}
-	stat = test_atanf_diap(-7.7777e-38, -1.7777e-38, COUNT_ITERATION);
-	if (stat!=nmppsStsNoErr) {
-		return 5;
+	TEST_ASSERT_EQUAL(nmppsStsNoErr, test_atanf_diap(3.3333e-38, 1.3337e-38, COUNT_ITERATION));
+	TEST_ASSERT_EQUAL(nmppsStsNoErr, test_atanf_diap(-7.7777e-38, -1.7777e-38, COUNT_ITERATION));
+}
+
+TEST(tests_atan64f, nmppsArctan64f_subnormal){
+	nmpps64f data[4] = {
+			NAN, -NAN, INFINITY, -INFINITY
+	};
+	nmpps64f kd[4] = {
+			NAN, -NAN, 1.5707963267948966192313216916398, -1.5707963267948966192313216916398
+	};
+	nmpps64f res[4];
+	dblint_t t1, t2;
+	TEST_ASSERT_EQUAL(nmppsStsNoErr, nmppsArctan_64f(&data, &res, 4));
+	for (int i =0;i<4;i++){
+		t1.dbl = kd[i];
+		t2.dbl = res[i];
+		if (t1.ui64 != t2.ui64){
+			TEST_ASSERT_EQUAL(-1, i);
+		}
 	}
 
-	stat = test_atanf_check_answer();
-	if (stat != 0){
-		return 6;
+}
+
+TEST(tests_atan32f, nmppsArctan32f_subnormal){
+	nmpps32f data[4] = {
+			NAN, -NAN, INFINITY, -INFINITY
+	};
+	nmpps32f kd[4] = {
+			NAN, -NAN, 1.57079633, -1.57079633
+	};
+	nmpps32f res[4];
+	fltint_t t1, t2;
+	TEST_ASSERT_EQUAL(nmppsStsNoErr, nmppsArctan_32f(&data, &res, 4));
+	for (int i =0;i<4;i++){
+		t1.flt = kd[i];
+		t2.flt = res[i];
+		if (t1.ui32!= t2.ui32){
+			TEST_ASSERT_EQUAL(-1, i);
+		}
 	}
 
-	return 0;
+}
+
+TEST_GROUP_RUNNER(tests_atan64f){
+    RUN_TEST_CASE(tests_atan64f, nmppsArctan64f_check_answer);
+    RUN_TEST_CASE(tests_atan64f, nmppsArctan64f_check_rewrite);
+    RUN_TEST_CASE(tests_atan64f, nmppsArctan64f_small_vecs);
+    RUN_TEST_CASE(tests_atan64f, nmppsArctan64f_calculation);
+    RUN_TEST_CASE(tests_atan64f, nmppsArctan64f_subnormal);
 }
 
 
+TEST_GROUP_RUNNER(tests_atan32f){
+    RUN_TEST_CASE(tests_atan32f, nmppsArctan32f_check_answer);
+    RUN_TEST_CASE(tests_atan32f, nmppsArctan32f_check_rewrite);
+    RUN_TEST_CASE(tests_atan32f, nmppsArctan32f_small_vecs);
+    RUN_TEST_CASE(tests_atan32f, nmppsArctan32f_calculation);
+    RUN_TEST_CASE(tests_atan32f, nmppsArctan32f_subnormal);
+}
