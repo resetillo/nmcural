@@ -304,7 +304,11 @@ TEST_GROUP_RUNNER(tests_atan64f){
 TEST_GROUP_RUNNER(tests_atan32f){
     RUN_TEST_CASE(tests_atan32f, nmppsArctan32f_check_answer);
     RUN_TEST_CASE(tests_atan32f, nmppsArctan32f_check_rewrite);
+    printf("LABEL 0");
     RUN_TEST_CASE(tests_atan32f, nmppsArctan32f_small_vecs);
+    printf("LABEL 1");
     RUN_TEST_CASE(tests_atan32f, nmppsArctan32f_calculation);
+    printf("LABEL 2");
     RUN_TEST_CASE(tests_atan32f, nmppsArctan32f_subnormal);
+    printf("LABEL 3");
 }

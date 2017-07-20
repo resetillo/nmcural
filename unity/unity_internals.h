@@ -243,8 +243,8 @@ typedef UNITY_FLOAT_TYPE UNITY_FLOAT;
 #ifndef UNITY_OUTPUT_CHAR
 /* Default to using putchar, which is defined in stdio.h */
 #include <stdio.h>
-#define UNITY_OUTPUT_CHAR(a) do {(void)putchar(a); fflush(stdout);} while (0)
-#define UNITY_OUTPUT_CHAR(a) do {char ch[2]; ch[0] = a; ch[1] = 0;(void)printf(ch); fflush(stdout);} while (0)
+//#define UNITY_OUTPUT_CHAR(a) do {(void)putchar(a); fflush(stdout);} while (0)
+#define UNITY_OUTPUT_CHAR(a) do { putc(a, stdout); fflush(stdout);} while (0)
 #else
   /* If defined as something else, make sure we declare it here so it's ready for use */
   #ifndef UNITY_OMIT_OUTPUT_CHAR_HEADER_DECLARATION

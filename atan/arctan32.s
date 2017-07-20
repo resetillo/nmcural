@@ -1,5 +1,5 @@
 
-#include <nmpps_asm_defs.h>
+#include "nmpps_asm_defs.h"
 
 .global _nmppsArctan_32f
 .global _arctan32f
