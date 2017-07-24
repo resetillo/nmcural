@@ -1,5 +1,6 @@
 #include "unity/unity_fixture.h"
 #include "nmpps.h"
+#include "tests/test_proto.h"
 
 #define COUNT_ITERATION (100)
 
@@ -10,21 +11,28 @@ TEST_TEAR_DOWN(tests_norm_L1_16s32s_Sfs) {}
 
 nmpps32s create_norm_16s32sfs_L1_vecs(nmpps16s bgn, nmpps16s step, int count, nmpps16s* vec, int sfs){
 	int i;
-	nmpps32s out = 0;
+	nmpps64f outf = 0;
+	dblint_t shift;
+	shift.dbl = 1.0;
 	for (i=0; i < count; i++){
 		vec[i] = bgn;
-		out += fabsf(bgn);
+		outf += fabs(bgn);
 		bgn += step;
 	}
 
-	if (sfs>0) {
-		out = out >> sfs;
-	}
-	else if (sfs<0){
-		out = out << -sfs;
+	i = sfs<<20;
+	shift.i32[1] -= i;
+	shift.ui32[1] &= 0x7FFFFFFF;
+
+	outf *= shift.dbl;
+
+	if (outf > 2147483647) {
+		outf = 2147483647;
+	} else if (outf < -2147483648){
+		outf = -2147483648;
 	}
 
-	return out;
+	return (nmpps32s)outf;
 }
 
 nmppsStatus test_norm_16s32sfs_L1_diap(nmpps16s bgn, nmpps16s step, int count){
@@ -33,7 +41,7 @@ nmppsStatus test_norm_16s32sfs_L1_diap(nmpps16s bgn, nmpps16s step, int count){
 	nmpps32s res;
 	nmppsStatus stat;
 	int i;
-	for (i= -16; i <= 16; i++){
+	for (i= 1; i <= 16; i++){
 		//Создаем эталонные значения
 		KD = create_norm_16s32sfs_L1_vecs(bgn, step, count, Vec, i);
 		//Производим рассчеты
@@ -42,7 +50,7 @@ nmppsStatus test_norm_16s32sfs_L1_diap(nmpps16s bgn, nmpps16s step, int count){
 		if (stat!=nmppsStsNoErr) {
 			return stat;
 		}
-		if (res != KD) {
+		if (abs(res - KD) > 1) {
 			TEST_ASSERT_EQUAL_FLOAT(res, KD);
 			return -1;
 		}

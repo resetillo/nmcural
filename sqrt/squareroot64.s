@@ -203,6 +203,9 @@ continue:*/
     fpu 0 .double vreg1 = mask ? vreg5 : vreg1;
 
 	//проверка на отрицательные
+	gr1 = 0;
+	sir = gr1;
+	fp0_dmask = sir;
     fpu 0 .double vreg5 + vreg5, set mask if <;
     sir = fp0_dmask;
     fpu 0 .double vreg1 = mask ? vreg6 : vreg1;

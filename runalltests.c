@@ -4,10 +4,12 @@
 
 
 void runAllTests(void) {
-    RUN_TEST_GROUP(tests_norm_L1_32f);
-    RUN_TEST_GROUP(tests_norm_L1_64f);
 	RUN_TEST_GROUP(tests_norm_L1_16s32f);
 	RUN_TEST_GROUP(tests_norm_L1_16s32s_Sfs);
+	RUN_TEST_GROUP(tests_norm_L2_16s32f);
+	RUN_TEST_GROUP(tests_norm_L2_16s32s_Sfs);
+    RUN_TEST_GROUP(tests_norm_L1_32f);
+    RUN_TEST_GROUP(tests_norm_L1_64f);
     RUN_TEST_GROUP(tests_atan32f);
     RUN_TEST_GROUP(tests_atan64f);
     RUN_TEST_GROUP(tests_sqrt32f);

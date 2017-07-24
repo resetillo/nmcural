@@ -4,6 +4,7 @@
 .global _zero_flt
 
 .global norm_L1_16s32f
+.global i16toV7
 
 
 mask_I16:

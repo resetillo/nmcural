@@ -4,147 +4,81 @@
 
 .global norm_L1_16s32s_Sfs
 .global norm_L1_16s32f
+.global scale_f64
 
 
-.global SIGN_BIT_flt
+.global SIGN_BIT_dbl
+.global _one_dbl
 
 .text
 
-scale_table_m16:
-	//2^16
-	.float 65536.0
-	.float 65536.0
-	//2^15
-	.float 32768.0
-	.float 32768.0
-	//2^14
-	.float 16384.0
-	.float 16384.0
-	//2^13
-	.float 8192.0
-	.float 8192.0
-	//2^12
-	.float 4096.0
-	.float 4096.0
-	//2^11
-	.float 2048.0
-	.float 2048.0
-	//2^10
-	.float 1024.0
-	.float 1024.0
-	//2^9
-	.float 512.0
-	.float 512.0
-	//2^8
-	.float 256.0
-	.float 256.0
-	//2^7
-	.float 128.0
-	.float 128.0
-	//2^6
-	.float 64.0
-	.float 64.0
-	//2^5
-	.float 32.0
-	.float 32.0
-	//2^4
-	.float 16.0
-	.float 16.0
-	//2^3
-	.float 8.0
-	.float 8.0
-	//2^2
-	.float 4.0
-	.float 4.0
-	//2^1
-	.float 2.0
-	.float 2.0
-scale_table:
-	//2^0
-	.float 1.0
-	.float 1.0
-	//2^-1
-	.float 0.5
-	.float 0.5
-	//2^-2
-	.float 0.25
-	.float 0.25
-	//2^-3
-	.float 0.125
-	.float 0.125
-	//2^-4
-	.float 0.0625
-	.float 0.0625
-	//2^-5
-	.float 0.03125
-	.float 0.03125
-	//2^-6
-	.float 0.015625
-	.float 0.015625
-	//2^-7
-	.float 0.0078125
-	.float 0.0078125
-	//2^-8
-	.float 0.00390625
-	.float 0.00390625
-	//2^-9
-	.float 0.001953125
-	.float 0.001953125
-	//2^-10
-	.float 0.0009765625
-	.float 0.0009765625
-	//2^-11
-	.float 0.00048828125
-	.float 0.00048828125
-	//2^-12
-	.float 0.000244140625
-	.float 0.000244140625
-	//2^-13
-	.float 0.0001220703125
-	.float 0.0001220703125
-	//2^-14
-	.float 0.00006103515625
-	.float 0.00006103515625
-	//2^-15
-	.float 0.000030517578125
-	.float 0.000030517578125
-	//2^-16
-	.float 0.0000152587890625
-	.float 0.0000152587890625
+max_int32_valueF:
+	.double 2147483647
+min_int32_valueF:
+	.double -2147483648
+
+
 
 /*
-	ar0 - input adr;
-	gr0 - scalefactor;
-	ar1 - output adr;
+	ar0 - input adr (double);
+	gr0 - scalefactor (signed int);
+	ar1 - output adr (signed int);
 
 */
-scale_f32:
+scale_f64:
+	push ar4, gr4;
 	push ar5, gr5;
 
+	ar4 = ar7 + 2;
+	ar7 = ar7 + 4;
     //Ограничение диапазона
-	gr5 = 16;
+	gr5 = 511;
 	gr0 - gr5;
 	if >= goto scaling;
 
-	gr5 = -16;
+	gr5 = -512;
 	gr0 - gr5;
 	if <= goto scaling;
 	gr5 = gr0;
 scaling:
 
-		ar5 =  scale_table;
-		gr5 = gr5 << 1; // *2
-		fpu 0 rep 1 vreg1 = [ar5+gr5]; //Весовой коэффициент
-		fpu 0 rep 1 vreg0 = [ar0]; //Входные данные формата float
-		fpu 0 .float vreg0 = vreg0*vreg1;
+		gr5 = gr5 << 20; //Размер сдвига, вычитаемый из экспоненты
+		ar5 = _one_dbl;
+		gr4 = [ar5 + 1]; // 1.0f
+		gr4 = gr4 - gr5;
+		ar5 = SIGN_BIT_dbl;
+		gr5 = [ar5 + 1]; //Маска для обнуления знака
+		gr4 = gr4 and gr5; //Весовой коэффициент
+		[ar4 + 1] = gr4; // Сохраняем в старшую часть
+		gr5 = false;
+		[ar4] = gr5; // обнуляем младшую часть, она нулевая ибо за базу брали 1
+
+		fpu 0 rep 1 vreg1 = [ar4]; //Весовой коэффициент
+		fpu 0 rep 1 vreg0 = [ar0]; //Входные данные
+		fpu 0 .double vreg0 = vreg0*vreg1;
+
+		//Проверка на выход за диапазон
+		ar5 = max_int32_valueF;
+		fpu 0 rep 1 vreg1 = [ar5];
+		fpu 0 .double vreg0 - vreg1, set mask if >;
+		fpu 0 .double vreg0 = mask ? vreg1 : vreg0;
+
+		ar5 = min_int32_valueF;
+		fpu 0 rep 1 vreg1 = [ar5];
+		fpu 0 .double vreg1 - vreg0, set mask if >;
+		fpu 0 .double vreg0 = mask ? vreg1 : vreg0;
+
 		//Приведение к целому
 		sir = 0;
 		fp_pack_exp = sir;
-		fpu 0 .packer = vreg0 with .fixed_32 <= .float;
-		fpu rep 1 [ar1] = .packer;
-		//fpu 0 rep 1 [ar1] = vreg0;
+		fpu 0 .packer = vreg0 with .fixed_32 <= .double;
+		fpu rep 1 [ar4] = .packer;
+		gr5 = [ar4];
+		[ar1] = gr5;
 
+	ar7 = ar7 - 4;
 	pop ar5, gr5;
+	pop ar4, gr4;
 	return;
 
 
@@ -158,14 +92,24 @@ scaling:
 norm_L1_16s32s_Sfs:
 	push ar0, gr0;
 
+	ar4 = ar7 + 2;
+	ar7 = ar7 + 6;
+
 	//Сложение
 	call norm_L1_16s32f;
 
-	//Растяжение результата
-	ar0 = ar1;
-	gr0 = gr1;
-	call scale_f32;
+	//Перевод результата в double
+	fpu rep 1 .packer = [ar1] with .double <= .float;
+	ar5 = ar4;
+	fpu rep 2 [ar5++] = .packer;
 
+
+	//Растяжение результата
+	ar0 = ar4;
+	gr0 = gr1;
+	call scale_f64;
+
+	ar7 = ar7 - 6;
 	pop ar0, gr0;
 	return;
 
