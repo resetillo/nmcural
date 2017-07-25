@@ -21,7 +21,7 @@ _nmppsDiv_64f:
 
     ar5 = ar7 - 2;
 
-    // Сохранение в стеке регистров, чтобы исключить их повреждение
+    // РЎРѕС…СЂР°РЅРµРЅРёРµ РІ СЃС‚РµРєРµ СЂРµРіРёСЃС‚СЂРѕРІ, С‡С‚РѕР±С‹ РёСЃРєР»СЋС‡РёС‚СЊ РёС… РїРѕРІСЂРµР¶РґРµРЅРёРµ
     push ar0, gr0;
     push ar1, gr1;
     push ar2, gr2;
@@ -35,7 +35,7 @@ _nmppsDiv_64f:
     ar0 = [--ar5]; // Output vector
 	gr1 = [--ar5]; // Lenght
 
-	ar3 = ar7 + 2; //Технологический массив на 64 слова
+	ar3 = ar7 + 2; //РўРµС…РЅРѕР»РѕРіРёС‡РµСЃРєРёР№ РјР°СЃСЃРёРІ РЅР° 64 СЃР»РѕРІР°
 	ar7 = ar7 + 66;
 
 	gr1;
@@ -54,17 +54,17 @@ _nmppsDiv_64f:
     gr0;
     if =0 goto exit;
 
-	gr7 = 0; //Значение по умолчанию
+	gr7 = 0; //Р—РЅР°С‡РµРЅРёРµ РїРѕ СѓРјРѕР»С‡Р°РЅРёСЋ
 
-	//Настройка векторника
+	//РќР°СЃС‚СЂРѕР№РєР° РІРµРєС‚РѕСЂРЅРёРєР°
     sir = [NB_default];
     nb1 = sir;
     sir = [SB_default];
     sb = sir;
 	ar5 = WB_default;
-    rep 1 wfifo = [ar5], ftw, wtw; // Загрузка матрицы  весов
+    rep 1 wfifo = [ar5], ftw, wtw; // Р—Р°РіСЂСѓР·РєР° РјР°С‚СЂРёС†С‹  РІРµСЃРѕРІ
 
-	gr0 = 0;// Здесь будут аккумулироваться признаки делений на 0
+	gr0 = 0;// Р—РґРµСЃСЊ Р±СѓРґСѓС‚ Р°РєРєСѓРјСѓР»РёСЂРѕРІР°С‚СЊСЃСЏ РїСЂРёР·РЅР°РєРё РґРµР»РµРЅРёР№ РЅР° 0
 
 	gr3 = 32;
 	gr3 - gr1;
@@ -79,7 +79,7 @@ _nmppsDiv_64f:
 		vreg6 infinity
 		vreg7 result
 	*/
-	//Загружаем данные, используемые каждую итерацию
+	//Р—Р°РіСЂСѓР¶Р°РµРј РґР°РЅРЅС‹Рµ, РёСЃРїРѕР»СЊР·СѓРµРјС‹Рµ РєР°Р¶РґСѓСЋ РёС‚РµСЂР°С†РёСЋ
 	ar5 = _two_dbl;
 	fpu 0 rep 32 vreg2 = [ar5]; //2.0
 	ar5 = _bigest_dbl;
@@ -95,14 +95,14 @@ _nmppsDiv_64f:
 
 
 main_loop:
-	gr3 = 32; //Остаток
+	gr3 = 32; //РћСЃС‚Р°С‚РѕРє
 	gr3 - gr1;
     if <= goto after_correct;
-    //Остаток меньше 32, ограничиваем обрабатываемый размер
-    //Размер вектора меньше 32
+    //РћСЃС‚Р°С‚РѕРє РјРµРЅСЊС€Рµ 32, РѕРіСЂР°РЅРёС‡РёРІР°РµРј РѕР±СЂР°Р±Р°С‚С‹РІР°РµРјС‹Р№ СЂР°Р·РјРµСЂ
+    //Р Р°Р·РјРµСЂ РІРµРєС‚РѕСЂР° РјРµРЅСЊС€Рµ 32
 	gr3 = gr1 - 1;
 	vlen = gr3;
-	//Обновляем данные в соответствии с размером вектора
+	//РћР±РЅРѕРІР»СЏРµРј РґР°РЅРЅС‹Рµ РІ СЃРѕРѕС‚РІРµС‚СЃС‚РІРёРё СЃ СЂР°Р·РјРµСЂРѕРј РІРµРєС‚РѕСЂР°
 	ar5 = _two_dbl;
 	fpu 0 rep vlen vreg2 = [ar5]; //2.0
 	ar5 = _bigest_dbl;
@@ -116,12 +116,12 @@ main_loop:
 
 after_correct:
 
-	//Рассчет приближенного значения ~1/divisor
+	//Р Р°СЃСЃС‡РµС‚ РїСЂРёР±Р»РёР¶РµРЅРЅРѕРіРѕ Р·РЅР°С‡РµРЅРёСЏ ~1/divisor
 	ar5 = ar2;
 	rep 32 data = [ar5++] with not data;
     ar5 = DpCode_const_dbl;
-    rep 32 data = [ar5] with afifo - data; // ~1/divisor ~ допкоду экспоненты divisor
-    //Сохранение результата ~1/divisor
+    rep 32 data = [ar5] with afifo - data; // ~1/divisor ~ РґРѕРїРєРѕРґСѓ СЌРєСЃРїРѕРЅРµРЅС‚С‹ divisor
+    //РЎРѕС…СЂР°РЅРµРЅРёРµ СЂРµР·СѓР»СЊС‚Р°С‚Р° ~1/divisor
 	ar5 = ar3;
 	rep 32 [ar5++] = afifo;
 
@@ -131,7 +131,7 @@ after_correct:
 	ar5 = ar3;
 	fpu 0 rep vlen vreg7 = [ar5++]; //~1/divisor
 
-	//Уточняем значение
+	//РЈС‚РѕС‡РЅСЏРµРј Р·РЅР°С‡РµРЅРёРµ
 	//~1/divisor = (2.0 - (~1/divisor)*divisor)*(~1/divisor);
 	fpu 0 .double vreg0 = -vreg7*vreg1 + vreg2;
 	fpu 0 .double vreg7 = vreg0*vreg7;
@@ -157,18 +157,18 @@ after_correct:
 	fpu 0 .double vreg7 = vreg0*vreg7;
 
 	######################################
-	##   Проверки аргументов
+	##   РџСЂРѕРІРµСЂРєРё Р°СЂРіСѓРјРµРЅС‚РѕРІ
 	######################################
-	//Проверки на бесконечность
-	fpu 0 .double vreg0 = /vreg0/; //О знаке позаботимся в конце
+	//РџСЂРѕРІРµСЂРєРё РЅР° Р±РµСЃРєРѕРЅРµС‡РЅРѕСЃС‚СЊ
+	fpu 0 .double vreg0 = /vreg0/; //Рћ Р·РЅР°РєРµ РїРѕР·Р°Р±РѕС‚РёРјСЃСЏ РІ РєРѕРЅС†Рµ
 	fpu 0 .double vreg3 - vreg0, set mask if <;
     sir = fp0_dmask;
-    gr3 = sir; //маска с divided = infinity
+    gr3 = sir; //РјР°СЃРєР° СЃ divided = infinity
 
-	fpu 0 .double vreg1 = /vreg1/;//О знаке позаботимся в конце
+	fpu 0 .double vreg1 = /vreg1/;//Рћ Р·РЅР°РєРµ РїРѕР·Р°Р±РѕС‚РёРјСЃСЏ РІ РєРѕРЅС†Рµ
 	fpu 0 .double vreg3 - vreg1, set mask if <;
     sir = fp0_dmask;
-    gr4 = sir; //маска с divisor = infinity
+    gr4 = sir; //РјР°СЃРєР° СЃ divisor = infinity
 
 
 	sir = gr3;
@@ -185,15 +185,15 @@ after_correct:
 	fpu 0 .double vreg7 = mask ? vreg5 : vreg7; //divided = divisor = infinity => out = NAN
 
 
-	//Проверка деления на 0
+	//РџСЂРѕРІРµСЂРєР° РґРµР»РµРЅРёСЏ РЅР° 0
     fpu 0 .double vreg0 + vreg0, set mask if =0;
     sir = fp0_dmask;
-    gr5 = sir;//маска с divided = 0
+    gr5 = sir;//РјР°СЃРєР° СЃ divided = 0
 
     fpu 0 .double vreg1 + vreg1, set mask if =0;
     sir = fp0_dmask;
-    gr6 = sir;//маска с divisor = 0
-    gr0 = gr0 or gr6; //Для определения результата
+    gr6 = sir;//РјР°СЃРєР° СЃ divisor = 0
+    gr0 = gr0 or gr6; //Р”Р»СЏ РѕРїСЂРµРґРµР»РµРЅРёСЏ СЂРµР·СѓР»СЊС‚Р°С‚Р°
 
 	//sir = gr6;
 	//fp0_dmask = sir;
@@ -211,44 +211,44 @@ after_correct:
 	fpu 0 .double vreg7 = mask ? vreg5 : vreg7; //divided =0, divisor = infinity => out = NAN
 
 
-	//Проверка на NAN
+	//РџСЂРѕРІРµСЂРєР° РЅР° NAN
     fpu 0 .double vreg0 - vreg0, set mask if <>0;
     sir = fp0_dmask;
-    gr5 = sir;//маска с divided = NAN
-    gr5 = gr5 and not gr3; //Исключим бесконечности
+    gr5 = sir;//РјР°СЃРєР° СЃ divided = NAN
+    gr5 = gr5 and not gr3; //РСЃРєР»СЋС‡РёРј Р±РµСЃРєРѕРЅРµС‡РЅРѕСЃС‚Рё
 
     fpu 0 .double vreg1 - vreg1, set mask if <>0;
     sir = fp0_dmask;
-    gr6 = sir;//маска с divisor = NAN
-    gr6 = gr6 and not gr4; //Исключим бесконечности
+    gr6 = sir;//РјР°СЃРєР° СЃ divisor = NAN
+    gr6 = gr6 and not gr4; //РСЃРєР»СЋС‡РёРј Р±РµСЃРєРѕРЅРµС‡РЅРѕСЃС‚Рё
 
-    gr5 = gr5 or gr6; //Объединим множества
+    gr5 = gr5 or gr6; //РћР±СЉРµРґРёРЅРёРј РјРЅРѕР¶РµСЃС‚РІР°
 	sir = gr5;
 	fp0_dmask = sir;
 	fpu 0 .double vreg7 = mask ? vreg5 : vreg7; //divided = NAN || divisor = NAN => out = NAN
 
 
 
-	//divided*divisor для определения знака результата
+	//divided*divisor РґР»СЏ РѕРїСЂРµРґРµР»РµРЅРёСЏ Р·РЅР°РєР° СЂРµР·СѓР»СЊС‚Р°С‚Р°
 	ar5 = ar1;
 	rep 32 data = [ar5++] with data;
 	ar5 = ar2;
-	rep 32 data = [ar5++] with data xor afifo; //ксорим биты
+	rep 32 data = [ar5++] with data xor afifo; //РєСЃРѕСЂРёРј Р±РёС‚С‹
 
 	ar5 = SIGN_BIT_dbl;
-	rep 32 data = [ar5] with not data and afifo; //Выделяем старший бит
+	rep 32 data = [ar5] with not data and afifo; //Р’С‹РґРµР»СЏРµРј СЃС‚Р°СЂС€РёР№ Р±РёС‚
 
 	ar5 = ar3;
 	fpu 0 rep vlen [ar5++] = vreg7;
 	ar5 = ar3;
-	rep 32 data = [ar5++] with data or afifo; //Установка нужных знаков
-	//Выгрузка конечных значений
+	rep 32 data = [ar5++] with data or afifo; //РЈСЃС‚Р°РЅРѕРІРєР° РЅСѓР¶РЅС‹С… Р·РЅР°РєРѕРІ
+	//Р’С‹РіСЂСѓР·РєР° РєРѕРЅРµС‡РЅС‹С… Р·РЅР°С‡РµРЅРёР№
 	ar5 = ar3;
 	rep 32 [ar5++] = afifo;
 	ar5 = ar3;
 	fpu 0 rep vlen vreg7 = [ar5++];
 
-	//Увеличиваем адреса для следующей итерации
+	//РЈРІРµР»РёС‡РёРІР°РµРј Р°РґСЂРµСЃР° РґР»СЏ СЃР»РµРґСѓСЋС‰РµР№ РёС‚РµСЂР°С†РёРё
 	gr5 = VL;
 	gr5 = gr5 + 1;
 	gr5 = gr5 << 1;
@@ -269,7 +269,7 @@ save_result:
     gr0;
     if =0 goto exit;
 
-    gr7 = -10; //Было деление на 0
+    gr7 = -10; //Р‘С‹Р»Рѕ РґРµР»РµРЅРёРµ РЅР° 0
 
 
 exit:

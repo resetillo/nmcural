@@ -1,3 +1,7 @@
+
+#include "nmpps_asm_defs.h"
+
+.global _nmppsArctan_32f
 .global _arctan32f
 
 .global _tanTableF
@@ -11,58 +15,129 @@
 .global __macro_change_infinityF32
 
 .text
-
-_arctan32f:
-    //ar4  input data
-	//gr2  lenght
-
+_nmppsArctan_32f:
+    ar5 = ar7 - 2;
     push ar0, gr0;
     push ar1, gr1;
+
+    ar0 = [--ar5];//pSrc
+    ar1 = [--ar5];//pDst
+    gr0 = [--ar5];//len
+
+    call _arctan32f;
+
+
+    pop ar1, gr1;
+    pop ar0, gr0;
+    return;
+
+/*
+    ar0 pSrc
+    ar1 pDst
+    gr0 len
+*/
+
+_arctan32f:
     push ar2, gr2;
     push ar3, gr3;
-    ar2 = ar7+2; //Промежуточный буфер
+    push ar4, gr4;
+    push ar5, gr5;
+    push ar6, gr6;
+
+    ar6 = ar7+2; //РџСЂРѕРјРµР¶СѓС‚РѕС‡РЅС‹Р№ Р±СѓС„РµСЂ
     ar7 = ar7 + 66;
 
-    gr3 = 1;
-    gr2 and gr3;
-    if =0 delayed goto after_correct;
-    gr1 = gr2 >> 1; //Перевод в двойные слова
-    nul;
+    gr0;
+    if <= delayed goto exit;
+    gr7 = nmppsStsSizeErr;
 
-    gr1 = gr1 + 1; //Нечетная длина вектора, на 1 двойное слово больше
+    gr5 = ar0;
+    gr5;
+    if =0 delayed goto exit;
+    gr7 = nmppsStsNullPtrErr;
+
+    gr5 = ar1;
+    gr5;
+    if =0 goto exit;
+
+    gr7 = nmppsStsNoErr;//РџРѕ СѓРјРѕР»С‡Р°РЅРёСЋ РІРѕР·РІСЂР°С‰Р°РµРј 0
+
+    gr4 = 64;
+    gr4 - gr0;
+
+    if > goto main_loop;
+
+    gr6 = 31;
+    vlen = gr6;
+
+    ar5 = _zero_flt;
+    fpu 0  rep  vlen  vreg0 = [ar5]; //0
+    ar5 = _one_flt;
+    fpu 0  rep  vlen  vreg1 = [ar5]; //1
+    ar5 =  _bigest_flt;
+    fpu 1  rep  vlen  vreg6 = [ar5]; //BIGGEST DOUBLE
+    ar5 =  _half_pi_flt;
+    fpu 1  rep  vlen  vreg7 = [ar5]; //Pi / 2
+
+
+
+main_loop:
+    gr4 - gr0;
+    if <= goto after_correct;
+
+    gr6 = gr0 >> 1;
+    gr6 = gr6 - 1;
+    gr5 = 1;
+    gr0 and gr5;
+    if =0 goto M1;
+    	//Р Р°Р·РјРµСЂ РЅРµС‡РµС‚РЅС‹Р№, РёСЃРїРѕР»СЊР·СѓРµРј Р±СѓС„С„РµСЂ
+		ar5 = ar6;
+		gr0 - gr5;
+		if =0 goto M1last_word; // Р•СЃР»Рё РѕРґРЅРѕ СЃР»РѕРІРѕ, РїСЂРѕСЃС‚Рѕ РєРѕРїРёСЂСѓРµРј
+			vlen = gr6;
+			fpu 0 rep vlen vreg0 = [ar0++];
+			ar5 = ar6;
+			fpu 0 rep vlen [ar5++] = vreg0;
+
+		M1last_word:
+		gr5 = [ar0];
+		[ar5] = gr5;
+        gr6 = gr0 >> 1;
+        ar0 = ar6; //РџРѕРґРјРµРЅР° Р°РґСЂРµСЃР°
+	M1:
+    vlen = gr6;
+
+    ar5 = _zero_flt;
+    fpu 0  rep  vlen  vreg0 = [ar5]; //0
+    ar5 = _one_flt;
+    fpu 0  rep  vlen  vreg1 = [ar5]; //1
+    ar5 =  _bigest_flt;
+    fpu 1  rep  vlen  vreg6 = [ar5]; //BIGGEST DOUBLE
+    ar5 =  _half_pi_flt;
+    fpu 1  rep  vlen  vreg7 = [ar5]; //Pi / 2
+
+
 
 after_correct:
-    gr3 = gr1 - 1; //vlen дб на 1 меньше
-    if >= goto load_vlen;
-    gr3 = 0;// vlen не может быть меньше 0
-load_vlen:
-    vlen = gr3;//Загрузим длину
-    //0
-    ar3 = _zero_flt;
-    fpu 0  rep  vlen  vreg0 = [ar3];
-	//1
-    ar3 = _one_flt;
-    fpu 0  rep  vlen  vreg1 = [ar3];
 
 	//X = 1
 	fpu 1  vreg1 = fpu 0 vreg1;
-	//Входное значение Y
-    ar3 = ar4;
-    fpu 1  rep  vlen  vreg5 = [ar3++];//Оригинальный Y для восстановления знака результата
-    fpu 1  .float vreg2 = /vreg5/;//Модуль Y для расчетов
+	//Р’С…РѕРґРЅРѕРµ Р·РЅР°С‡РµРЅРёРµ Y
+    fpu 1  rep  vlen  vreg5 = [ar0++];//РћСЂРёРіРёРЅР°Р»СЊРЅС‹Р№ Y РґР»СЏ РІРѕСЃСЃС‚Р°РЅРѕРІР»РµРЅРёСЏ Р·РЅР°РєР° СЂРµР·СѓР»СЊС‚Р°С‚Р°
+    fpu 1  .float vreg2 = /vreg5/;//РњРѕРґСѓР»СЊ Y РґР»СЏ СЂР°СЃС‡РµС‚РѕРІ
 
     //sum_angle = 0
-    fpu 0  vreg7 = vreg0;//Выходной вектор
+    fpu 0  vreg7 = vreg0;//Р’С‹С…РѕРґРЅРѕР№ РІРµРєС‚РѕСЂ
 
-    //ЦИКЛ
-    gr0 = 23;//23 - длина мантиссы
-    ar0 = _tanTableF;//Таблица тангенсов
-    ar1 = _angTableF;//Таблица углов
+    //Р¦РРљР›
+    gr5 = 23;//23 - РґР»РёРЅР° РјР°РЅС‚РёСЃСЃС‹
+    ar4 = _tanTableF;//РўР°Р±Р»РёС†Р° С‚Р°РЅРіРµРЅСЃРѕРІ
+    ar6 = _angTableF;//РўР°Р±Р»РёС†Р° СѓРіР»РѕРІ
 arctan_cycle:
-    fpu 0  rep vlen vreg2 = [ar0];
-    ar0+=2; //загружаем по 2
-    fpu 0  rep vlen vreg3 = [ar1];
-    ar1+=2; //загружаем по 2
+    fpu 0  rep vlen vreg2 = [ar4];
+    ar4+=2; //Р·Р°РіСЂСѓР¶Р°РµРј РїРѕ 2
+    fpu 0  rep vlen vreg3 = [ar6];
+    ar6+=2; //Р·Р°РіСЂСѓР¶Р°РµРј РїРѕ 2
 
 
     //s = copysign(1, y)
@@ -94,37 +169,62 @@ arctan_cycle:
 	fpu 1 vreg1 = fpu 1  vreg3;
 	//y =  Ynew;
 	fpu 1 vreg2 = fpu 1 vreg4;
-	gr0 = gr0 - 1;
+	gr5 = gr5 - 1;
 	if > goto arctan_cycle;
 
-	//Обработаем NAN и INF
-	fpu 0 vreg5 = fpu 1 vreg5;//Оригинальный вектор
+	//РћР±СЂР°Р±РѕС‚Р°РµРј NAN Рё INF
+	fpu 0 vreg5 = fpu 1 vreg5;//РћСЂРёРіРёРЅР°Р»СЊРЅС‹Р№ РІРµРєС‚РѕСЂ
     fpu 0 .float vreg5 - vreg5, set mask if <>0;
-    fpu 0 .float vreg7 = mask ? vreg5 : vreg7; //Для nan & inf восстановим изначальные значения
+    fpu 0 .float vreg7 = mask ? vreg5 : vreg7; //Р”Р»СЏ nan & inf РІРѕСЃСЃС‚Р°РЅРѕРІРёРј РёР·РЅР°С‡Р°Р»СЊРЅС‹Рµ Р·РЅР°С‡РµРЅРёСЏ
 
-	//Бесконечности обработаем используя функцию замены на значение
-	/*	ar0 - input vector
-		ar1 - changing value
-		vlen - length of vector
-		vreg7 - out vector*/
-	ar3 = ar2;
-    fpu 0 rep vlen [ar3++] = vreg7;
-    ar0 = ar2;
-    ar1 = _half_pi_flt; //arctan(inf) = pi/2
-	call __macro_change_infinityF32;
+	//Р‘РµСЃРєРѕРЅРµС‡РЅРѕСЃС‚Рё РѕР±СЂР°Р±РѕС‚Р°РµРј РёСЃРїРѕР»СЊР·СѓСЏ С„СѓРЅРєС†РёСЋ Р·Р°РјРµРЅС‹ РЅР° Р·РЅР°С‡РµРЅРёРµ
+	fpu 0 vreg6 = fpu 1 vreg6;//РќР°РёР±РѕР»СЊС€РµРµ С‡РёСЃР»Рѕ
+    fpu 0 .float vreg5 = /vreg5/;
+    fpu 0 .float vreg5 - vreg6, set mask if >;
+	fpu 0 vreg6 = fpu 1 vreg7;//PI / 2
+    fpu 0 .float vreg7 = mask ? vreg6 : vreg7;
 
-    //Восстановим исходный знак
-    fpu 0 vreg6 = fpu 1 vreg5;
-    fpu 0 .float vreg6 + vreg6, set mask if <;
+    //Р’РѕСЃСЃС‚Р°РЅРѕРІРёРј РёСЃС…РѕРґРЅС‹Р№ Р·РЅР°Рє
+	fpu 0 vreg5 = fpu 1 vreg5;//РћСЂРёРіРёРЅР°Р»СЊРЅС‹Р№ РІРµРєС‚РѕСЂ
+    fpu 0 .float vreg5 + vreg5, set mask if <;
     fpu 0 .float vreg7 = mask ? -vreg7 : vreg7;
-    //fpu 0 rep vlen [ar3++] = vreg7;
 
+	gr0 - gr4;
+	if >= goto normal_save;
+		gr5 = 1;
+		gr0 and gr5;
+		if =0 goto normal_save;
+			// РїРѕСЃР»РµРґРЅРёР№ РєСѓСЃРѕРє РґР°РЅРЅС‹С… РЅРµС‡РµС‚РЅРѕРіРѕ СЂР°Р·РјРµСЂР°
+			// РЅР°РґРѕ РєРѕРїРёСЂРѕРІР°С‚СЊ С‡РµСЂРµР· Р±СѓС„С„РµСЂ
+			ar5 = ar6;
+    		fpu 0 rep vlen [ar5++] = vreg7; //Р’С‹РіСЂСѓР¶Р°РµРј РІ Р±СѓС„С„РµСЂ
+
+    		gr0 - gr5;
+    		if =0 goto M2last_word;
+
+				gr5 = gr0 >>1;
+				gr5 = gr5 - 1;
+				vlen = gr5;
+				fpu 0 rep vlen vreg7 = [ar6++];
+				fpu 0 rep vlen [ar1++] = vreg7;
+
+			M2last_word: //РџРѕСЃР»РµРґРЅРµРµ РЅРµС‡РµС‚РЅРѕРµ СЃР»РѕРІРѕ
+				gr5 = [ar6];
+				[ar1] = gr5;
+			goto exit;
+normal_save:
+    //РЎРѕС…СЂР°РЅРµРЅРёРµ
+    fpu 0 rep vlen [ar1++] = vreg7;
+
+    gr0 = gr0 - gr4;
+    if > goto main_loop;
 
 exit:
     ar7 = ar7 - 66;
+    pop ar6, gr6;
+    pop ar5, gr5;
+    pop ar4, gr4;
     pop ar3, gr3;
     pop ar2, gr2;
-    pop ar1, gr1;
-    pop ar0, gr0;
     return;
 

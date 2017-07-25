@@ -4,12 +4,24 @@
 
 
 void runAllTests(void) {
-    RUN_TEST_GROUP(tests_divC32);
+	RUN_TEST_GROUP(tests_norm_L1_16s32f);
+	RUN_TEST_GROUP(tests_norm_L1_16s32s_Sfs);
+	RUN_TEST_GROUP(tests_norm_L2_16s32f);
+	RUN_TEST_GROUP(tests_norm_L2_16s32s_Sfs);
+    RUN_TEST_GROUP(tests_norm_L1_32f);
+    RUN_TEST_GROUP(tests_norm_L1_64f);
+    RUN_TEST_GROUP(tests_atan32f);
+    RUN_TEST_GROUP(tests_atan64f);
+    RUN_TEST_GROUP(tests_sqrt32f);
+    RUN_TEST_GROUP(tests_sqrt64f);
+    RUN_TEST_GROUP(tests_normalize32);
+    RUN_TEST_GROUP(tests_normalize64);
     RUN_TEST_GROUP(tests_div32);
+    RUN_TEST_GROUP(tests_divC32);
     RUN_TEST_GROUP(tests_div64);
     RUN_TEST_GROUP(tests_divC64);
-    RUN_TEST_GROUP(tests_normalize);
-    RUN_TEST_GROUP(tests_old_tests);
+
+    RUN_TEST_GROUP(tests_conj);
     RUN_TEST_GROUP(tests_sqr);
     RUN_TEST_GROUP(tests_min);
     RUN_TEST_GROUP(tests_minabs);
