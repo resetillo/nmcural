@@ -133,7 +133,6 @@ shift64:
   gr3 = gr3 - 1;
 
 shift_less_64:
-  if < goto shift_last_element;
 
   /// Сдвиг через взвешенное суммирование
   rep 32 data = [ar0++] with vsum, data, 0;
@@ -154,15 +153,6 @@ shift_less_64:
 
   if =0 goto exit;
 
-  goto copy_last_element;
-
-shift_last_element:
-  /// Сдвиг через взвешенное суммирование
-  rep 1 data = [ar0++] with vsum, data, 0;
-  /// Выгрузка в буфер
-  rep 1 [ar2++] = afifo;
-
-copy_last_element:
   gr2 = [ar5];
   [ar1] = gr2;
 

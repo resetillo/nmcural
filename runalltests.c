@@ -37,6 +37,8 @@ void runAllTests(void) {
     RUN_TEST_GROUP(tests_zero);
     RUN_TEST_GROUP(tests_abs);
     RUN_TEST_GROUP(tests_flip);
+    RUN_TEST_GROUP(tests_lshift);
+
 
 }
 

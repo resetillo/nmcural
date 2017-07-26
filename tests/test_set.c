@@ -25,7 +25,7 @@ TEST(tests_set, test_nmppsSet_16sc_len){
 }
 
 TEST(tests_set, test_nmppsSet_16sc){
-	nmpps16sc* dst = get_ptr_dst_vector_16sc();
+	nmpps16sc dst[70] __attribute__ ((aligned (2)));
 	nmpps16sc val;
     int i = 0;
 
@@ -33,7 +33,7 @@ TEST(tests_set, test_nmppsSet_16sc){
 	val.re = 55;
 
 	// Частичная загрузка векторного регистра
-	init_vector_zero_16sc(dst, 4100);
+	init_vector_zero_16sc(dst, 70);
 	TEST_ASSERT_EQUAL(nmppsStsNoErr, nmppsSet_16sc(val, dst, 23));
 
 	for(i = 0; i < 23; i++){
@@ -45,10 +45,10 @@ TEST(tests_set, test_nmppsSet_16sc){
 	val.im = 15;
 	val.re = -789;
 
-	init_vector_zero_16sc(dst, 128);
-	TEST_ASSERT_EQUAL(nmppsStsNoErr, nmppsSet_16sc(val, dst, 128));
+	init_vector_zero_16sc(dst, 70);
+	TEST_ASSERT_EQUAL(nmppsStsNoErr, nmppsSet_16sc(val, dst, 64));
 
-	for(i = 0; i < 128; i++){
+	for(i = 0; i < 64; i++){
 		TEST_ASSERT_EQUAL(val.im, dst[i].im);
 		TEST_ASSERT_EQUAL(val.re, dst[i].re);
 	}
@@ -57,10 +57,10 @@ TEST(tests_set, test_nmppsSet_16sc){
 	val.im = 1223;
 	val.re = 13789;
 
-	init_vector_zero_16sc(dst, 671);
-	TEST_ASSERT_EQUAL(nmppsStsNoErr, nmppsSet_16sc(val, dst, 128));
+	init_vector_zero_16sc(dst, 70);
+	TEST_ASSERT_EQUAL(nmppsStsNoErr, nmppsSet_16sc(val, dst, 70));
 
-	for(i = 0; i < 128; i++){
+	for(i = 0; i < 70; i++){
 		TEST_ASSERT_EQUAL(val.im, dst[i].im);
 		TEST_ASSERT_EQUAL(val.re, dst[i].re);
 	}
@@ -84,7 +84,7 @@ TEST(tests_set, test_nmppsSet_32sc_len){
 }
 
 TEST(tests_set, test_nmppsSet_32sc){
-	nmpps32sc* dst = get_ptr_dst_vector_32sc();
+	nmpps32sc dst[70] __attribute__ ((aligned (2)));;
 	nmpps32sc val;
     int i = 0;
 
@@ -92,7 +92,7 @@ TEST(tests_set, test_nmppsSet_32sc){
 	val.re = 511115;
 
 	// Частичная загрузка векторного регистра
-	init_vector_zero_32sc(dst, 4100);
+	init_vector_zero_32sc(dst, 70);
 	TEST_ASSERT_EQUAL(nmppsStsNoErr, nmppsSet_32sc(val, dst, 23));
 
 	for(i = 0; i < 23; i++){
@@ -104,10 +104,10 @@ TEST(tests_set, test_nmppsSet_32sc){
 	val.im = -15321;
 	val.re = 778589;
 
-	init_vector_zero_32sc(dst, 128);
-	TEST_ASSERT_EQUAL(nmppsStsNoErr, nmppsSet_32sc(val, dst, 128));
+	init_vector_zero_32sc(dst, 70);
+	TEST_ASSERT_EQUAL(nmppsStsNoErr, nmppsSet_32sc(val, dst, 64));
 
-	for(i = 0; i < 128; i++){
+	for(i = 0; i < 64; i++){
 		TEST_ASSERT_EQUAL(val.im, dst[i].im);
 		TEST_ASSERT_EQUAL(val.re, dst[i].re);
 	}
@@ -116,10 +116,10 @@ TEST(tests_set, test_nmppsSet_32sc){
 	val.im = 111223;
 	val.re = 131789;
 
-	init_vector_zero_32sc(dst, 671);
-	TEST_ASSERT_EQUAL(nmppsStsNoErr, nmppsSet_32sc(val, dst, 128));
+	init_vector_zero_32sc(dst, 70);
+	TEST_ASSERT_EQUAL(nmppsStsNoErr, nmppsSet_32sc(val, dst, 70));
 
-	for(i = 0; i < 128; i++){
+	for(i = 0; i < 70; i++){
 		TEST_ASSERT_EQUAL(val.im, dst[i].im);
 		TEST_ASSERT_EQUAL(val.re, dst[i].re);
 	}
@@ -142,7 +142,7 @@ TEST(tests_set, test_nmppsSet_64sc_len){
 }
 
 TEST(tests_set, test_nmppsSet_64sc){
-	nmpps64sc* dst = get_ptr_dst_vector_64sc();
+	nmpps64sc dst[40] __attribute__ ((aligned (2)));;
 	nmpps64sc val;
     int i = 0;
 
@@ -150,10 +150,10 @@ TEST(tests_set, test_nmppsSet_64sc){
 	val.re = -51001115;
 
 	// Частичная загрузка векторного регистра
-	init_vector_zero_64sc(dst, 4100);
-	TEST_ASSERT_EQUAL(nmppsStsNoErr, nmppsSet_64sc(val, dst, 23));
+	init_vector_zero_64sc(dst, 40);
+	TEST_ASSERT_EQUAL(nmppsStsNoErr, nmppsSet_64sc(val, dst, 12));
 
-	for(i = 0; i < 23; i++){
+	for(i = 0; i < 12; i++){
 		TEST_ASSERT_EQUAL(val.im, dst[i].im);
 		TEST_ASSERT_EQUAL(val.re, dst[i].re);
 	}
@@ -162,10 +162,10 @@ TEST(tests_set, test_nmppsSet_64sc){
 	val.im = -15112641;
 	val.re = -1778589;
 
-	init_vector_zero_64sc(dst, 4100);
-	TEST_ASSERT_EQUAL(nmppsStsNoErr, nmppsSet_64sc(val, dst, 128));
+	init_vector_zero_64sc(dst, 40);
+	TEST_ASSERT_EQUAL(nmppsStsNoErr, nmppsSet_64sc(val, dst, 32));
 
-	for(i = 0; i < 128; i++){
+	for(i = 0; i < 32; i++){
 		TEST_ASSERT_EQUAL(val.im, dst[i].im);
 		TEST_ASSERT_EQUAL(val.re, dst[i].re);
 	}
@@ -174,10 +174,10 @@ TEST(tests_set, test_nmppsSet_64sc){
 	val.im = 234011223;
 	val.re = 131102789;
 
-	init_vector_zero_64sc(dst, 4100);
-	TEST_ASSERT_EQUAL(nmppsStsNoErr, nmppsSet_64sc(val, dst, 671));
+	init_vector_zero_64sc(dst, 40);
+	TEST_ASSERT_EQUAL(nmppsStsNoErr, nmppsSet_64sc(val, dst, 40));
 
-	for(i = 0; i < 671; i++){
+	for(i = 0; i < 40; i++){
 		TEST_ASSERT_EQUAL(val.im, dst[i].im);
 		TEST_ASSERT_EQUAL(val.re, dst[i].re);
 	}
