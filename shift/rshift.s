@@ -1,19 +1,21 @@
-.globl _nmppsLShiftC_8u
-.globl _nmppsLShiftC_16u
-.globl _nmppsLShiftC_16s
-.globl _nmppsLShiftC_32s
-.globl _nmppsLShiftC_8u_I
-.globl _nmppsLShiftC_16u_I
-.globl _nmppsLShiftC_16s_I
-.globl _nmppsLShiftC_32s_I
+.globl _nmppsRShiftC_8u
+.globl _nmppsRShiftC_16u
+.globl _nmppsRShiftC_16s
+.globl _nmppsRShiftC_32s
+.globl _nmppsRShiftC_8u_I
+.globl _nmppsRShiftC_16u_I
+.globl _nmppsRShiftC_16s_I
+.globl _nmppsRShiftC_32s_I
 
 
-.globl _arrShiftlData
+.globl _arrRShiftData
+.globl _arrRShiftMatr
+.globl _arrRShiftReg
 
-_nmppsLShiftC_8u_I:
-_nmppsLShiftC_16u_I:
-_nmppsLShiftC_16s_I:
-_nmppsLShiftC_32s_I:
+_nmppsRShiftC_8u_I:
+_nmppsRShiftC_16u_I:
+_nmppsRShiftC_16s_I:
+_nmppsRShiftC_32s_I:
   ar5 = ar7 - 2;
   push ar0, gr0;
   push ar1, gr1;
@@ -37,12 +39,12 @@ _nmppsLShiftC_32s_I:
   gr1;
   if <= goto err_size;
 
-  goto shift_left;
+  goto shift_right;
 
-_nmppsLShiftC_8u:
-_nmppsLShiftC_16u:
-_nmppsLShiftC_16s:
-_nmppsLShiftC_32s:
+_nmppsRShiftC_8u:
+_nmppsRShiftC_16u:
+_nmppsRShiftC_16s:
+_nmppsRShiftC_32s:
 
   ar5 = ar7 - 2;
   push ar0, gr0;
@@ -82,7 +84,7 @@ _nmppsLShiftC_32s:
   gr1;
   if <= goto err_size;
 
-shift_left:
+shift_right:
   // Буфер на 64 слова
   ar3 = ar7 + 2;
   ar7 = ar7 + 66;
@@ -90,23 +92,39 @@ shift_left:
 
   gr7 = 0;
 
-  ar2 = _arrShiftlData;
+  /// Вычисление индекса массива со значениями регистров
+  ar2 = _arrRShiftReg with gr2 = gr0 << 1;
 
-  // Разбиение рабочей матрицы: 2 х 2
-  sir = 80000000h;
-  nb1 = sir;
-  sir = 03h;
-  sb = sir;
-
-  gr2 = gr0 << 1;
   gr3 = 2;
   gr2 = gr2 - gr3;
-  gr2 = gr2 << 1;
 
   ar2 = ar2 + gr2;
+  ar2, gr2 = [ar2];
 
+  sir = ar2;
+  nb1 = sir;
+
+  sir = gr2;
+  sb =  sir;
+
+  ar2 = _arrRShiftMatr with gr0 - 1;
+
+  if <>0 goto load_matr_shift;
+
+  ar2 = ar2 + 8;
+
+load_matr_shift:
   /// Загрузка матрицы
-  rep 2 wfifo = [ar2++], ftw, wtw;
+  rep 4 wfifo = [ar2++], ftw, wtw;
+
+  gr2 = 1;
+  ar2 = shift_parity with gr0 and gr2;
+
+  if =0 goto set_shift_parity;
+
+  ar2 = shift_non_parity;
+
+set_shift_parity:
 
   /// Количество итераций
   gr2 = gr1 >> 6;
@@ -119,7 +137,8 @@ shift_left:
 /// Двигаем по 64 слова
 shift64:
   /// Сдвиг через взвешенное суммирование
-  rep 32 data = [ar0++] with vsum, data, 0;
+  call ar2;
+
   /// Выгрузка в выходной вектор
   rep 32 [ar1++] = afifo;
 
@@ -137,7 +156,7 @@ shift64:
 shift_less_64:
 
   /// Сдвиг через взвешенное суммирование
-  rep 32 data = [ar0++] with vsum, data, 0;
+  call ar2;
   /// Выгрузка в буфер
   rep 32 [ar5++] = afifo;
 
@@ -159,6 +178,14 @@ shift_less_64:
   [ar1] = gr2;
 
   goto exit;
+
+shift_parity:
+  rep 32 data = [ar0++] with vsum, data, 0;
+  return;
+
+shift_non_parity:
+  rep 32 data = [ar0++] with vsum, shift data, 0;
+  return;
 
 // Нулевой указатель на вектор
 err_ptr:
