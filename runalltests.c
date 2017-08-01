@@ -20,7 +20,7 @@ void runAllTests(void) {
     RUN_TEST_GROUP(tests_divC32);
     RUN_TEST_GROUP(tests_div64);
     RUN_TEST_GROUP(tests_divC64);
-
+    RUN_TEST_GROUP(tests_mean);
     RUN_TEST_GROUP(tests_conj);
     RUN_TEST_GROUP(tests_sqr);
     RUN_TEST_GROUP(tests_min);
