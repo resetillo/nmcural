@@ -1089,7 +1089,386 @@ _nmppsMean_64f: .global _nmppsMean_64f
 */
 	.align 8
 _nmppsMean_64fc: .global _nmppsMean_64fc
-	return with gr7 = nmppsStsNotImplemented;
+	ar5 = ar7 - 2 addr;
+	push ar0, gr0;
+	push ar1, gr1;
+	push ar2, gr2;
+	push ar6, gr6;
+
+	ar1, gr1 = [--ar5];								// after read: ar1 == len, gr1 == pSrc
+	gr2 = [--ar5] with gr1;							//             gr2 == pMean
+
+	if =0 delayed goto .LnmppsMean_64fc_return with gr2;
+	gr7 = nmppsStsNullPtrErr;						// delay slot (x2)
+
+	if =0 delayed goto .LnmppsMean_64fc_return;
+	gr0 = ar1;										// delay slot
+	ar0 = gr1 with gr0;								// delay slot
+
+	if <= delayed goto .LnmppsMean_64fc_return;
+	gr7 = nmppsStsSizeErr;							// delay slot (x2)
+
+	gr6 = 64;
+
+	// vreg6 = | 0.0 |
+	// vreg7 = | 0.0 |
+	ar5 = Zero_Double;
+	fpu 0 rep 1 vreg6 = [ar5];						// zero out accumulator for Re
+	fpu 0 rep 1 vreg7 = [ar5];						// zero out accumulator for Im
+
+	ar1 = gr2 with gr0 - gr6;
+
+	// Used registers:
+	// ===============
+	// ar0 == pSrc
+	// gr0 == len (variable)
+	// ar1 == pMean
+	// ar2, gr2 == temp
+	// ar6 == buffer pointer
+	// gr6 == len comparator
+
+	// if (len < 64) do for 32;
+	if < goto .LnmppsMean_64fc_less64;
+
+.LnmppsMean_64fc_more_than_64:
+	fpu 0 rep 32 vreg0 = [ar0++];					// vreg0[32] = { [0] = Re, [1] = Im, ... }
+	fpu 0 rep 32 vreg1 = [ar0++];					// vreg1[32] = { [0] = Re, [1] = Im, ... }
+	fpu 0 rep 32 vreg2 = [ar0++];					// vreg2[32] = { [0] = Re, [1] = Im, ... }
+	fpu 0 rep 32 vreg3 = [ar0++];					// vreg3[32] = { [0] = Re, [1] = Im, ... }
+													// in total: 64 complex numbers
+	fpu 0 .double vreg4 = vreg0 + vreg1;
+	fpu 0 .double vreg4 = vreg4 + vreg2;
+	fpu 0 .double vreg4 = vreg4 + vreg3;			// vreg4[32] = vreg0[32] + vreg1[32] + vreg2[32] + vreg3[32]
+
+	fpu 0 .packer = vreg4 with .double <= .double;
+	fpu 0 rep 16 (vreg4, vreg5) = .packer;			// vreg4[16] = Re, vreg5[16] = Im
+
+	/*
+	// sum Re parts
+	*/
+
+	fpu 0 .packer = vreg4 with .double <= .double;
+	fpu 0 rep 8 (vreg0, vreg1) = .packer;
+
+	fpu 0 .double vreg4 = vreg0 + vreg1;
+
+	fpu 0 .packer = vreg4 with .double <= .double;
+	fpu 0 rep 4 (vreg0, vreg1) = .packer;
+
+	fpu 0 .double vreg4 = vreg0 + vreg1;
+
+	fpu 0 .packer = vreg4 with .double <= .double;
+	fpu 0 rep 2 (vreg0, vreg1) = .packer;
+
+	fpu 0 .double vreg4 = vreg0 + vreg1;
+
+	fpu 0 .packer = vreg4 with .double <= .double;
+	fpu 0 rep 1 (vreg0, vreg1) = .packer;
+
+	fpu 0 .double vreg4 = vreg0 + vreg1;
+	fpu 0 .double vreg6 = vreg6 + vreg4;			// accumulate Re
+
+	/*
+	// sum Im parts
+	*/
+
+	fpu 0 .packer = vreg5 with .double <= .double;
+	fpu 0 rep 8 (vreg2, vreg3) = .packer;
+
+	fpu 0 .double vreg5 = vreg2 + vreg3;
+
+	fpu 0 .packer = vreg5 with .double <= .double;
+	fpu 0 rep 4 (vreg2, vreg3) = .packer;
+
+	fpu 0 .double vreg5 = vreg2 + vreg3;
+
+	fpu 0 .packer = vreg5 with .double <= .double;
+	fpu 0 rep 2 (vreg2, vreg3) = .packer;
+
+	fpu 0 .double vreg5 = vreg2 + vreg3;
+
+	fpu 0 .packer = vreg5 with .double <= .double;
+	fpu 0 rep 1 (vreg2, vreg3) = .packer;
+
+	fpu 0 .double vreg5 = vreg2 + vreg3;
+	fpu 0 .double vreg7 = vreg7 + vreg5;			// accumulate Im
+
+	with gr0 -= gr6 noflags;
+	with gr0 - gr6;
+	if > goto .LnmppsMean_64fc_more_than_64;
+
+	if =0 delayed goto .LnmppsMean_64fc_get_average;
+.LnmppsMean_64fc_less64:
+	with gr6 >>= 1;									// delay slot: gr6 = 32
+	with gr0 - gr6;									// delay slot
+
+	if < goto .LnmppsMean_64fc_less32;
+
+	fpu 0 rep 16 vreg0 = [ar0++];					// vreg0[16] = { [0] = Re, [1] = Im, ... }
+	fpu 0 rep 16 vreg1 = [ar0++];					// vreg1[16] = { [0] = Re, [1] = Im, ... }
+	fpu 0 rep 16 vreg2 = [ar0++];					// vreg2[16] = { [0] = Re, [1] = Im, ... }
+	fpu 0 rep 16 vreg3 = [ar0++];					// vreg3[16] = { [0] = Re, [1] = Im, ... }
+													// in total: 32 complex numbers
+	fpu 0 .double vreg4 = vreg0 + vreg1;
+	fpu 0 .double vreg4 = vreg4 + vreg2;
+	fpu 0 .double vreg4 = vreg4 + vreg3;			// vreg4[16] = vreg0[16] + vreg1[16] + vreg2[16] + vreg3[16]
+
+	fpu 0 .packer = vreg4 with .double <= .double;
+	fpu 0 rep 8 (vreg4, vreg5) = .packer;			// vreg4[8] = Re, vreg5[8] = Im
+
+	/*
+	// sum Re parts
+	*/
+
+	fpu 0 .packer = vreg4 with .double <= .double;
+	fpu 0 rep 4 (vreg0, vreg1) = .packer;
+
+	fpu 0 .double vreg4 = vreg0 + vreg1;
+
+	fpu 0 .packer = vreg4 with .double <= .double;
+	fpu 0 rep 2 (vreg0, vreg1) = .packer;
+
+	fpu 0 .double vreg4 = vreg0 + vreg1;
+
+	fpu 0 .packer = vreg4 with .double <= .double;
+	fpu 0 rep 1 (vreg0, vreg1) = .packer;
+
+	fpu 0 .double vreg4 = vreg0 + vreg1;
+	fpu 0 .double vreg6 = vreg6 + vreg4;			// accumulate Re
+
+	/*
+	// sum Im parts
+	*/
+
+	fpu 0 .packer = vreg5 with .double <= .double;
+	fpu 0 rep 4 (vreg2, vreg3) = .packer;
+
+	fpu 0 .double vreg5 = vreg2 + vreg3;
+
+	fpu 0 .packer = vreg5 with .double <= .double;
+	fpu 0 rep 2 (vreg2, vreg3) = .packer;
+
+	fpu 0 .double vreg5 = vreg2 + vreg3;
+
+	fpu 0 .packer = vreg5 with .double <= .double;
+	fpu 0 rep 1 (vreg2, vreg3) = .packer;
+
+	fpu 0 .double vreg5 = vreg2 + vreg3;
+	fpu 0 .double vreg7 = vreg7 + vreg5;			// accumulate Im
+
+	with gr0 -= gr6;
+	if =0 delayed goto .LnmppsMean_64fc_get_average;
+.LnmppsMean_64fc_less32:
+	with gr6 >>= 1;									// delay slot: gr6 = 16
+	with gr0 - gr6;									// delay slot
+
+	if < goto .LnmppsMean_64fc_less16;
+
+	fpu 0 rep 8 vreg0 = [ar0++];					// vreg0[8] = { [0] = Re, [1] = Im, ... }
+	fpu 0 rep 8 vreg1 = [ar0++];					// vreg1[8] = { [0] = Re, [1] = Im, ... }
+	fpu 0 rep 8 vreg2 = [ar0++];					// vreg2[8] = { [0] = Re, [1] = Im, ... }
+	fpu 0 rep 8 vreg3 = [ar0++];					// vreg3[8] = { [0] = Re, [1] = Im, ... }
+													// in total: 16 complex numbers
+	fpu 0 .double vreg4 = vreg0 + vreg1;
+	fpu 0 .double vreg4 = vreg4 + vreg2;
+	fpu 0 .double vreg4 = vreg4 + vreg3;			// vreg4[8] = vreg0[8] + vreg1[8] + vreg2[8] + vreg3[8]
+
+	fpu 0 .packer = vreg4 with .double <= .double;
+	fpu 0 rep 4 (vreg4, vreg5) = .packer;			// vreg4[4] = Re, vreg5[4] = Im
+
+	/*
+	// sum Re parts
+	*/
+
+	fpu 0 .packer = vreg4 with .double <= .double;
+	fpu 0 rep 2 (vreg0, vreg1) = .packer;
+
+	fpu 0 .double vreg4 = vreg0 + vreg1;
+
+	fpu 0 .packer = vreg4 with .double <= .double;
+	fpu 0 rep 1 (vreg0, vreg1) = .packer;
+
+	fpu 0 .double vreg4 = vreg0 + vreg1;
+	fpu 0 .double vreg6 = vreg6 + vreg4;			// accumulate Re
+
+	/*
+	// sum Im parts
+	*/
+
+	fpu 0 .packer = vreg5 with .double <= .double;
+	fpu 0 rep 2 (vreg2, vreg3) = .packer;
+
+	fpu 0 .double vreg5 = vreg2 + vreg3;
+
+	fpu 0 .packer = vreg5 with .double <= .double;
+	fpu 0 rep 1 (vreg2, vreg3) = .packer;
+
+	fpu 0 .double vreg5 = vreg2 + vreg3;
+	fpu 0 .double vreg7 = vreg7 + vreg5;			// accumulate Im
+
+	with gr0 -= gr6;
+	if =0 delayed goto .LnmppsMean_64fc_get_average;
+.LnmppsMean_64fc_less16:
+	with gr6 >>= 1;									// delay slot: gr6 = 8
+	with gr0 - gr6;									// delay slot
+
+	if < goto .LnmppsMean_64fc_less8;
+
+	fpu 0 rep 4 vreg0 = [ar0++];					// vreg0[4] = { [0] = Re, [1] = Im, ... }
+	fpu 0 rep 4 vreg1 = [ar0++];					// vreg1[4] = { [0] = Re, [1] = Im, ... }
+	fpu 0 rep 4 vreg2 = [ar0++];					// vreg2[4] = { [0] = Re, [1] = Im, ... }
+	fpu 0 rep 4 vreg3 = [ar0++];					// vreg3[4] = { [0] = Re, [1] = Im, ... }
+													// in total: 8 complex numbers
+	fpu 0 .double vreg4 = vreg0 + vreg1;
+	fpu 0 .double vreg4 = vreg4 + vreg2;
+	fpu 0 .double vreg4 = vreg4 + vreg3;			// vreg4[4] = vreg0[4] + vreg1[4] + vreg2[4] + vreg3[4]
+
+	fpu 0 .packer = vreg4 with .double <= .double;
+	fpu 0 rep 2 (vreg4, vreg5) = .packer;			// vreg4[2] = Re, vreg5[2] = Im
+
+	/*
+	// sum Re parts
+	*/
+
+	fpu 0 .packer = vreg4 with .double <= .double;
+	fpu 0 rep 1 (vreg0, vreg1) = .packer;
+
+	fpu 0 .double vreg4 = vreg0 + vreg1;
+	fpu 0 .double vreg6 = vreg6 + vreg4;			// accumulate Re
+
+	/*
+	// sum Im parts
+	*/
+
+	fpu 0 .packer = vreg5 with .double <= .double;
+	fpu 0 rep 1 (vreg2, vreg3) = .packer;
+
+	fpu 0 .double vreg5 = vreg2 + vreg3;
+	fpu 0 .double vreg7 = vreg7 + vreg5;			// accumulate Im
+
+	with gr0 -= gr6;
+	if =0 delayed goto .LnmppsMean_64fc_get_average;
+.LnmppsMean_64fc_less8:
+	with gr6 >>= 1;									// delay slot: gr6 = 4
+	with gr0 - gr6;									// delay slot
+
+	if < goto .LnmppsMean_64fc_less4;
+
+	fpu 0 rep 2 vreg0 = [ar0++];					// vreg0[2] = { [0] = Re, [1] = Im }
+	fpu 0 rep 2 vreg1 = [ar0++];					// vreg1[2] = { [0] = Re, [1] = Im }
+	fpu 0 rep 2 vreg2 = [ar0++];					// vreg2[2] = { [0] = Re, [1] = Im }
+	fpu 0 rep 2 vreg3 = [ar0++];					// vreg3[2] = { [0] = Re, [1] = Im }
+													// in total: 4 complex numbers
+	fpu 0 .double vreg4 = vreg0 + vreg1;
+	fpu 0 .double vreg4 = vreg4 + vreg2;
+	fpu 0 .double vreg4 = vreg4 + vreg3;			// vreg4[2] = vreg0[2] + vreg1[2] + vreg2[2] + vreg3[2]
+
+	fpu 0 .packer = vreg4 with .double <= .double;
+	fpu 0 rep 1 (vreg4, vreg5) = .packer;			// vreg4[1] = Re, vreg5[1] = Im
+
+	/*
+	// sum Re parts
+	*/
+
+	fpu 0 .double vreg6 = vreg6 + vreg4;			// accumulate Re
+
+	/*
+	// sum Im parts
+	*/
+
+	fpu 0 .double vreg7 = vreg7 + vreg5;			// accumulate Im
+
+	with gr0 -= gr6;
+	if =0 delayed goto .LnmppsMean_64fc_get_average;
+.LnmppsMean_64fc_less4:
+	with gr6 >>= 1;									// delay slot: gr6 = 2
+	with gr0 - gr6;									// delay slot
+
+	if < goto .LnmppsMean_64fc_the_last_one;
+
+	fpu 0 rep 1 vreg0 = [ar0++];					// vreg0[1] = { [0] = Re, }
+	fpu 0 rep 1 vreg1 = [ar0++];					// vreg1[1] = { [0] = Im, }
+	fpu 0 rep 1 vreg2 = [ar0++];					// vreg2[1] = { [0] = Re, }
+	fpu 0 rep 1 vreg3 = [ar0++];					// vreg3[1] = { [0] = Im, }
+													// in total: 2 complex numbers
+
+	fpu 0 .double vreg4 = vreg0 + vreg2;			// vreg4[1] = vreg0[1] + vreg2[1] (Re)
+	fpu 0 .double vreg5 = vreg1 + vreg3;			// vreg5[1] = vreg0[1] + vreg2[1] (Im)
+
+	/*
+	// sum Re parts
+	*/
+
+	fpu 0 .double vreg6 = vreg6 + vreg4;			// accumulate Re
+
+	/*
+	// sum Im parts
+	*/
+
+	fpu 0 .double vreg7 = vreg7 + vreg5;			// accumulate Im
+
+	with gr0 -= gr6;
+	if =0 goto .LnmppsMean_64fc_get_average;
+
+.LnmppsMean_64fc_the_last_one:
+	fpu 0 rep 1 vreg4 = [ar0++];					// vreg4[1] = Re
+	fpu 0 rep 1 vreg5 = [ar0++];					// vreg5[1] = Im
+
+	/*
+	// sum Re parts
+	*/
+
+	fpu 0 .double vreg6 = vreg6 + vreg4;			// accumulate Re
+
+	/*
+	// sum Im parts
+	*/
+
+	fpu 0 .double vreg7 = vreg7 + vreg5;			// accumulate Im
+
+.LnmppsMean_64fc_get_average:
+	ar5 = ar7;
+	ar7 = ar7 + 4 addr;								// allocate buffer
+	ar6 = ar7 - 16 addr with gr7 = false;			// ATTENTION! seek addr of len from arguments
+
+	sir = gr7;
+	fp_pack_exp = sir;
+
+	fpu 0 rep 1 [ar5++] = vreg6;					// save sum of Re
+
+	delayed call DDiv;								// Re_avg := DDiv(sum(Re), float(len))
+	// convert int32_t to double
+	fpu rep 1 .packer = [ar6] with .double <= .fixed_32 .in_low;	// delay slot
+	fpu rep 1 [ar5++] = .packer;									// delay slot
+
+	ar5 = ar7;
+	ar2, gr2 = [--ar5];
+
+	[ar1++] = ar2, gr2;								// store average Re
+
+	ar5 = ar7 - 4 addr;
+
+	fpu 0 rep 1 [ar5++] = vreg7;					// save sum of Im
+
+	delayed call DDiv;								// Im_avg := DDiv(sum(Im), float(len))
+	// convert int32_t to double
+	fpu rep 1 .packer = [ar6] with .double <= .fixed_32 .in_low;	// delay slot
+	fpu rep 1 [ar5++] = .packer;									// delay slot
+
+	ar5 = ar7;
+	ar2, gr2 = [--ar5];
+
+	[ar1++] = ar2, gr2;								// store average Im
+
+	// release buffer and return Ok status
+	ar7 = ar7 - 4 addr with gr7 = nmppsStsNoErr;
+
+.LnmppsMean_64fc_return:
+	pop ar6, gr6;
+	pop ar2, gr2;
+	pop ar1, gr1;
+	pop ar0, gr0;
+	return;
 /*
 // }
 */
