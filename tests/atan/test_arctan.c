@@ -4,6 +4,8 @@
 #include "tests/test_math.h"
 #include "math.h"
 
+#if AtanTestEnable
+
 TEST_GROUP(tests_atan32f);
 TEST_SETUP(tests_atan32f) {}
 TEST_TEAR_DOWN(tests_atan32f) {}
@@ -312,3 +314,7 @@ TEST_GROUP_RUNNER(tests_atan32f){
     RUN_TEST_CASE(tests_atan32f, nmppsArctan32f_subnormal);
     printf("LABEL 3");
 }
+
+
+
+#endif

@@ -1,6 +1,8 @@
 #include "unity/unity_fixture.h"
 #include "nmpps.h"
+#include "tests/test_proto.h"
 
+#if NormL1TestEnable
 #define COUNT_ITERATION (100)
 
 TEST_GROUP(tests_norm_L1_64f);
@@ -37,10 +39,10 @@ nmppsStatus test_norm_L1_64_diap(nmpps64f bgn, nmpps64f step, int count){
 }
 
 TEST(tests_norm_L1_64f, nmppsNorm_L1_64f_small_vecs) {
-	TEST_ASSERT_EQUAL(nmppsStsNoErr, test_norm_L1_64_diap(-0.0777, 0.1, 32));
 	TEST_ASSERT_EQUAL(nmppsStsNoErr, test_norm_L1_64_diap(-0.0777, 0.1, 1));
 	TEST_ASSERT_EQUAL(nmppsStsNoErr, test_norm_L1_64_diap(-0.0777, 0.1, 2));
 	TEST_ASSERT_EQUAL(nmppsStsNoErr, test_norm_L1_64_diap(-0.0777, 0.1, 3));
+	TEST_ASSERT_EQUAL(nmppsStsNoErr, test_norm_L1_64_diap(-0.0777, 0.1, 32));
 	TEST_ASSERT_EQUAL(nmppsStsNoErr, test_norm_L1_64_diap(-0.0777, 0.1, 33));
 	TEST_ASSERT_EQUAL(nmppsStsNoErr, test_norm_L1_64_diap(-0.0777, 0.1, 64));
 	TEST_ASSERT_EQUAL(nmppsStsNoErr, test_norm_L1_64_diap(-0.0777, 0.1, 65));
@@ -74,3 +76,4 @@ TEST_GROUP_RUNNER(tests_norm_L1_64f){
     RUN_TEST_CASE(tests_norm_L1_64f, nmppsNorm_L1_64f_small_vecs);
     RUN_TEST_CASE(tests_norm_L1_64f, nmppsNorm_L1_64f_calculation);
 }
+#endif

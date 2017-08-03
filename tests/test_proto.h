@@ -2,10 +2,6 @@
 #ifndef __NMPPS_PROTO_TESTS_H__
 #define __NMPPS_PROTO_TESTS_H__
 
-int test_copysign();
-int test_vec_handler32();
-
-
 
 typedef union {
 	double dbl;
@@ -20,6 +16,25 @@ typedef union {
 	int i32;
 	unsigned int ui32;
 } fltint_t;
+
+
+#define DivTestEnable 1
+#define AtanTestEnable 1
+#define SqrtTestEnable 1
+#define NormalizeTestEnable 1
+#define NormTestEnable 1
+
+#if NormTestEnable
+	#define NormInfTestEnable 1
+	#define NormL1TestEnable 1
+	#define NormL2TestEnable 1
+
+    #define NormDiffInfTestEnable 1
+    #define NormDiffL1TestEnable 1
+    #define NormDiffL2TestEnable 1
+#endif
+
+
 
 #endif /* __NMPPS_PROTO_TESTS_H__ */
 

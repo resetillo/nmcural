@@ -1,26 +1,66 @@
 #include "unity/unity_fixture.h"
 #include "include/nmpps.h"
 
+#include "tests/test_proto.h"
 
 
 void runAllTests(void) {
-	RUN_TEST_GROUP(tests_norm_L1_16s32f);
-	RUN_TEST_GROUP(tests_norm_L1_16s32s_Sfs);
-	RUN_TEST_GROUP(tests_norm_L2_16s32f);
-	RUN_TEST_GROUP(tests_norm_L2_16s32s_Sfs);
+#if NormInfTestEnable
+    RUN_TEST_GROUP(tests_norm_Inf_32f);
+    RUN_TEST_GROUP(tests_norm_Inf_64f);
+	RUN_TEST_GROUP(tests_norm_Inf_16s32f);
+	RUN_TEST_GROUP(tests_norm_Inf_16s32s_Sfs);
+#endif
+
+#if NormL1TestEnable
     RUN_TEST_GROUP(tests_norm_L1_32f);
     RUN_TEST_GROUP(tests_norm_L1_64f);
+	RUN_TEST_GROUP(tests_norm_L1_16s32f);
+	RUN_TEST_GROUP(tests_norm_L1_16s32s_Sfs);
+#endif
+
+#if NormL2TestEnable
+	RUN_TEST_GROUP(tests_norm_L2_16s32f);
+	RUN_TEST_GROUP(tests_norm_L2_16s32s_Sfs);
+#endif
+
+#if NormDiffInfTestEnable
+    RUN_TEST_GROUP(tests_normDiff_Inf_32f);
+    RUN_TEST_GROUP(tests_normDiff_Inf_64f);
+#endif
+
+#if NormDiffL1TestEnable
+    RUN_TEST_GROUP(tests_normDiff_L1_32f);
+    RUN_TEST_GROUP(tests_normDiff_L1_64f);
+	RUN_TEST_GROUP(tests_normDiff_L1_16s32f);
+	RUN_TEST_GROUP(tests_normDiff_L1_16s32s_Sfs);
+#endif
+
+#if NormDiffL2TestEnable
+	RUN_TEST_GROUP(tests_normDiff_L2_32f);
+	RUN_TEST_GROUP(tests_normDiff_L2_64f);
+	RUN_TEST_GROUP(tests_normDiff_L2_16s32s_Sfs);
+	RUN_TEST_GROUP(tests_normDiff_L2_16s32f);
+#endif
+
+#if AtanTestEnable
     RUN_TEST_GROUP(tests_atan32f);
     RUN_TEST_GROUP(tests_atan64f);
+#endif
+#if SqrtTestEnable
     RUN_TEST_GROUP(tests_sqrt32f);
     RUN_TEST_GROUP(tests_sqrt64f);
+#endif
+#if NormalizeTestEnable
     RUN_TEST_GROUP(tests_normalize32);
     RUN_TEST_GROUP(tests_normalize64);
+#endif
+#if DivTestEnable
     RUN_TEST_GROUP(tests_div32);
     RUN_TEST_GROUP(tests_divC32);
     RUN_TEST_GROUP(tests_div64);
     RUN_TEST_GROUP(tests_divC64);
-
+#endif
     RUN_TEST_GROUP(tests_conj);
     RUN_TEST_GROUP(tests_sqr);
     RUN_TEST_GROUP(tests_min);

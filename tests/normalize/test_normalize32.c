@@ -2,7 +2,7 @@
 #include "nmpps.h"
 #include "tests/test_proto.h"
 
-
+#if NormalizeTestEnable
 
 TEST_GROUP(tests_normalize32);
 TEST_SETUP(tests_normalize32) {}
@@ -280,3 +280,5 @@ TEST_GROUP_RUNNER(tests_normalize32){
     RUN_TEST_CASE(tests_normalize32, nmppsNormalize_32fc_check_rewrite);
 
 }
+
+#endif

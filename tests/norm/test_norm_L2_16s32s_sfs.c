@@ -2,6 +2,7 @@
 #include "nmpps.h"
 #include "tests/test_proto.h"
 
+#if NormL2TestEnable
 #define COUNT_ITERATION (100)
 
 TEST_GROUP(tests_norm_L2_16s32s_Sfs);
@@ -105,3 +106,4 @@ TEST_GROUP_RUNNER(tests_norm_L2_16s32s_Sfs){
     RUN_TEST_CASE(tests_norm_L2_16s32s_Sfs, nmppsNorm_L2_16s32s_Sfs_check_answer);
     RUN_TEST_CASE(tests_norm_L2_16s32s_Sfs, nmppsNorm_L2_16s32s_Sfs_subnormal);
 }
+#endif

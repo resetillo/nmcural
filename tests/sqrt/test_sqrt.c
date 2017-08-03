@@ -4,6 +4,8 @@
 #include "tests/test_math.h"
 //#include "stdlib.h"
 
+#if SqrtTestEnable
+
 float right_sqrtf(float x);
 double right_sqrt(double x);
 
@@ -285,4 +287,4 @@ TEST_GROUP_RUNNER(tests_sqrt32f){
     RUN_TEST_CASE(tests_sqrt32f, nmppsSqrt32f_calculation);
 }
 
-
+#endif

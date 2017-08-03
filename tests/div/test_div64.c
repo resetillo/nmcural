@@ -4,6 +4,8 @@
 #include "tests/test_math.h"
 #include "math.h"
 
+#if DivTestEnable
+
 TEST_GROUP(tests_div64);
 TEST_SETUP(tests_div64) {}
 TEST_TEAR_DOWN(tests_div64) {}
@@ -418,3 +420,4 @@ TEST_GROUP_RUNNER(tests_divC64){
 
 }
 
+#endif

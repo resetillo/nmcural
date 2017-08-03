@@ -1,6 +1,8 @@
 #include "unity/unity_fixture.h"
 #include "nmpps.h"
+#include "tests/test_proto.h"
 
+#if NormL2TestEnable
 #define COUNT_ITERATION (100)
 
 TEST_GROUP(tests_norm_L2_16s32f);
@@ -86,3 +88,4 @@ TEST_GROUP_RUNNER(tests_norm_L2_16s32f){
     RUN_TEST_CASE(tests_norm_L2_16s32f, nmppsNorm_L2_16s32f_small_vecs);
     RUN_TEST_CASE(tests_norm_L2_16s32f, nmppsNorm_L2_16s32f_subnormal);
 }
+#endif
