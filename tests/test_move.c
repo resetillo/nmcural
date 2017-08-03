@@ -12,7 +12,6 @@ TEST_GROUP(tests_move);
 TEST_SETUP(tests_move){}
 TEST_TEAR_DOWN(tests_move){}
 
-
 // nmppsMove_8u
 
 TEST(tests_move, test_nmppsMove_8u_null_ptr){
@@ -32,80 +31,83 @@ TEST(tests_move, test_nmppsMove_8u_len){
 // Адрес источника больше адреса приемника
 TEST(tests_move, test_nmppsMove_8u_direct){
 
-    nmpps8u* src = get_ptr_src_vector_8u();
-    nmpps8u* etalon = get_ptr_dst_vector_8u();
-    nmpps8u*  dst2 = src - _SHIFT_DST2;
+	struct {
+		nmpps8u mem[10];
+	    nmpps8u src[150]   __attribute__ ((aligned (2)));
+	}for_test_move;
 
-    init_vector_8u(etalon, 4100);
-    init_vector_8u(src, 4100);
+    nmpps8u etalon[150]__attribute__ ((aligned (2)));
+    nmpps8u*  dst2 = for_test_move.src - _SHIFT_DST2;
+
+    init_vector_8u(etalon, 131);
+    init_vector_8u(for_test_move.src, 131);
 
     //Полная загрузка векторного регистра + один элемент
-    TEST_ASSERT_EQUAL(nmppsStsNoErr, nmppsMove_8u(src, dst2, 193));
-    TEST_ASSERT_EQUAL_UINT8_ARRAY(etalon, dst2, 193);
+    TEST_ASSERT_EQUAL(nmppsStsNoErr, nmppsMove_8u(for_test_move.src, dst2, 129));
+    TEST_ASSERT_EQUAL_UINT8_ARRAY(etalon, dst2, 129);
 
     //Полная загрузка векторного регистра + частичная загрузка + один элемент
-    init_vector_8u(src, 4100);
-    TEST_ASSERT_EQUAL(nmppsStsNoErr, nmppsMove_8u(src, dst2, 4067));
-    TEST_ASSERT_EQUAL_UINT8_ARRAY(etalon, dst2, 4067);
+    init_vector_8u(for_test_move.src, 131);
+    TEST_ASSERT_EQUAL(nmppsStsNoErr, nmppsMove_8u(for_test_move.src, dst2, 137));
+    TEST_ASSERT_EQUAL_UINT8_ARRAY(etalon, dst2, 131);
 
     //Частичная загрузка векторного регистра + один элемент
-    init_vector_8u(src, 4100);
-    TEST_ASSERT_EQUAL(nmppsStsNoErr, nmppsMove_8u(src, dst2, 31));
+    init_vector_8u(for_test_move.src, 131);
+    TEST_ASSERT_EQUAL(nmppsStsNoErr, nmppsMove_8u(for_test_move.src, dst2, 31));
     TEST_ASSERT_EQUAL_UINT8_ARRAY(etalon, dst2, 31);
 
     //Полная загрузка векторного регистра
-    init_vector_8u(src, 4100);
-    TEST_ASSERT_EQUAL(nmppsStsNoErr, nmppsMove_8u(src, dst2, 4096));
-    TEST_ASSERT_EQUAL_UINT8_ARRAY(etalon, dst2, 4096);
+    init_vector_8u(for_test_move.src, 131);
+    TEST_ASSERT_EQUAL(nmppsStsNoErr, nmppsMove_8u(for_test_move.src, dst2, 128));
+    TEST_ASSERT_EQUAL_UINT8_ARRAY(etalon, dst2, 128);
 
     //Полная загрузка векторного регистра + частичная загрузка
-    init_vector_8u(src, 4100);
-    TEST_ASSERT_EQUAL(nmppsStsNoErr, nmppsMove_8u(src, dst2, 130));
+    init_vector_8u(for_test_move.src, 131);
+    TEST_ASSERT_EQUAL(nmppsStsNoErr, nmppsMove_8u(for_test_move.src, dst2, 130));
     TEST_ASSERT_EQUAL_UINT8_ARRAY(etalon, dst2, 130);
 
     // Один элемент
-    init_vector_8u(src, 4100);
-    TEST_ASSERT_EQUAL(nmppsStsNoErr, nmppsMove_8u(src, dst2, 1));
+    init_vector_8u(for_test_move.src, 131);
+    TEST_ASSERT_EQUAL(nmppsStsNoErr, nmppsMove_8u(for_test_move.src, dst2, 1));
     TEST_ASSERT_EQUAL_UINT8_ARRAY(etalon, dst2, 1);
 }
 
 // Адрес источника меньше адреса приемника
 TEST(tests_move, test_nmppsMove_8u_back){
 
-    nmpps8u* src = get_ptr_src_vector_8u();
-    nmpps8u* etalon = get_ptr_dst_vector_8u();
-    nmpps8u*  dst1 = &src[_SHIFT_DST1];
+	struct {
+		nmpps8u src[150]   __attribute__ ((aligned (2)));
+		nmpps8u mem[10];
+	}for_test_move;
 
-    init_vector_8u(etalon, 4100);
-    init_vector_8u(src, 4100);
+    nmpps8u etalon[150] __attribute__ ((aligned (2)));
+    nmpps8u*  dst1 = &(for_test_move.src[_SHIFT_DST1]);
+
+    init_vector_8u(etalon, 150);
+    init_vector_8u(for_test_move.src, 150);
 
     //Полная загрузка векторного регистра + один элемент
-    TEST_ASSERT_EQUAL(nmppsStsNoErr, nmppsMove_8u(src, dst1, 193));
-    TEST_ASSERT_EQUAL_UINT8_ARRAY(etalon, dst1, 193);
+    TEST_ASSERT_EQUAL(nmppsStsNoErr, nmppsMove_8u(for_test_move.src, dst1, 129));
+    TEST_ASSERT_EQUAL_UINT8_ARRAY(etalon, dst1, 129);
 
     //Полная загрузка векторного регистра + частичная загрузка + один элемент
-    init_vector_8u(src, 4100);
-    TEST_ASSERT_EQUAL(nmppsStsNoErr, nmppsMove_8u(src, dst1, 4067));
-    TEST_ASSERT_EQUAL_UINT8_ARRAY(etalon, dst1, 4067);
+    init_vector_8u(for_test_move.src, 150);
+    TEST_ASSERT_EQUAL(nmppsStsNoErr, nmppsMove_8u(for_test_move.src, dst1, 137));
+    TEST_ASSERT_EQUAL_UINT8_ARRAY(etalon, dst1, 137);
 
     //Частичная загрузка векторного регистра + один элемент
-    init_vector_8u(src, 4100);
-    TEST_ASSERT_EQUAL(nmppsStsNoErr, nmppsMove_8u(src, dst1, 31));
-    TEST_ASSERT_EQUAL_UINT8_ARRAY(etalon, dst1, 31);
+    init_vector_8u(for_test_move.src, 150);
+    TEST_ASSERT_EQUAL(nmppsStsNoErr, nmppsMove_8u(for_test_move.src, dst1, 63));
+    TEST_ASSERT_EQUAL_UINT8_ARRAY(etalon, dst1, 63);
 
     //Полная загрузка векторного регистра + частичная загрузка
-    init_vector_8u(src, 4100);
-    TEST_ASSERT_EQUAL(nmppsStsNoErr, nmppsMove_8u(src, dst1, 130));
-    TEST_ASSERT_EQUAL_UINT8_ARRAY(etalon, dst1, 130);
-
-    //Полная загрузка векторного регистра + частичная загрузка
-    init_vector_8u(src, 4100);
-    TEST_ASSERT_EQUAL(nmppsStsNoErr, nmppsMove_8u(src, dst1, 130));
+    init_vector_8u(for_test_move.src, 150);
+    TEST_ASSERT_EQUAL(nmppsStsNoErr, nmppsMove_8u(for_test_move.src, dst1, 130));
     TEST_ASSERT_EQUAL_UINT8_ARRAY(etalon, dst1, 130);
 
     // Один элемент
-    init_vector_8u(src, 4100);
-    TEST_ASSERT_EQUAL(nmppsStsNoErr, nmppsMove_8u(src, dst1, 1));
+    init_vector_8u(for_test_move.src, 150);
+    TEST_ASSERT_EQUAL(nmppsStsNoErr, nmppsMove_8u(for_test_move.src, dst1, 1));
     TEST_ASSERT_EQUAL_UINT8_ARRAY(etalon, dst1, 1);
 }
 
@@ -127,85 +129,84 @@ TEST(tests_move, test_nmppsMove_16s_len){
 
 // Адрес источника больше адреса приемника
 TEST(tests_move, test_nmppsMove_16s_direct){
-    nmpps16s* src = get_ptr_src_vector_16s();
-    nmpps16s* etalon = get_ptr_dst_vector_16s();
-    nmpps16s*  dst2 = src - _SHIFT_DST2;
-    int i = 0;
 
-    init_vector_16s(etalon, 4100);
-    init_vector_16s(src, 4100);
+	struct {
+		nmpps16s mem[10];
+		nmpps16s src[150]   __attribute__ ((aligned (2)));
+	}for_test_move;
+
+    nmpps16s etalon[150] __attribute__ ((aligned (2)));
+    nmpps16s*  dst2 = for_test_move.src - _SHIFT_DST2;
+
+    init_vector_16s(etalon, 150);
+    init_vector_16s(for_test_move.src, 150);
 
     //Полная загрузка векторного регистра + один элемент
-    TEST_ASSERT_EQUAL(nmppsStsNoErr, nmppsMove_16s(src, dst2, 193));
-    TEST_ASSERT_EQUAL_INT8_ARRAY(etalon, dst2, 193);
-//
-//    for(i = 0; i < 193; i++){
-//    	TEST_ASSERT_EQUAL(etalon[i], dst2[i]);
-//    }
+    TEST_ASSERT_EQUAL(nmppsStsNoErr, nmppsMove_16s(for_test_move.src, dst2, 65));
+    TEST_ASSERT_EQUAL_INT8_ARRAY(etalon, dst2, 65);
 
     //Полная загрузка векторного регистра + частичная загрузка + один элемент
-    init_vector_16s(src, 4100);
-    TEST_ASSERT_EQUAL(nmppsStsNoErr, nmppsMove_16s(src, dst2, 4067));
-    TEST_ASSERT_EQUAL_INT8_ARRAY(etalon, dst2, 4067);
+    init_vector_16s(for_test_move.src, 150);
+    TEST_ASSERT_EQUAL(nmppsStsNoErr, nmppsMove_16s(for_test_move.src, dst2, 131));
+    TEST_ASSERT_EQUAL_INT8_ARRAY(etalon, dst2, 131);
 
     //Частичная загрузка векторного регистра + один элемент
-    init_vector_16s(src, 4100);
-    TEST_ASSERT_EQUAL(nmppsStsNoErr, nmppsMove_16s(src, dst2, 31));
-    TEST_ASSERT_EQUAL_INT8_ARRAY(etalon, dst2, 31);
+    init_vector_16s(for_test_move.src, 150);
+    TEST_ASSERT_EQUAL(nmppsStsNoErr, nmppsMove_16s(for_test_move.src, dst2, 63));
+    TEST_ASSERT_EQUAL_INT8_ARRAY(etalon, dst2, 63);
 
     //Полная загрузка векторного регистра
-    init_vector_16s(src, 4100);
-    TEST_ASSERT_EQUAL(nmppsStsNoErr, nmppsMove_16s(src, dst2, 4096));
-    TEST_ASSERT_EQUAL_INT8_ARRAY(etalon, dst2, 4096);
+    init_vector_16s(for_test_move.src, 150);
+    TEST_ASSERT_EQUAL(nmppsStsNoErr, nmppsMove_16s(for_test_move.src, dst2, 128));
+    TEST_ASSERT_EQUAL_INT8_ARRAY(etalon, dst2, 128);
 
     //Полная загрузка векторного регистра + частичная загрузка
-    init_vector_16s(src, 4100);
-    TEST_ASSERT_EQUAL(nmppsStsNoErr, nmppsMove_16s(src, dst2, 130));
+    init_vector_16s(for_test_move.src, 150);
+    TEST_ASSERT_EQUAL(nmppsStsNoErr, nmppsMove_16s(for_test_move.src, dst2, 130));
     TEST_ASSERT_EQUAL_INT8_ARRAY(etalon, dst2, 130);
 
     // Один элемент
-    init_vector_16s(src, 4100);
-    TEST_ASSERT_EQUAL(nmppsStsNoErr, nmppsMove_16s(src, dst2, 1));
+    init_vector_16s(for_test_move.src, 150);
+    TEST_ASSERT_EQUAL(nmppsStsNoErr, nmppsMove_16s(for_test_move.src, dst2, 1));
     TEST_ASSERT_EQUAL_INT8_ARRAY(etalon, dst2, 1);
 }
 
 // Адрес источника меньше адреса приемника
 TEST(tests_move, test_nmppsMove_16s_back){
 
-    nmpps16s* src = get_ptr_src_vector_16s();
-    nmpps16s* etalon = get_ptr_dst_vector_16s();
-    nmpps16s*  dst1 = &src[_SHIFT_DST1];
+	struct {
+		nmpps16s src[150]   __attribute__ ((aligned (2)));
+		nmpps16s mem[10];
+	}for_test_move;
 
-    init_vector_16s(etalon, 4100);
-    init_vector_16s(src, 4100);
+    nmpps16s etalon[150] __attribute__ ((aligned (2)));
+    nmpps16s*  dst1 = &(for_test_move.src[_SHIFT_DST1]);
+
+    init_vector_16s(etalon, 150);
+    init_vector_16s(for_test_move.src, 150);
 
     //Полная загрузка векторного регистра + один элемент
-    TEST_ASSERT_EQUAL(nmppsStsNoErr, nmppsMove_16s(src, dst1, 193));
-    TEST_ASSERT_EQUAL_INT8_ARRAY(etalon, dst1, 193);
+    TEST_ASSERT_EQUAL(nmppsStsNoErr, nmppsMove_16s(for_test_move.src, dst1, 65));
+    TEST_ASSERT_EQUAL_INT8_ARRAY(etalon, dst1, 65);
 
     //Полная загрузка векторного регистра + частичная загрузка + один элемент
-    init_vector_16s(src, 4100);
-    TEST_ASSERT_EQUAL(nmppsStsNoErr, nmppsMove_16s(src, dst1, 4067));
-    TEST_ASSERT_EQUAL_INT8_ARRAY(etalon, dst1, 4067);
+    init_vector_16s(for_test_move.src, 150);
+    TEST_ASSERT_EQUAL(nmppsStsNoErr, nmppsMove_16s(for_test_move.src, dst1, 131));
+    TEST_ASSERT_EQUAL_INT8_ARRAY(etalon, dst1, 131);
 
     //Частичная загрузка векторного регистра + один элемент
-    init_vector_16s(src, 4100);
-    TEST_ASSERT_EQUAL(nmppsStsNoErr, nmppsMove_16s(src, dst1, 31));
-    TEST_ASSERT_EQUAL_INT8_ARRAY(etalon, dst1, 31);
+    init_vector_16s(for_test_move.src, 150);
+    TEST_ASSERT_EQUAL(nmppsStsNoErr, nmppsMove_16s(for_test_move.src, dst1, 63));
+    TEST_ASSERT_EQUAL_INT8_ARRAY(etalon, dst1, 63);
 
     //Полная загрузка векторного регистра + частичная загрузка
-    init_vector_16s(src, 4100);
-    TEST_ASSERT_EQUAL(nmppsStsNoErr, nmppsMove_16s(src, dst1, 130));
-    TEST_ASSERT_EQUAL_INT8_ARRAY(etalon, dst1, 130);
-
-    //Полная загрузка векторного регистра + частичная загрузка
-    init_vector_16s(src, 4100);
-    TEST_ASSERT_EQUAL(nmppsStsNoErr, nmppsMove_16s(src, dst1, 130));
+    init_vector_16s(for_test_move.src, 150);
+    TEST_ASSERT_EQUAL(nmppsStsNoErr, nmppsMove_16s(for_test_move.src, dst1, 130));
     TEST_ASSERT_EQUAL_INT8_ARRAY(etalon, dst1, 130);
 
     // Один элемент
-    init_vector_16s(src, 4100);
-    TEST_ASSERT_EQUAL(nmppsStsNoErr, nmppsMove_16s(src, dst1, 1));
+    init_vector_16s(for_test_move.src, 150);
+    TEST_ASSERT_EQUAL(nmppsStsNoErr, nmppsMove_16s(for_test_move.src, dst1, 1));
     TEST_ASSERT_EQUAL_INT8_ARRAY(etalon, dst1, 1);
 }
 
@@ -228,80 +229,83 @@ TEST(tests_move, test_nmppsMove_32s_len){
 // Адрес источника больше адреса приемника
 TEST(tests_move, test_nmppsMove_32s_direct){
 
-    nmpps32s* src = get_ptr_src_vector_32s();
-    nmpps32s* etalon = get_ptr_dst_vector_32s();
-    nmpps32s*  dst2 = src - _SHIFT_DST2;
+	struct {
+		nmpps32s mem[10];
+		nmpps32s src[150]   __attribute__ ((aligned (2)));
+	}for_test_move;
 
-    init_vector_32s(etalon, 4100);
-    init_vector_32s(src, 4100);
+    nmpps32s etalon[150] __attribute__ ((aligned (2)));
+    nmpps32s*  dst2 = for_test_move.src - _SHIFT_DST2;
+
+    init_vector_32s(etalon, 150);
+    init_vector_32s(for_test_move.src, 150);
 
     //Полная загрузка векторного регистра + один элемент
-    TEST_ASSERT_EQUAL(nmppsStsNoErr, nmppsMove_32s(src, dst2, 193));
-    TEST_ASSERT_EQUAL_INT8_ARRAY(etalon, dst2, 193);
+    TEST_ASSERT_EQUAL(nmppsStsNoErr, nmppsMove_32s(for_test_move.src, dst2, 65));
+    TEST_ASSERT_EQUAL_INT8_ARRAY(etalon, dst2, 65);
 
     //Полная загрузка векторного регистра + частичная загрузка + один элемент
-    init_vector_32s(src, 4100);
-    TEST_ASSERT_EQUAL(nmppsStsNoErr, nmppsMove_32s(src, dst2, 4067));
-    TEST_ASSERT_EQUAL_INT8_ARRAY(etalon, dst2, 4067);
+    init_vector_32s(for_test_move.src, 150);
+    TEST_ASSERT_EQUAL(nmppsStsNoErr, nmppsMove_32s(for_test_move.src, dst2, 137));
+    TEST_ASSERT_EQUAL_INT8_ARRAY(etalon, dst2, 137);
 
     //Частичная загрузка векторного регистра + один элемент
-    init_vector_32s(src, 4100);
-    TEST_ASSERT_EQUAL(nmppsStsNoErr, nmppsMove_32s(src, dst2, 31));
-    TEST_ASSERT_EQUAL_INT8_ARRAY(etalon, dst2, 31);
+    init_vector_32s(for_test_move.src, 150);
+    TEST_ASSERT_EQUAL(nmppsStsNoErr, nmppsMove_32s(for_test_move.src, dst2, 63));
+    TEST_ASSERT_EQUAL_INT8_ARRAY(etalon, dst2, 63);
 
     //Полная загрузка векторного регистра
-    init_vector_32s(src, 4100);
-    TEST_ASSERT_EQUAL(nmppsStsNoErr, nmppsMove_32s(src, dst2, 4096));
-    TEST_ASSERT_EQUAL_INT8_ARRAY(etalon, dst2, 4096);
+    init_vector_32s(for_test_move.src, 150);
+    TEST_ASSERT_EQUAL(nmppsStsNoErr, nmppsMove_32s(for_test_move.src, dst2, 128));
+    TEST_ASSERT_EQUAL_INT8_ARRAY(etalon, dst2, 128);
 
     //Полная загрузка векторного регистра + частичная загрузка
-    init_vector_32s(src, 4100);
-    TEST_ASSERT_EQUAL(nmppsStsNoErr, nmppsMove_32s(src, dst2, 130));
+    init_vector_32s(for_test_move.src, 150);
+    TEST_ASSERT_EQUAL(nmppsStsNoErr, nmppsMove_32s(for_test_move.src, dst2, 130));
     TEST_ASSERT_EQUAL_INT8_ARRAY(etalon, dst2, 130);
 
     // Один элемент
-    init_vector_32s(src, 4100);
-    TEST_ASSERT_EQUAL(nmppsStsNoErr, nmppsMove_32s(src, dst2, 1));
+    init_vector_32s(for_test_move.src, 150);
+    TEST_ASSERT_EQUAL(nmppsStsNoErr, nmppsMove_32s(for_test_move.src, dst2, 1));
     TEST_ASSERT_EQUAL_INT8_ARRAY(etalon, dst2, 1);
 }
 
 // Адрес источника меньше адреса приемника
 TEST(tests_move, test_nmppsMove_32s_back){
 
-    nmpps32s* src = get_ptr_src_vector_32s();
-    nmpps32s* etalon = get_ptr_dst_vector_32s();
-    nmpps32s*  dst1 = &src[_SHIFT_DST1];
+	struct {
+		nmpps32s src[150]   __attribute__ ((aligned (2)));
+		nmpps32s mem[10];
+	}for_test_move;
 
-    init_vector_32s(etalon, 4100);
-    init_vector_32s(src, 4100);
+    nmpps32s etalon[150] __attribute__ ((aligned (2)));
+    nmpps32s*  dst1 = &(for_test_move.src[_SHIFT_DST1]);
+
+    init_vector_32s(etalon, 150);
+    init_vector_32s(for_test_move.src, 150);
 
     //Полная загрузка векторного регистра + один элемент
-    TEST_ASSERT_EQUAL(nmppsStsNoErr, nmppsMove_32s(src, dst1, 193));
-    TEST_ASSERT_EQUAL_INT8_ARRAY(etalon, dst1, 193);
+    TEST_ASSERT_EQUAL(nmppsStsNoErr, nmppsMove_32s(for_test_move.src, dst1, 129));
+    TEST_ASSERT_EQUAL_INT8_ARRAY(etalon, dst1, 129);
 
     //Полная загрузка векторного регистра + частичная загрузка + один элемент
-    init_vector_32s(src, 4100);
-    TEST_ASSERT_EQUAL(nmppsStsNoErr, nmppsMove_32s(src, dst1, 4067));
-    TEST_ASSERT_EQUAL_INT8_ARRAY(etalon, dst1, 4067);
+    init_vector_32s(for_test_move.src, 150);
+    TEST_ASSERT_EQUAL(nmppsStsNoErr, nmppsMove_32s(for_test_move.src, dst1, 137));
+    TEST_ASSERT_EQUAL_INT8_ARRAY(etalon, dst1, 137);
 
     //Частичная загрузка векторного регистра + один элемент
-    init_vector_32s(src, 4100);
-    TEST_ASSERT_EQUAL(nmppsStsNoErr, nmppsMove_32s(src, dst1, 31));
-    TEST_ASSERT_EQUAL_INT8_ARRAY(etalon, dst1, 31);
+    init_vector_32s(for_test_move.src, 150);
+    TEST_ASSERT_EQUAL(nmppsStsNoErr, nmppsMove_32s(for_test_move.src, dst1, 63));
+    TEST_ASSERT_EQUAL_INT8_ARRAY(etalon, dst1, 63);
 
     //Полная загрузка векторного регистра + частичная загрузка
-    init_vector_32s(src, 4100);
-    TEST_ASSERT_EQUAL(nmppsStsNoErr, nmppsMove_32s(src, dst1, 130));
-    TEST_ASSERT_EQUAL_INT8_ARRAY(etalon, dst1, 130);
-
-    //Полная загрузка векторного регистра + частичная загрузка
-    init_vector_32s(src, 4100);
-    TEST_ASSERT_EQUAL(nmppsStsNoErr, nmppsMove_32s(src, dst1, 130));
+    init_vector_32s(for_test_move.src, 150);
+    TEST_ASSERT_EQUAL(nmppsStsNoErr, nmppsMove_32s(for_test_move.src, dst1, 130));
     TEST_ASSERT_EQUAL_INT8_ARRAY(etalon, dst1, 130);
 
     // Один элемент
-    init_vector_32s(src, 4100);
-    TEST_ASSERT_EQUAL(nmppsStsNoErr, nmppsMove_32s(src, dst1, 1));
+    init_vector_32s(for_test_move.src, 150);
+    TEST_ASSERT_EQUAL(nmppsStsNoErr, nmppsMove_32s(for_test_move.src, dst1, 1));
     TEST_ASSERT_EQUAL_INT8_ARRAY(etalon, dst1, 1);
 }
 
@@ -324,60 +328,62 @@ TEST(tests_move, test_nmppsMove_64s_len){
 // Адрес источника больше адреса приемника
 TEST(tests_move, test_nmppsMove_64s_direct){
 
-    nmpps64s* src = get_ptr_src_vector_64s();
-    nmpps64s* etalon = get_ptr_dst_vector_64s();
-    nmpps64s*  dst2 = src - _SHIFT_DST2;
+	struct {
+		nmpps64s mem[4];
+		nmpps64s src[70]   __attribute__ ((aligned (2)));
+	}for_test_move;
 
-    init_vector_64s(etalon, 4100);
-    init_vector_64s(src, 4100);
+    nmpps64s etalon[70] __attribute__ ((aligned (2)));
+    nmpps64s*  dst2 = for_test_move.src - _SHIFT_DST2;
+
+    init_vector_64s(etalon, 70);
+    init_vector_64s(for_test_move.src, 70);
 
     //Полная загрузка векторного регистра + частичная загрузка
-    init_vector_64s(src, 4100);
-    TEST_ASSERT_EQUAL(nmppsStsNoErr, nmppsMove_64s(src, dst2, 4067));
-    TEST_ASSERT_EQUAL_INT16_ARRAY(etalon, dst2, 4067);
+    init_vector_64s(for_test_move.src, 70);
+    TEST_ASSERT_EQUAL(nmppsStsNoErr, nmppsMove_64s(for_test_move.src, dst2, 40));
+    TEST_ASSERT_EQUAL_INT16_ARRAY(etalon, dst2, 40);
 
     //Частичная загрузка векторного регистра
-    init_vector_64s(src, 4100);
-    TEST_ASSERT_EQUAL(nmppsStsNoErr, nmppsMove_64s(src, dst2, 31));
+    init_vector_64s(for_test_move.src, 70);
+    TEST_ASSERT_EQUAL(nmppsStsNoErr, nmppsMove_64s(for_test_move.src, dst2, 31));
     TEST_ASSERT_EQUAL_INT16_ARRAY(etalon, dst2, 31);
 
     //Полная загрузка векторного регистра
-    init_vector_64s(src, 4100);
-    TEST_ASSERT_EQUAL(nmppsStsNoErr, nmppsMove_64s(src, dst2, 4096));
-    TEST_ASSERT_EQUAL_INT16_ARRAY(etalon, dst2, 4096);
+    init_vector_64s(for_test_move.src, 70);
+    TEST_ASSERT_EQUAL(nmppsStsNoErr, nmppsMove_64s(for_test_move.src, dst2, 64));
+    TEST_ASSERT_EQUAL_INT16_ARRAY(etalon, dst2, 64);
 
 }
 
 // Адрес источника меньше адреса приемника
 TEST(tests_move, test_nmppsMove_64s_back){
 
-    nmpps64s* src = get_ptr_src_vector_64s();
-    nmpps64s* etalon = get_ptr_dst_vector_64s();
-    nmpps64s*  dst1 = &src[_SHIFT_DST1];
+	struct {
+		nmpps64s src[70]   __attribute__ ((aligned (2)));
+		nmpps64s mem[4];
+	}for_test_move;
 
-    init_vector_64s(etalon, 4100);
-    init_vector_64s(src, 4100);
+    nmpps64s etalon[70] __attribute__ ((aligned (2)));
+    nmpps64s*  dst1 = &(for_test_move.src[_SHIFT_DST1]);
 
-
-    //Полная загрузка векторного регистра + частичная загрузка
-    init_vector_64s(src, 4100);
-    TEST_ASSERT_EQUAL(nmppsStsNoErr, nmppsMove_64s(src, dst1, 4067));
-    TEST_ASSERT_EQUAL_INT16_ARRAY(etalon, dst1, 4067);
+    init_vector_64s(etalon, 70);
+    init_vector_64s(for_test_move.src, 70);
 
     //Частичная загрузка векторного регистра
-    init_vector_64s(src, 4100);
-    TEST_ASSERT_EQUAL(nmppsStsNoErr, nmppsMove_64s(src, dst1, 31));
+    init_vector_64s(for_test_move.src, 70);
+    TEST_ASSERT_EQUAL(nmppsStsNoErr, nmppsMove_64s(for_test_move.src, dst1, 31));
     TEST_ASSERT_EQUAL_INT16_ARRAY(etalon, dst1, 31);
 
     //Полная загрузка векторного регистра + частичная загрузка
-    init_vector_64s(src, 4100);
-    TEST_ASSERT_EQUAL(nmppsStsNoErr, nmppsMove_64s(src, dst1, 130));
-    TEST_ASSERT_EQUAL_INT16_ARRAY(etalon, dst1, 130);
+    init_vector_64s(for_test_move.src, 70);
+    TEST_ASSERT_EQUAL(nmppsStsNoErr, nmppsMove_64s(for_test_move.src, dst1, 66));
+    TEST_ASSERT_EQUAL_INT16_ARRAY(etalon, dst1, 66);
 
     //Полная загрузка векторного регистра
-    init_vector_64s(src, 4100);
-    TEST_ASSERT_EQUAL(nmppsStsNoErr, nmppsMove_64s(src, dst1, 4096));
-    TEST_ASSERT_EQUAL_INT16_ARRAY(etalon, dst1, 4096);
+    init_vector_64s(for_test_move.src, 70);
+    TEST_ASSERT_EQUAL(nmppsStsNoErr, nmppsMove_64s(for_test_move.src, dst1, 64));
+    TEST_ASSERT_EQUAL_INT16_ARRAY(etalon, dst1, 64);
 }
 
 // nmppsMove_16sc
@@ -400,26 +406,30 @@ TEST(tests_move, test_nmppsMove_16sc_len){
 TEST(tests_move, test_nmppsMove_16sc_direct){
     int i = 0;
 
-    nmpps16sc* src = get_ptr_src_vector_16sc();
-    nmpps16sc* etalon = get_ptr_dst_vector_16sc();
-    nmpps16sc*  dst2 = src - _SHIFT_DST2;
+    struct {
+    	nmpps16sc mem[4];
+    	nmpps16sc src[70]   __attribute__ ((aligned (2)));
+    }for_test_move;
 
-    init_vector_16sc(etalon, 4100);
-    init_vector_16sc(src, 4100);
+    nmpps16sc etalon[70] __attribute__ ((aligned (2)));
+    nmpps16sc*  dst2 = for_test_move.src - _SHIFT_DST2;
+
+    init_vector_16sc(etalon, 70);
+    init_vector_16sc(for_test_move.src, 70);
 
     //Полная загрузка векторного регистра + частичная загрузка
-    init_vector_16sc(src, 4100);
-    TEST_ASSERT_EQUAL(nmppsStsNoErr, nmppsMove_16sc(src, dst2, 4067));
+    init_vector_16sc(for_test_move.src, 70);
+    TEST_ASSERT_EQUAL(nmppsStsNoErr, nmppsMove_16sc(for_test_move.src, dst2, 66));
 
-    for(i = 0; i < 4067; i++){
+    for(i = 0; i < 66; i++){
     	TEST_ASSERT_EQUAL(etalon[i].im, dst2[i].im);
     	TEST_ASSERT_EQUAL(etalon[i].re, dst2[i].re);
     }
 
     //Частичная загрузка векторного регистра
-    init_vector_16sc(src, 4100);
+    init_vector_16sc(for_test_move.src, 70);
 
-    TEST_ASSERT_EQUAL(nmppsStsNoErr, nmppsMove_16sc(src, dst2, 31));
+    TEST_ASSERT_EQUAL(nmppsStsNoErr, nmppsMove_16sc(for_test_move.src, dst2, 31));
 
     for(i = 0; i < 31; i++){
     	TEST_ASSERT_EQUAL(etalon[i].im, dst2[i].im);
@@ -427,10 +437,10 @@ TEST(tests_move, test_nmppsMove_16sc_direct){
     }
 
     //Полная загрузка векторного регистра
-    init_vector_16sc(src, 4100);
-    TEST_ASSERT_EQUAL(nmppsStsNoErr, nmppsMove_16sc(src, dst2, 4096));
+    init_vector_16sc(for_test_move.src, 70);
+    TEST_ASSERT_EQUAL(nmppsStsNoErr, nmppsMove_16sc(for_test_move.src, dst2, 64));
 
-    for(i = 0; i < 4096; i++){
+    for(i = 0; i < 64; i++){
     	TEST_ASSERT_EQUAL(etalon[i].im, dst2[i].im);
     	TEST_ASSERT_EQUAL(etalon[i].re, dst2[i].re);
     }
@@ -441,26 +451,30 @@ TEST(tests_move, test_nmppsMove_16sc_direct){
 TEST(tests_move, test_nmppsMove_16sc_back){
     int i = 0;
 
-    nmpps16sc* src = get_ptr_src_vector_16sc();
-    nmpps16sc* etalon = get_ptr_dst_vector_16sc();
-    nmpps16sc*  dst1 = &src[_SHIFT_DST1];
+    struct {
+    	nmpps16sc src[70]   __attribute__ ((aligned (2)));
+    	nmpps16sc mem[4];
+    }for_test_move;
 
-    init_vector_16sc(etalon, 4100);
-    init_vector_16sc(src, 4100);
+    nmpps16sc etalon[70] __attribute__ ((aligned (2)));
+    nmpps16sc*  dst1 = &(for_test_move.src[_SHIFT_DST1]);
+
+    init_vector_16sc(etalon, 70);
+    init_vector_16sc(for_test_move.src, 70);
 
 
     //Полная загрузка векторного регистра + частичная загрузка
-    init_vector_16sc(src, 4100);
-    TEST_ASSERT_EQUAL(nmppsStsNoErr, nmppsMove_16sc(src, dst1, 4067));
+    init_vector_16sc(for_test_move.src, 70);
+    TEST_ASSERT_EQUAL(nmppsStsNoErr, nmppsMove_16sc(for_test_move.src, dst1, 66));
 
-    for(i = 0; i < 4067; i++){
+    for(i = 0; i < 66; i++){
     	TEST_ASSERT_EQUAL(etalon[i].im, dst1[i].im);
     	TEST_ASSERT_EQUAL(etalon[i].re, dst1[i].re);
     }
 
     //Частичная загрузка векторного регистра
-    init_vector_16sc(src, 4100);
-    TEST_ASSERT_EQUAL(nmppsStsNoErr, nmppsMove_16sc(src, dst1, 31));
+    init_vector_16sc(for_test_move.src, 70);
+    TEST_ASSERT_EQUAL(nmppsStsNoErr, nmppsMove_16sc(for_test_move.src, dst1, 31));
 
     for(i = 0; i < 31; i++){
     	TEST_ASSERT_EQUAL(etalon[i].im, dst1[i].im);
@@ -468,10 +482,10 @@ TEST(tests_move, test_nmppsMove_16sc_back){
     }
 
     //Полная загрузка векторного регистра
-    init_vector_16sc(src, 4100);
-    TEST_ASSERT_EQUAL(nmppsStsNoErr, nmppsMove_16sc(src, dst1, 4096));
+    init_vector_16sc(for_test_move.src, 70);
+    TEST_ASSERT_EQUAL(nmppsStsNoErr, nmppsMove_16sc(for_test_move.src, dst1, 64));
 
-    for(i = 0; i < 4096; i++){
+    for(i = 0; i < 64; i++){
     	TEST_ASSERT_EQUAL(etalon[i].im, dst1[i].im);
     	TEST_ASSERT_EQUAL(etalon[i].re, dst1[i].re);
     }
@@ -497,26 +511,30 @@ TEST(tests_move, test_nmppsMove_32sc_len){
 TEST(tests_move, test_nmppsMove_32sc_direct){
     int i = 0;
 
-    nmpps32sc* src = get_ptr_src_vector_32sc();
-    nmpps32sc* etalon = get_ptr_dst_vector_32sc();
-    nmpps32sc*  dst2 = src - _SHIFT_DST2;
+    struct {
+    	nmpps32sc mem[4];
+    	nmpps32sc src[70]   __attribute__ ((aligned (2)));
+    }for_test_move;
 
-    init_vector_32sc(etalon, 4100);
-    init_vector_32sc(src, 4100);
+    nmpps32sc etalon[70] __attribute__ ((aligned (2)));
+    nmpps32sc*  dst2 = for_test_move.src - _SHIFT_DST2;
+
+    init_vector_32sc(etalon, 70);
+    init_vector_32sc(for_test_move.src, 70);
 
     //Полная загрузка векторного регистра + частичная загрузка
-    init_vector_32sc(src, 4100);
-    TEST_ASSERT_EQUAL(nmppsStsNoErr, nmppsMove_32sc(src, dst2, 4067));
+    init_vector_32sc(for_test_move.src, 70);
+    TEST_ASSERT_EQUAL(nmppsStsNoErr, nmppsMove_32sc(for_test_move.src, dst2, 66));
 
-    for(i = 0; i < 4067; i++){
+    for(i = 0; i < 66; i++){
     	TEST_ASSERT_EQUAL(etalon[i].im, dst2[i].im);
     	TEST_ASSERT_EQUAL(etalon[i].re, dst2[i].re);
     }
 
     //Частичная загрузка векторного регистра
-    init_vector_32sc(src, 4100);
+    init_vector_32sc(for_test_move.src, 70);
 
-    TEST_ASSERT_EQUAL(nmppsStsNoErr, nmppsMove_32sc(src, dst2, 31));
+    TEST_ASSERT_EQUAL(nmppsStsNoErr, nmppsMove_32sc(for_test_move.src, dst2, 31));
 
     for(i = 0; i < 31; i++){
     	TEST_ASSERT_EQUAL(etalon[i].im, dst2[i].im);
@@ -524,10 +542,10 @@ TEST(tests_move, test_nmppsMove_32sc_direct){
     }
 
     //Полная загрузка векторного регистра
-    init_vector_32sc(src, 4100);
-    TEST_ASSERT_EQUAL(nmppsStsNoErr, nmppsMove_32sc(src, dst2, 4096));
+    init_vector_32sc(for_test_move.src, 70);
+    TEST_ASSERT_EQUAL(nmppsStsNoErr, nmppsMove_32sc(for_test_move.src, dst2, 64));
 
-    for(i = 0; i < 4096; i++){
+    for(i = 0; i < 64; i++){
     	TEST_ASSERT_EQUAL(etalon[i].im, dst2[i].im);
     	TEST_ASSERT_EQUAL(etalon[i].re, dst2[i].re);
     }
@@ -538,26 +556,30 @@ TEST(tests_move, test_nmppsMove_32sc_direct){
 TEST(tests_move, test_nmppsMove_32sc_back){
     int i = 0;
 
-    nmpps32sc* src = get_ptr_src_vector_32sc();
-    nmpps32sc* etalon = get_ptr_dst_vector_32sc();
-    nmpps32sc*  dst1 = &src[_SHIFT_DST1];
+    struct {
+    	nmpps32sc src[70]   __attribute__ ((aligned (2)));
+    	nmpps32sc mem[4];
+    }for_test_move;
 
-    init_vector_32sc(etalon, 4100);
-    init_vector_32sc(src, 4100);
+    nmpps32sc etalon[70] __attribute__ ((aligned (2)));
+    nmpps32sc*  dst1 = &(for_test_move.src[_SHIFT_DST1]);
+
+    init_vector_32sc(etalon, 70);
+    init_vector_32sc(for_test_move.src, 70);
 
 
     //Полная загрузка векторного регистра + частичная загрузка
-    init_vector_32sc(src, 4100);
-    TEST_ASSERT_EQUAL(nmppsStsNoErr, nmppsMove_32sc(src, dst1, 4067));
+    init_vector_32sc(for_test_move.src, 70);
+    TEST_ASSERT_EQUAL(nmppsStsNoErr, nmppsMove_32sc(for_test_move.src, dst1, 66));
 
-    for(i = 0; i < 4067; i++){
+    for(i = 0; i < 66; i++){
     	TEST_ASSERT_EQUAL(etalon[i].im, dst1[i].im);
     	TEST_ASSERT_EQUAL(etalon[i].re, dst1[i].re);
     }
 
     //Частичная загрузка векторного регистра
-    init_vector_32sc(src, 4100);
-    TEST_ASSERT_EQUAL(nmppsStsNoErr, nmppsMove_32sc(src, dst1, 31));
+    init_vector_32sc(for_test_move.src, 70);
+    TEST_ASSERT_EQUAL(nmppsStsNoErr, nmppsMove_32sc(for_test_move.src, dst1, 31));
 
     for(i = 0; i < 31; i++){
     	TEST_ASSERT_EQUAL(etalon[i].im, dst1[i].im);
@@ -565,10 +587,10 @@ TEST(tests_move, test_nmppsMove_32sc_back){
     }
 
     //Полная загрузка векторного регистра
-    init_vector_32sc(src, 4100);
-    TEST_ASSERT_EQUAL(nmppsStsNoErr, nmppsMove_32sc(src, dst1, 4096));
+    init_vector_32sc(for_test_move.src, 70);
+    TEST_ASSERT_EQUAL(nmppsStsNoErr, nmppsMove_32sc(for_test_move.src, dst1, 64));
 
-    for(i = 0; i < 4096; i++){
+    for(i = 0; i < 64; i++){
     	TEST_ASSERT_EQUAL(etalon[i].im, dst1[i].im);
     	TEST_ASSERT_EQUAL(etalon[i].re, dst1[i].re);
     }
@@ -594,37 +616,41 @@ TEST(tests_move, test_nmppsMove_64sc_len){
 TEST(tests_move, test_nmppsMove_64sc_direct){
     int i = 0;
 
-    nmpps64sc* src = get_ptr_src_vector_64sc();
-    nmpps64sc* etalon = get_ptr_dst_vector_64sc();
-    nmpps64sc*  dst2 = src - _SHIFT_DST2;
+    struct {
+    	nmpps64sc mem[4];
+    	nmpps64sc src[40]   __attribute__ ((aligned (2)));
+    }for_test_move;
 
-    init_vector_64sc(etalon, 4100);
-    init_vector_64sc(src, 4100);
+    nmpps64sc etalon[40] __attribute__ ((aligned (2)));
+    nmpps64sc*  dst2 = for_test_move.src - _SHIFT_DST2;
+
+    init_vector_64sc(etalon, 40);
+    init_vector_64sc(for_test_move.src, 40);
 
     //Полная загрузка векторного регистра + частичная загрузка
-    init_vector_64sc(src, 4100);
-    TEST_ASSERT_EQUAL(nmppsStsNoErr, nmppsMove_64sc(src, dst2, 4067));
+    init_vector_64sc(for_test_move.src, 40);
+    TEST_ASSERT_EQUAL(nmppsStsNoErr, nmppsMove_64sc(for_test_move.src, dst2, 34));
 
-    for(i = 0; i < 4067; i++){
+    for(i = 0; i < 34; i++){
     	TEST_ASSERT_EQUAL(etalon[i].im, dst2[i].im);
     	TEST_ASSERT_EQUAL(etalon[i].re, dst2[i].re);
     }
 
     //Частичная загрузка векторного регистра
-    init_vector_64sc(src, 4100);
+    init_vector_64sc(for_test_move.src, 40);
 
-    TEST_ASSERT_EQUAL(nmppsStsNoErr, nmppsMove_64sc(src, dst2, 31));
+    TEST_ASSERT_EQUAL(nmppsStsNoErr, nmppsMove_64sc(for_test_move.src, dst2, 12));
 
-    for(i = 0; i < 31; i++){
+    for(i = 0; i < 12; i++){
     	TEST_ASSERT_EQUAL(etalon[i].im, dst2[i].im);
     	TEST_ASSERT_EQUAL(etalon[i].re, dst2[i].re);
     }
 
     //Полная загрузка векторного регистра
-    init_vector_64sc(src, 4100);
-    TEST_ASSERT_EQUAL(nmppsStsNoErr, nmppsMove_64sc(src, dst2, 4096));
+    init_vector_64sc(for_test_move.src, 40);
+    TEST_ASSERT_EQUAL(nmppsStsNoErr, nmppsMove_64sc(for_test_move.src, dst2, 32));
 
-    for(i = 0; i < 4096; i++){
+    for(i = 0; i < 32; i++){
     	TEST_ASSERT_EQUAL(etalon[i].im, dst2[i].im);
     	TEST_ASSERT_EQUAL(etalon[i].re, dst2[i].re);
     }
@@ -635,37 +661,41 @@ TEST(tests_move, test_nmppsMove_64sc_direct){
 TEST(tests_move, test_nmppsMove_64sc_back){
     int i = 0;
 
-    nmpps64sc* src = get_ptr_src_vector_64sc();
-    nmpps64sc* etalon = get_ptr_dst_vector_64sc();
-    nmpps64sc*  dst1 = &src[_SHIFT_DST1];
+    struct {
+    	nmpps64sc src[40]   __attribute__ ((aligned (2)));
+    	nmpps64sc mem[4];
+    }for_test_move;
 
-    init_vector_64sc(etalon, 4100);
-    init_vector_64sc(src, 4100);
+    nmpps64sc etalon[40] __attribute__ ((aligned (2)));
+    nmpps64sc*  dst1 = &(for_test_move.src[_SHIFT_DST1]);
+
+    init_vector_64sc(etalon, 40);
+    init_vector_64sc(for_test_move.src, 40);
 
 
     //Полная загрузка векторного регистра + частичная загрузка
-    init_vector_64sc(src, 4100);
-    TEST_ASSERT_EQUAL(nmppsStsNoErr, nmppsMove_64sc(src, dst1, 4067));
+    init_vector_64sc(for_test_move.src, 40);
+    TEST_ASSERT_EQUAL(nmppsStsNoErr, nmppsMove_64sc(for_test_move.src, dst1, 34));
 
-    for(i = 0; i < 4067; i++){
+    for(i = 0; i < 34; i++){
     	TEST_ASSERT_EQUAL(etalon[i].im, dst1[i].im);
     	TEST_ASSERT_EQUAL(etalon[i].re, dst1[i].re);
     }
 
     //Частичная загрузка векторного регистра
-    init_vector_64sc(src, 4100);
-    TEST_ASSERT_EQUAL(nmppsStsNoErr, nmppsMove_64sc(src, dst1, 31));
+    init_vector_64sc(for_test_move.src, 3);
+    TEST_ASSERT_EQUAL(nmppsStsNoErr, nmppsMove_64sc(for_test_move.src, dst1, 3));
 
-    for(i = 0; i < 31; i++){
+    for(i = 0; i < 3; i++){
     	TEST_ASSERT_EQUAL(etalon[i].im, dst1[i].im);
     	TEST_ASSERT_EQUAL(etalon[i].re, dst1[i].re);
     }
 
     //Полная загрузка векторного регистра
-    init_vector_64sc(src, 4100);
-    TEST_ASSERT_EQUAL(nmppsStsNoErr, nmppsMove_64sc(src, dst1, 4096));
+    init_vector_64sc(for_test_move.src, 40);
+    TEST_ASSERT_EQUAL(nmppsStsNoErr, nmppsMove_64sc(for_test_move.src, dst1, 32));
 
-    for(i = 0; i < 4096; i++){
+    for(i = 0; i < 32; i++){
     	TEST_ASSERT_EQUAL(etalon[i].im, dst1[i].im);
     	TEST_ASSERT_EQUAL(etalon[i].re, dst1[i].re);
     }
@@ -676,27 +706,27 @@ TEST_GROUP_RUNNER(tests_move){
     RUN_TEST_CASE(tests_move, test_nmppsMove_8u_len);
     RUN_TEST_CASE(tests_move, test_nmppsMove_8u_direct);
     RUN_TEST_CASE(tests_move, test_nmppsMove_8u_back);
-
+//
     RUN_TEST_CASE(tests_move, test_nmppsMove_16s_null_ptr);
     RUN_TEST_CASE(tests_move, test_nmppsMove_16s_len);
     RUN_TEST_CASE(tests_move, test_nmppsMove_16s_direct);
     RUN_TEST_CASE(tests_move, test_nmppsMove_16s_back);
-
+//
     RUN_TEST_CASE(tests_move, test_nmppsMove_32s_null_ptr);
     RUN_TEST_CASE(tests_move, test_nmppsMove_32s_len);
     RUN_TEST_CASE(tests_move, test_nmppsMove_32s_direct);
     RUN_TEST_CASE(tests_move, test_nmppsMove_32s_back);
-
+//
     RUN_TEST_CASE(tests_move, test_nmppsMove_64s_null_ptr);
     RUN_TEST_CASE(tests_move, test_nmppsMove_64s_len);
     RUN_TEST_CASE(tests_move, test_nmppsMove_64s_direct);
     RUN_TEST_CASE(tests_move, test_nmppsMove_64s_back);
-
+//
     RUN_TEST_CASE(tests_move, test_nmppsMove_16sc_null_ptr);
     RUN_TEST_CASE(tests_move, test_nmppsMove_16sc_len);
     RUN_TEST_CASE(tests_move, test_nmppsMove_16sc_direct);
     RUN_TEST_CASE(tests_move, test_nmppsMove_16sc_back);
-
+//
     RUN_TEST_CASE(tests_move, test_nmppsMove_32sc_null_ptr);
     RUN_TEST_CASE(tests_move, test_nmppsMove_32sc_len);
     RUN_TEST_CASE(tests_move, test_nmppsMove_32sc_direct);

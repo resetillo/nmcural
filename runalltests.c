@@ -44,7 +44,7 @@ void runAllTests(void) {
 #endif
 
 #if AtanTestEnable
-    RUN_TEST_GROUP(tests_atan32f);
+//    RUN_TEST_GROUP(tests_atan32f);
     RUN_TEST_GROUP(tests_atan64f);
 #endif
 #if SqrtTestEnable
@@ -61,7 +61,7 @@ void runAllTests(void) {
     RUN_TEST_GROUP(tests_div64);
     RUN_TEST_GROUP(tests_divC64);
 #endif
-    RUN_TEST_GROUP(tests_conj);
+    RUN_TEST_GROUP(tests_mean);    RUN_TEST_GROUP(tests_conj);
     RUN_TEST_GROUP(tests_sqr);
     RUN_TEST_GROUP(tests_min);
     RUN_TEST_GROUP(tests_minabs);
@@ -77,8 +77,10 @@ void runAllTests(void) {
     RUN_TEST_GROUP(tests_zero);
     RUN_TEST_GROUP(tests_abs);
     RUN_TEST_GROUP(tests_flip);
-
+    RUN_TEST_GROUP(tests_lshift);
+    RUN_TEST_GROUP(tests_rshift);
 }
+
 
 int main(void) {
 	static const char *argv[] = {

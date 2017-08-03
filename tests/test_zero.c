@@ -23,7 +23,7 @@ TEST(tests_zero, test_nmppsZero_8u_len){
 }
 
 TEST(tests_zero, test_nmppsZero_8u){
-	nmpps8u* dst = get_ptr_dst_vector_8u();
+	nmpps8u dst[150] __attribute__ ((aligned (2)));
     int i = 0;
 
 	// Один элемент
@@ -32,43 +32,43 @@ TEST(tests_zero, test_nmppsZero_8u){
 	TEST_ASSERT_EQUAL(0, dst[0]);
 
 	// Частичная загрузка векторного регистра
-	init_vector_8u(dst, 4100);
+	init_vector_8u(dst, 150);
 
-	TEST_ASSERT_EQUAL(nmppsStsNoErr, nmppsZero_8u(dst, 23));
+	TEST_ASSERT_EQUAL(nmppsStsNoErr, nmppsZero_8u(dst, 63));
 
-	for(i = 0; i < 23; i++){
+	for(i = 0; i < 63; i++){
 		TEST_ASSERT_EQUAL(0, dst[i]);
 	}
 
     // Полная загрузка вектора
-    init_vector_8u(dst, 4100);
+    init_vector_8u(dst, 150);
 
-    TEST_ASSERT_EQUAL(nmppsStsNoErr, nmppsZero_8u(dst, 3520));
-    for(i = 0; i < 3520; i++){
+    TEST_ASSERT_EQUAL(nmppsStsNoErr, nmppsZero_8u(dst, 128));
+    for(i = 0; i < 128; i++){
     	TEST_ASSERT_EQUAL(0, dst[i]);
     }
 
     // Полная загрузка векторного регистра + один элемент
-    init_vector_8u(dst, 4100);
+    init_vector_8u(dst, 150);
 
-    TEST_ASSERT_EQUAL(nmppsStsNoErr, nmppsZero_8u(dst, 3521));
-    for(i = 0; i < 3521; i++){
+    TEST_ASSERT_EQUAL(nmppsStsNoErr, nmppsZero_8u(dst, 129));
+    for(i = 0; i < 129; i++){
     	TEST_ASSERT_EQUAL(0, dst[i]);
     }
 
     // Полная загрузка векторного регистра + частичная загрузка
-    init_vector_8u(dst, 664);
+    init_vector_8u(dst, 150);
 
-    TEST_ASSERT_EQUAL(nmppsStsNoErr, nmppsZero_8u(dst, 664));
-    for(i = 0; i < 3521; i++){
+    TEST_ASSERT_EQUAL(nmppsStsNoErr, nmppsZero_8u(dst, 150));
+    for(i = 0; i < 150; i++){
     	TEST_ASSERT_EQUAL(0, dst[i]);
     }
 
     // Полная загрузка векторного регистра + частичная загрузка + один элемент
-    init_vector_8u(dst, 665);
+    init_vector_8u(dst, 150);
 
-    TEST_ASSERT_EQUAL(nmppsStsNoErr, nmppsZero_8u(dst, 665));
-    for(i = 0; i < 3521; i++){
+    TEST_ASSERT_EQUAL(nmppsStsNoErr, nmppsZero_8u(dst, 149));
+    for(i = 0; i < 149; i++){
     	TEST_ASSERT_EQUAL(0, dst[i]);
     }
 }
@@ -88,7 +88,7 @@ TEST(tests_zero, test_nmppsZero_16s_len){
 }
 
 TEST(tests_zero, test_nmppsZero_16s){
-	nmpps16s* dst = get_ptr_dst_vector_16s();
+	nmpps16s dst[150] __attribute__ ((aligned (2)));
     int i = 0;
 
 	// Один элемент
@@ -97,7 +97,7 @@ TEST(tests_zero, test_nmppsZero_16s){
 	TEST_ASSERT_EQUAL(0, dst[0]);
 
 	// Частичная загрузка векторного регистра
-	init_vector_16s(dst, 4100);
+	init_vector_16s(dst, 150);
 
 	TEST_ASSERT_EQUAL(nmppsStsNoErr, nmppsZero_16s(dst, 23));
 
@@ -106,34 +106,34 @@ TEST(tests_zero, test_nmppsZero_16s){
 	}
 
     // Полная загрузка вектора
-    init_vector_16s(dst, 4100);
+    init_vector_16s(dst, 150);
 
-    TEST_ASSERT_EQUAL(nmppsStsNoErr, nmppsZero_16s(dst, 3520));
-    for(i = 0; i < 3520; i++){
+    TEST_ASSERT_EQUAL(nmppsStsNoErr, nmppsZero_16s(dst, 128));
+    for(i = 0; i < 128; i++){
     	TEST_ASSERT_EQUAL(0, dst[i]);
     }
 
     // Полная загрузка векторного регистра + один элемент
-    init_vector_16s(dst, 4100);
+    init_vector_16s(dst, 150);
 
-    TEST_ASSERT_EQUAL(nmppsStsNoErr, nmppsZero_16s(dst, 3521));
-    for(i = 0; i < 3521; i++){
+    TEST_ASSERT_EQUAL(nmppsStsNoErr, nmppsZero_16s(dst, 129));
+    for(i = 0; i < 129; i++){
     	TEST_ASSERT_EQUAL(0, dst[i]);
     }
 
     // Полная загрузка векторного регистра + частичная загрузка
-    init_vector_16s(dst, 664);
+    init_vector_16s(dst, 150);
 
-    TEST_ASSERT_EQUAL(nmppsStsNoErr, nmppsZero_16s(dst, 664));
-    for(i = 0; i < 3521; i++){
+    TEST_ASSERT_EQUAL(nmppsStsNoErr, nmppsZero_16s(dst, 150));
+    for(i = 0; i < 150; i++){
     	TEST_ASSERT_EQUAL(0, dst[i]);
     }
 
     // Полная загрузка векторного регистра + частичная загрузка + один элемент
-    init_vector_16s(dst, 665);
+    init_vector_16s(dst, 150);
 
-    TEST_ASSERT_EQUAL(nmppsStsNoErr, nmppsZero_16s(dst, 665));
-    for(i = 0; i < 665; i++){
+    TEST_ASSERT_EQUAL(nmppsStsNoErr, nmppsZero_16s(dst, 149));
+    for(i = 0; i < 149; i++){
     	TEST_ASSERT_EQUAL(0, dst[i]);
     }
 }
@@ -154,7 +154,7 @@ TEST(tests_zero, test_nmppsZero_32s_len){
 }
 
 TEST(tests_zero, test_nmppsZero_32s){
-	nmpps32s* dst = get_ptr_dst_vector_32s();
+	nmpps32s dst[150] __attribute__ ((aligned (2)));
     int i = 0;
 
 	// Один элемент
@@ -163,7 +163,7 @@ TEST(tests_zero, test_nmppsZero_32s){
 	TEST_ASSERT_EQUAL(0, dst[0]);
 
 	// Частичная загрузка векторного регистра
-	init_vector_32s(dst, 4100);
+	init_vector_32s(dst, 150);
 
 	TEST_ASSERT_EQUAL(nmppsStsNoErr, nmppsZero_32s(dst, 23));
 
@@ -172,34 +172,34 @@ TEST(tests_zero, test_nmppsZero_32s){
 	}
 
     // Полная загрузка вектора
-    init_vector_32s(dst, 4100);
+    init_vector_32s(dst, 150);
 
-    TEST_ASSERT_EQUAL(nmppsStsNoErr, nmppsZero_32s(dst, 3520));
-    for(i = 0; i < 3520; i++){
+    TEST_ASSERT_EQUAL(nmppsStsNoErr, nmppsZero_32s(dst, 128));
+    for(i = 0; i < 128; i++){
     	TEST_ASSERT_EQUAL(0, dst[i]);
     }
 
     // Полная загрузка векторного регистра + один элемент
-    init_vector_32s(dst, 4100);
+    init_vector_32s(dst, 150);
 
-    TEST_ASSERT_EQUAL(nmppsStsNoErr, nmppsZero_32s(dst, 3521));
-    for(i = 0; i < 3521; i++){
+    TEST_ASSERT_EQUAL(nmppsStsNoErr, nmppsZero_32s(dst, 129));
+    for(i = 0; i < 129; i++){
     	TEST_ASSERT_EQUAL(0, dst[i]);
     }
 
     // Полная загрузка векторного регистра + частичная загрузка
-    init_vector_32s(dst, 664);
+    init_vector_32s(dst, 150);
 
-    TEST_ASSERT_EQUAL(nmppsStsNoErr, nmppsZero_32s(dst, 664));
-    for(i = 0; i < 664; i++){
+    TEST_ASSERT_EQUAL(nmppsStsNoErr, nmppsZero_32s(dst, 150));
+    for(i = 0; i < 150; i++){
     	TEST_ASSERT_EQUAL(0, dst[i]);
     }
 
     // Полная загрузка векторного регистра + частичная загрузка + один элемент
-    init_vector_32s(dst, 665);
+    init_vector_32s(dst, 150);
 
-    TEST_ASSERT_EQUAL(nmppsStsNoErr, nmppsZero_32s(dst, 665));
-    for(i = 0; i < 665; i++){
+    TEST_ASSERT_EQUAL(nmppsStsNoErr, nmppsZero_32s(dst, 149));
+    for(i = 0; i < 149; i++){
     	TEST_ASSERT_EQUAL(0, dst[i]);
     }
 }
@@ -219,7 +219,7 @@ TEST(tests_zero, test_nmppsZero_64s_len){
 }
 
 TEST(tests_zero, test_nmppsZero_64s){
-	nmpps64s* dst = get_ptr_dst_vector_64s();
+	nmpps64s dst[70] __attribute__ ((aligned (2)));
     int i = 0;
 
 	// Частичная загрузка векторного регистра
@@ -232,18 +232,18 @@ TEST(tests_zero, test_nmppsZero_64s){
 	}
 
     // Полная загрузка вектора
-    init_vector_64s(dst, 4100);
+    init_vector_64s(dst, 70);
 
-    TEST_ASSERT_EQUAL(nmppsStsNoErr, nmppsZero_64s(dst, 3520));
-    for(i = 0; i < 3520; i++){
+    TEST_ASSERT_EQUAL(nmppsStsNoErr, nmppsZero_64s(dst, 64));
+    for(i = 0; i < 64; i++){
     	TEST_ASSERT_EQUAL(0, dst[i]);
     }
 
     // Полная загрузка векторного регистра + частичная загрузка
-    init_vector_64s(dst, 664);
+    init_vector_64s(dst, 70);
 
-    TEST_ASSERT_EQUAL(nmppsStsNoErr, nmppsZero_64s(dst, 664));
-    for(i = 0; i < 664; i++){
+    TEST_ASSERT_EQUAL(nmppsStsNoErr, nmppsZero_64s(dst, 70));
+    for(i = 0; i < 70; i++){
     	TEST_ASSERT_EQUAL(0, dst[i]);
     }
 
@@ -264,11 +264,11 @@ TEST(tests_zero, test_nmppsZero_16sc_len){
 }
 
 TEST(tests_zero, test_nmppsZero_16sc){
-	nmpps16sc* dst = get_ptr_dst_vector_16sc();
+	nmpps16sc dst[70] __attribute__ ((aligned (2)));
     int i = 0;
 
 	// Частичная загрузка векторного регистра
-	init_vector_16sc(dst, 4100);
+	init_vector_16sc(dst, 70);
 
 	TEST_ASSERT_EQUAL(nmppsStsNoErr, nmppsZero_16sc(dst, 23));
 
@@ -278,19 +278,19 @@ TEST(tests_zero, test_nmppsZero_16sc){
 	}
 
     // Полная загрузка вектора
-    init_vector_16sc(dst, 4100);
+    init_vector_16sc(dst, 70);
 
-    TEST_ASSERT_EQUAL(nmppsStsNoErr, nmppsZero_16sc(dst, 3520));
-    for(i = 0; i < 3520; i++){
+    TEST_ASSERT_EQUAL(nmppsStsNoErr, nmppsZero_16sc(dst, 64));
+    for(i = 0; i < 64; i++){
     	TEST_ASSERT_EQUAL(0, dst[i].im);
         TEST_ASSERT_EQUAL(0, dst[i].re);
     }
 
     // Полная загрузка векторного регистра + частичная загрузка
-    init_vector_16sc(dst, 664);
+    init_vector_16sc(dst, 70);
 
-    TEST_ASSERT_EQUAL(nmppsStsNoErr, nmppsZero_16sc(dst, 664));
-    for(i = 0; i < 664; i++){
+    TEST_ASSERT_EQUAL(nmppsStsNoErr, nmppsZero_16sc(dst, 70));
+    for(i = 0; i < 70; i++){
     	TEST_ASSERT_EQUAL(0, dst[i].im);
     	TEST_ASSERT_EQUAL(0, dst[i].re);
     }
@@ -312,11 +312,11 @@ TEST(tests_zero, test_nmppsZero_32sc_len){
 }
 
 TEST(tests_zero, test_nmppsZero_32sc){
-	nmpps32sc* dst = get_ptr_dst_vector_32sc();
+	nmpps32sc dst[70] __attribute__ ((aligned (2)));
     int i = 0;
 
 	// Частичная загрузка векторного регистра
-	init_vector_32sc(dst, 4100);
+	init_vector_32sc(dst, 70);
 
 	TEST_ASSERT_EQUAL(nmppsStsNoErr, nmppsZero_32sc(dst, 23));
 
@@ -326,19 +326,19 @@ TEST(tests_zero, test_nmppsZero_32sc){
 	}
 
     // Полная загрузка вектора
-    init_vector_32sc(dst, 4100);
+    init_vector_32sc(dst, 70);
 
-    TEST_ASSERT_EQUAL(nmppsStsNoErr, nmppsZero_32sc(dst, 3520));
-    for(i = 0; i < 3520; i++){
+    TEST_ASSERT_EQUAL(nmppsStsNoErr, nmppsZero_32sc(dst, 64));
+    for(i = 0; i < 64; i++){
     	TEST_ASSERT_EQUAL(0, dst[i].im);
         TEST_ASSERT_EQUAL(0, dst[i].re);
     }
 
     // Полная загрузка векторного регистра + частичная загрузка
-    init_vector_32sc(dst, 664);
+    init_vector_32sc(dst, 70);
 
-    TEST_ASSERT_EQUAL(nmppsStsNoErr, nmppsZero_32sc(dst, 664));
-    for(i = 0; i < 664; i++){
+    TEST_ASSERT_EQUAL(nmppsStsNoErr, nmppsZero_32sc(dst, 70));
+    for(i = 0; i < 70; i++){
     	TEST_ASSERT_EQUAL(0, dst[i].im);
     	TEST_ASSERT_EQUAL(0, dst[i].re);
     }
@@ -360,33 +360,33 @@ TEST(tests_zero, test_nmppsZero_64sc_len){
 }
 
 TEST(tests_zero, test_nmppsZero_64sc){
-	nmpps64sc* dst = get_ptr_dst_vector_64sc();
+	nmpps64sc dst[40] __attribute__ ((aligned (2)));
     int i = 0;
 
 	// Частичная загрузка векторного регистра
-	init_vector_64sc(dst, 4100);
+	init_vector_64sc(dst, 40);
 
-	TEST_ASSERT_EQUAL(nmppsStsNoErr, nmppsZero_64sc(dst, 23));
+	TEST_ASSERT_EQUAL(nmppsStsNoErr, nmppsZero_64sc(dst, 3));
 
-	for(i = 0; i < 23; i++){
+	for(i = 0; i < 3; i++){
 		TEST_ASSERT_EQUAL(0, dst[i].im);
 		TEST_ASSERT_EQUAL(0, dst[i].re);
 	}
 
     // Полная загрузка вектора
-    init_vector_64sc(dst, 4100);
+    init_vector_64sc(dst, 40);
 
-    TEST_ASSERT_EQUAL(nmppsStsNoErr, nmppsZero_64sc(dst, 3520));
-    for(i = 0; i < 3520; i++){
+    TEST_ASSERT_EQUAL(nmppsStsNoErr, nmppsZero_64sc(dst, 32));
+    for(i = 0; i < 32; i++){
     	TEST_ASSERT_EQUAL(0, dst[i].im);
         TEST_ASSERT_EQUAL(0, dst[i].re);
     }
 
     // Полная загрузка векторного регистра + частичная загрузка
-    init_vector_64sc(dst, 664);
+    init_vector_64sc(dst, 40);
 
-    TEST_ASSERT_EQUAL(nmppsStsNoErr, nmppsZero_64sc(dst, 664));
-    for(i = 0; i < 664; i++){
+    TEST_ASSERT_EQUAL(nmppsStsNoErr, nmppsZero_64sc(dst, 40));
+    for(i = 0; i < 40; i++){
     	TEST_ASSERT_EQUAL(0, dst[i].im);
     	TEST_ASSERT_EQUAL(0, dst[i].re);
     }
