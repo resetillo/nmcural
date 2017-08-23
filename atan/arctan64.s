@@ -2,7 +2,7 @@
 #include <nmpps_asm_defs.h>
 
 .global _nmppsArctan_64f
-.global _arctan64f
+.global arctan64f
 
 .global _tanTable
 .global _angTable
@@ -25,7 +25,7 @@ _nmppsArctan_64f:
     ar1 = [--ar5];//pDst
     gr0 = [--ar5];//len
 
-    call _arctan64f;
+    call arctan64f;
 
 
     pop ar1, gr1;
@@ -38,7 +38,7 @@ _nmppsArctan_64f:
     ar1 pDst
     gr0 len
 */
-_arctan64f:
+arctan64f:
     push ar2, gr2;
     push ar3, gr3;
     push ar4, gr4;
@@ -105,6 +105,62 @@ main_loop:
     fpu 1  rep  vlen  vreg5 = [ar0++];//Оригинальный Y для восстановления знака результата
     fpu 1  .double vreg2 = /vreg5/;//Модуль Y для расчетов
     
+
+	call arctan_calculation_cycle;
+
+	//Обработаем NAN и INF
+	fpu 0 vreg5 = fpu 1 vreg5;//Оригинальный вектор
+    fpu 0 .double vreg5 - vreg5, set mask if <>0;
+    fpu 0 .double vreg7 = mask ? vreg5 : vreg7; //Для nan & inf восстановим изначальные значения
+
+	//Бесконечности обработаем используя функцию замены на значение
+	fpu 0 vreg6 = fpu 1 vreg6;//Наибольшее число
+    fpu 0 .double vreg5 = /vreg5/;
+    fpu 0 .double vreg5 - vreg6, set mask if >;
+	fpu 0 vreg6 = fpu 1 vreg7;//PI / 2
+    fpu 0 .double vreg7 = mask ? vreg6 : vreg7;
+
+
+
+    //Восстановим исходный знак
+	fpu 0 vreg5 = fpu 1 vreg5;//Оригинальный вектор
+    fpu 0 .double vreg5 + vreg5, set mask if <;
+    fpu 0 .double vreg7 = mask ? -vreg7 : vreg7;
+    fpu 0 rep vlen [ar1++] = vreg7;
+
+
+    gr0 = gr0 - gr4;
+    if > goto main_loop;
+
+
+exit:
+    pop ar6, gr6;
+    pop ar5, gr5;
+    pop ar4, gr4;
+    pop ar3, gr3;
+    pop ar2, gr2;
+    return;
+
+/*
+	Используется внутри функций, рассчитывающих арктангенс
+	fpu 0 vreg0 - zero_dbl
+	fpu 0 vreg1 - one
+	fpu 1 vreg1 - /X/
+	fpu 1 vreg2 - /Y/
+
+	fpu 0 vreg7 - out data
+	also used:
+		ar4, gr5, ar6
+		fpu 0 vreg2
+		fpu 0 vreg3
+		fpu 0 vreg4
+		fpu 0 vreg5
+		fpu 0 vreg6
+		fpu 1 vreg3
+		fpu 1 vreg4
+*/
+
+arctan_calculation_cycle:
     //sum_angle = 0
     fpu 0  vreg7 = vreg0;//Выходной вектор
     
@@ -150,37 +206,5 @@ main_loop:
 		fpu 1 vreg2 = fpu 1 vreg4;
 		gr5 = gr5 - 1;
 		if > goto arctan_cycle;
-
-	//Обработаем NAN и INF
-	fpu 0 vreg5 = fpu 1 vreg5;//Оригинальный вектор
-    fpu 0 .double vreg5 - vreg5, set mask if <>0;
-    fpu 0 .double vreg7 = mask ? vreg5 : vreg7; //Для nan & inf восстановим изначальные значения
-
-	//Бесконечности обработаем используя функцию замены на значение
-	fpu 0 vreg6 = fpu 1 vreg6;//Наибольшее число
-    fpu 0 .double vreg5 = /vreg5/;
-    fpu 0 .double vreg5 - vreg6, set mask if >;
-	fpu 0 vreg6 = fpu 1 vreg7;//PI / 2
-    fpu 0 .double vreg7 = mask ? vreg6 : vreg7;
-
-
-
-    //Восстановим исходный знак
-	fpu 0 vreg5 = fpu 1 vreg5;//Оригинальный вектор
-    fpu 0 .double vreg5 + vreg5, set mask if <;
-    fpu 0 .double vreg7 = mask ? -vreg7 : vreg7;
-    fpu 0 rep vlen [ar1++] = vreg7;
-
-
-    gr0 = gr0 - gr4;
-    if > goto main_loop;
-
- 
-exit:
-    pop ar6, gr6;
-    pop ar5, gr5;
-    pop ar4, gr4;
-    pop ar3, gr3;
-    pop ar2, gr2;
-    return;
+return;
 

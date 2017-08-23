@@ -18,11 +18,11 @@ typedef union {
 } fltint_t;
 
 
-#define DivTestEnable 1
-#define AtanTestEnable 1
-#define SqrtTestEnable 1
-#define NormalizeTestEnable 1
-#define NormTestEnable 1
+#define DivTestEnable 0
+#define AtanTestEnable 0
+#define SqrtTestEnable 0
+#define NormalizeTestEnable 0
+#define NormTestEnable 0
 
 #if NormTestEnable
 	#define NormInfTestEnable 1
@@ -34,7 +34,7 @@ typedef union {
     #define NormDiffL2TestEnable 1
 #endif
 
-
+#define PhaseTestEnable 1
 
 #endif /* __NMPPS_PROTO_TESTS_H__ */
 

@@ -5,6 +5,21 @@
 
 
 void runAllTests(void) {
+
+#if PhaseTestEnable
+    RUN_TEST_GROUP(tests_phase32f);
+    RUN_TEST_GROUP(tests_phase32fc);
+    RUN_TEST_GROUP(tests_phase64f);
+    RUN_TEST_GROUP(tests_phase64fc);
+#endif
+
+#if DivTestEnable
+    RUN_TEST_GROUP(tests_div32);
+    RUN_TEST_GROUP(tests_divC32);
+    RUN_TEST_GROUP(tests_div64);
+    RUN_TEST_GROUP(tests_divC64);
+#endif
+
 #if NormInfTestEnable
     RUN_TEST_GROUP(tests_norm_Inf_32f);
     RUN_TEST_GROUP(tests_norm_Inf_64f);
@@ -44,7 +59,7 @@ void runAllTests(void) {
 #endif
 
 #if AtanTestEnable
-//    RUN_TEST_GROUP(tests_atan32f);
+    RUN_TEST_GROUP(tests_atan32f);
     RUN_TEST_GROUP(tests_atan64f);
 #endif
 #if SqrtTestEnable
@@ -55,12 +70,7 @@ void runAllTests(void) {
     RUN_TEST_GROUP(tests_normalize32);
     RUN_TEST_GROUP(tests_normalize64);
 #endif
-#if DivTestEnable
-    RUN_TEST_GROUP(tests_div32);
-    RUN_TEST_GROUP(tests_divC32);
-    RUN_TEST_GROUP(tests_div64);
-    RUN_TEST_GROUP(tests_divC64);
-#endif
+
     RUN_TEST_GROUP(tests_mean);    RUN_TEST_GROUP(tests_conj);
     RUN_TEST_GROUP(tests_sqr);
     RUN_TEST_GROUP(tests_min);
