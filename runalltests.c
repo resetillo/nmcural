@@ -79,6 +79,8 @@ void runAllTests(void) {
     RUN_TEST_GROUP(tests_flip);
     RUN_TEST_GROUP(tests_lshift);
     RUN_TEST_GROUP(tests_rshift);
+	RUN_TEST_GROUP(tests_dotprod);
+	RUN_TEST_GROUP(tests_sum);
 }
 
 
@@ -94,7 +96,6 @@ int main(void) {
 #endif
 	};
 	static const int argc = sizeof(argv) / sizeof(char*);
-
     return UnityMain(argc, argv, runAllTests);
 
 
