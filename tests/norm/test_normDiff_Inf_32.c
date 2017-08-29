@@ -38,8 +38,6 @@ nmppsStatus test_normDiff_Inf_32f_diap(nmpps32f bgn1, nmpps32f step1, nmpps32f b
 	nmpps32f KD;
 	nmpps32f res;
 	nmppsStatus stat;
-	//float er;
-	int i;
 	//Создаем эталонные значения
 	KD = create_normDiff_Inf_32f_vecs(bgn1, step1, Vec1,
 			                   bgn2, step2, Vec2, count);

@@ -1,5 +1,6 @@
 //
 .global _nmppsDiv_32f
+.global Div_32f
 
 .global _zero_flt
 .global _two_flt
@@ -32,34 +33,52 @@ _nmppsDiv_32f:
     push ar0, gr0;
     push ar1, gr1;
     push ar2, gr2;
+
+    ar0 = [--ar5]; // Divided vector
+    ar1 = [--ar5]; // Divisor vector
+    ar2 = [--ar5]; // Output vector
+	gr0 = [--ar5]; // Lenght
+
+	call Div_32f;
+
+    pop ar2, gr2;
+    pop ar1, gr1;
+    pop ar0, gr0;
+    return;
+
+
+/*
+    ar0 Divided vector
+    ar1 Divisor vector
+    ar2 Output vector
+	gr0 Lenght
+*/
+Div_32f:
+
+    // Сохранение в стеке регистров, чтобы исключить их повреждение
     push ar3, gr3;
     push ar4, gr4;
     push ar5, gr5;
     push ar6, gr6;
 
-    ar1 = [--ar5]; // Divided vector
-    ar2 = [--ar5]; // Divisor vector
-    ar0 = [--ar5]; // Output vector
-	gr1 = [--ar5]; // Lenght
-
 	ar3 = ar7 + 2; //Технологический массив на 64 слова
 	ar4 = ar7 + 66; //Технологический массив на 64 слова
 	ar7 = ar7 + 130;
 
-	gr1;
+	gr0;
     if <= delayed goto exit;
     gr7 = -6;
 
-    gr0 = ar0;
-    gr0;
+    gr1 = ar2;
+    gr1;
     if =0 delayed goto exit;
     gr7 = -8;
 
-    gr0 = ar1;
-    gr0;
+    gr1 = ar0;
+    gr1;
     if =0 delayed goto exit;
-    gr0 = ar2;
-    gr0;
+    gr1 = ar1;
+    gr1;
     if =0 goto exit;
 
 	gr7 = 0; //Значение по умолчанию
@@ -72,10 +91,10 @@ _nmppsDiv_32f:
 	ar5 = WB2x2;
     rep 2 wfifo = [ar5], ftw, wtw; // Загрузка матрицы  весов
 
-	gr0 = 0;// Здесь будут аккумулироваться признаки делений на 0
+	gr1 = 0;// Здесь будут аккумулироваться признаки делений на 0
 
 	gr3 = 64;
-	gr3 - gr1;
+	gr3 - gr0;
 	if > goto main_loop;
 	/*
 		vreg0 tmp / divided
@@ -104,23 +123,23 @@ _nmppsDiv_32f:
 
 main_loop:
 	gr3 = 64; //Остаток
-	gr3 - gr1;
+	gr3 - gr0;
     if <= goto after_correct;
 	    //Остаток меньше 64, ограничиваем обрабатываемый размер
 	    gr5 = 1;
-	    gr1 and gr5;
+	    gr0 and gr5;
 	    if =0 delayed goto ML1;
-	    gr3 = gr1 >> 1; // div 2
+	    gr3 = gr0 >> 1; // div 2
 	    nul;
 			//Нечетный размер
 			vlen = gr3;
 		    gr3 = gr3 + 1;
 		    //Копирование остатка делителя в буфер
-			fpu 0 rep vlen vreg1 = [ar2++];
+			fpu 0 rep vlen vreg1 = [ar1++];
 			ar5 = ar4 with gr4 = true;
 			fpu 0 rep vlen [ar5++] = vreg1;
 			[--ar5] = gr4; //В последнем слове должно лежать не 0, дабы не возникло ошибочного деления на 0
-			ar2 = ar4 ; //Подмена адреса
+			ar1 = ar4 ; //Подмена адреса
 
 	ML1:
 		gr3 = gr3 - 1;
@@ -140,7 +159,7 @@ main_loop:
 after_correct:
 
 	//Рассчет приближенного значения ~1/divisor
-	ar5 = ar2;
+	ar5 = ar1;
 	rep 32 data = [ar5++] with not data;
     ar5 = DpCode_const_flt;
     rep 32 data = [ar5] with afifo - data; // ~1/divisor ~ допкоду экспоненты divisor
@@ -149,7 +168,7 @@ after_correct:
 	rep 32 [ar5++] = afifo;
 
 
-	ar5 = ar2;
+	ar5 = ar1;
 	fpu 0 rep vlen vreg1 = [ar5++]; //divisor
 	ar5 = ar3;
 	fpu 0 rep vlen vreg7 = [ar5++]; //~1/divisor
@@ -175,7 +194,7 @@ after_correct:
 	fpu 0 .float vreg7 = vreg0*vreg7;
 */
 	//Output = divided*(~1/divisor)
-	ar5 = ar1;
+	ar5 = ar0;
 	fpu 0 rep vlen vreg0 = [ar5++]; //divided
 	fpu 0 .float vreg7 = vreg0*vreg7;
 
@@ -242,7 +261,7 @@ after_correct:
 	//Т.е. если раньше использовались вектора длиной 64 члена, то при использовании векторов меньшей длины
 	//в масках может остаться мусор, так что маски необходимо обнулять перед использованием данных из них
 	//в скалярном операциях (в данном случае они используются для определения факта деления на 0)
-	sir = gr0; //Вместо 0 можно использовать накопительный регистр, т.к. все регистры уже задействованы
+	sir = gr1; //Вместо 0 можно использовать накопительный регистр, т.к. все регистры уже задействованы
 	fp0_lmask = sir;
 	fp0_hmask = sir;
 
@@ -253,8 +272,8 @@ after_correct:
     gr6 = sir;//маска с divisor = 0
 
     //Для формирования признака деления на 0
-    gr0 = gr0 or gr5;
-    gr0 = gr0 or gr6;
+    gr1 = gr1 or gr5;
+    gr1 = gr1 or gr6;
 
 	//divisor = 0 => out = infinity
 	fpu 0 .float vreg7 = mask ? vreg6 : vreg7;
@@ -311,9 +330,9 @@ after_correct:
 
 
 	//divided*divisor для определения знака результата
-	ar5 = ar1;
+	ar5 = ar0;
 	rep 32 data = [ar5++] with data;
-	ar5 = ar2;
+	ar5 = ar1;
 	rep 32 data = [ar5++] with data xor afifo; //ксорим биты
 
 	ar5 = SIGN_BIT_flt;
@@ -329,25 +348,25 @@ after_correct:
 	rep 32 [ar5++] = afifo;
 
 	gr5 = 64;
-	gr1 -gr5;
+	gr0 -gr5;
 	if >= goto common_out;
 		//Сохранение последнего куска данных
-		gr3 = gr1 >> 1;
+		gr3 = gr0 >> 1;
 		if =0 goto last_out;
 		gr3 = gr3 - 1;
 		vlen = gr3;
 		ar5 = ar3;
 		fpu 0 rep vlen vreg7 = [ar5++];
-		fpu 0 rep vlen [ar0++] = vreg7;
+		fpu 0 rep vlen [ar2++] = vreg7;
 		gr5 = 1;
-		gr1 and gr5;
+		gr0 and gr5;
 		if =0 goto check_zero_div;
-		gr3 = gr1 - 1;
+		gr3 = gr0 - 1;
 		ar3 = ar3 + gr3;
 		last_out:
 			//Нечетный размер, осталось сохранить еще 1 слово
 			gr5 = [ar3];
-			[ar0] = gr5;
+			[ar2] = gr5;
 			goto check_zero_div;
 
 
@@ -359,22 +378,22 @@ common_out:
 	gr5 = VL;
 	gr5 = gr5 + 1;
 	gr5 = gr5 << 1;
+	ar5 = ar0;
+	ar0 = ar5 + gr5;
 	ar5 = ar1;
 	ar1 = ar5 + gr5;
-	ar5 = ar2;
-	ar2 = ar5 + gr5;
 
 
 
 save_result:
-	fpu 0 rep vlen [ar0++] = vreg7;
+	fpu 0 rep vlen [ar2++] = vreg7;
 
     gr2 = 64;
-	gr1 = gr1 - gr2;
+	gr0 = gr0 - gr2;
     if > goto main_loop;
 
 check_zero_div:
-    gr0;
+    gr1;
     if =0 goto exit;
 
     gr7 = -10; //Было деление на 0
@@ -394,8 +413,5 @@ exit:
     pop ar5, gr5;
     pop ar4, gr4;
     pop ar3, gr3;
-    pop ar2, gr2;
-    pop ar1, gr1;
-    pop ar0, gr0;
     return;
 
