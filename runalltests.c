@@ -6,18 +6,26 @@
 
 void runAllTests(void) {
 
+#if KaiserTestEnable
+    RUN_TEST_GROUP(tests_kaiser_32f);
+    RUN_TEST_GROUP(tests_bessel_I0_32f);
+    RUN_TEST_GROUP(tests_exp_32f);
+#endif
+
+#if DivTestEnable
+    RUN_TEST_GROUP(tests_divCRev32);
+    RUN_TEST_GROUP(tests_div32);
+    RUN_TEST_GROUP(tests_divC32);
+    RUN_TEST_GROUP(tests_div64);
+    RUN_TEST_GROUP(tests_divC64);
+#endif
+
+
 #if PhaseTestEnable
     RUN_TEST_GROUP(tests_phase32f);
     RUN_TEST_GROUP(tests_phase32fc);
     RUN_TEST_GROUP(tests_phase64f);
     RUN_TEST_GROUP(tests_phase64fc);
-#endif
-
-#if DivTestEnable
-    RUN_TEST_GROUP(tests_div32);
-    RUN_TEST_GROUP(tests_divC32);
-    RUN_TEST_GROUP(tests_div64);
-    RUN_TEST_GROUP(tests_divC64);
 #endif
 
 #if NormInfTestEnable
@@ -70,7 +78,7 @@ void runAllTests(void) {
     RUN_TEST_GROUP(tests_normalize32);
     RUN_TEST_GROUP(tests_normalize64);
 #endif
-
+#if AnotherTestEnable
     RUN_TEST_GROUP(tests_mean);    RUN_TEST_GROUP(tests_conj);
     RUN_TEST_GROUP(tests_sqr);
     RUN_TEST_GROUP(tests_min);
@@ -89,6 +97,7 @@ void runAllTests(void) {
     RUN_TEST_GROUP(tests_flip);
     RUN_TEST_GROUP(tests_lshift);
     RUN_TEST_GROUP(tests_rshift);
+#endif
 }
 
 

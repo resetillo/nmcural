@@ -11,6 +11,7 @@
 .global WB2x2
 .global SIGN_BIT_flt
 .global DpCode_const_flt
+.global BIAS
 
 .data
 
