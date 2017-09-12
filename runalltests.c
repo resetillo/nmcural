@@ -6,6 +6,7 @@
 
 void runAllTests(void) {
 
+
 #if KaiserTestEnable
     RUN_TEST_GROUP(tests_kaiser_32f);
     RUN_TEST_GROUP(tests_bessel_I0_32f);
@@ -97,8 +98,8 @@ void runAllTests(void) {
     RUN_TEST_GROUP(tests_flip);
     RUN_TEST_GROUP(tests_lshift);
     RUN_TEST_GROUP(tests_rshift);
-#endif
-}
+	RUN_TEST_GROUP(tests_dotprod);
+	RUN_TEST_GROUP(tests_sum);#endif}
 
 
 int main(void) {
@@ -113,7 +114,6 @@ int main(void) {
 #endif
 	};
 	static const int argc = sizeof(argv) / sizeof(char*);
-
     return UnityMain(argc, argv, runAllTests);
 
 
