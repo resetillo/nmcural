@@ -34,7 +34,7 @@ typedef union {
     #define NormDiffL2TestEnable 1
 #endif
 
-#define PhaseTestEnable 0
+#define PhaseTestEnable 1
 #define KaiserTestEnable 1
 #define AnotherTestEnable 1
 

@@ -71,16 +71,20 @@ void runAllTests(void) {
     RUN_TEST_GROUP(tests_atan32f);
     RUN_TEST_GROUP(tests_atan64f);
 #endif
+
 #if SqrtTestEnable
     RUN_TEST_GROUP(tests_sqrt32f);
     RUN_TEST_GROUP(tests_sqrt64f);
 #endif
+
 #if NormalizeTestEnable
     RUN_TEST_GROUP(tests_normalize32);
     RUN_TEST_GROUP(tests_normalize64);
 #endif
+
 #if AnotherTestEnable
-    RUN_TEST_GROUP(tests_mean);    RUN_TEST_GROUP(tests_conj);
+    RUN_TEST_GROUP(tests_mean);
+    RUN_TEST_GROUP(tests_conj);
     RUN_TEST_GROUP(tests_sqr);
     RUN_TEST_GROUP(tests_min);
     RUN_TEST_GROUP(tests_minabs);
@@ -99,8 +103,10 @@ void runAllTests(void) {
     RUN_TEST_GROUP(tests_lshift);
     RUN_TEST_GROUP(tests_rshift);
 	RUN_TEST_GROUP(tests_dotprod);
-	RUN_TEST_GROUP(tests_sum);#endif}
+	RUN_TEST_GROUP(tests_sum);
+#endif
 
+}
 
 int main(void) {
 	static const char *argv[] = {
