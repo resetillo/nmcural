@@ -1,20 +1,20 @@
 #include <nmpps_asm_defs.h>
 
-.global _nmppsWinKaiser_32f
-.global wKaiser_32f
+.global _nmppsWinKaiser_16s
+.global wKaiser_16s
 
 
 
 .text
 
 /*
-	nmppsStatus nmppsWinKaiser_32f(const nmpps32f*  pSrc, nmpps32f*  pDst, int len, nmpps32f beta)
+	nmppsStatus nmppsWinKaiser_16s(const nmpps16s*  pSrc, nmpps16s*  pDst, int len, nmpps32f beta)
 
 	pDst[n] = pSrc[n]*w(n)
 	w(n) = I0(beta*sqrt(1-((n - (L-1)/2)/((L-1)/2))^2)) / I0(beta), 0 <= n <= L - 1
 */
 
-_nmppsWinKaiser_32f:
+_nmppsWinKaiser_16s:
     ar5 = ar7 - 2;
 
     // Сохранение в стеке регистров, чтобы исключить их повреждение
@@ -26,7 +26,7 @@ _nmppsWinKaiser_32f:
     gr0 = [--ar5]; // len
 	gr1 = [--ar5]; // beta
 
-	call wKaiser_32f;
+	call wKaiser_16s;
 
 	//loop for multiply input vector and window
 
@@ -44,7 +44,7 @@ _nmppsWinKaiser_32f:
 	write window to output adr
 */
 
-wKaiser_32f:
+wKaiser_16s:
 
    // Сохранение в стеке регистров, чтобы исключить их повреждение
     push ar2, gr2;
@@ -194,10 +194,21 @@ main_loop:
 	fpu 2 .float vreg7 = vreg7 * vreg1; //I0(beta*sqrt(1 - t*t))/I0(beta) aka window
 
 	//multiply
-	fpu 0 vreg7 = fpu 2 vreg7;
-	fpu 0 rep 32 vreg1 = [ar0++];
+/*
+	convert from 16s
+	ar0 = adr;
+	gr0 = len;[1,64]
+	fpu 0 vreg7 = out;
+*/
+	push ar0, gr0;
+	gr0 = gr4;
+	call i16toV7;
+	pop ar0, gr0;
+	fpu 0 vreg1 = fpu 2 vreg7;
 	fpu 0 .float vreg7 = vreg7*vreg1;
-
+	//convert to 16s
+	fpu 0 .packer = vreg7 with .fixed_32 <= .float;
+	fpu 0 rep vlen vreg7 = .packer;
 
 
 
@@ -228,6 +239,9 @@ main_loop:
 	gr0 = gr0 - gr4; // minus 64
 	if =0 goto pre_exit;
 
+	ar5 = ar0 with \
+	gr5 = gr4;
+	ar0 = ar5 + gr5;
 	fpu 2 .float vreg5 = vreg5 + vreg6; // prepare n for next iteration
 	goto main_loop;
 

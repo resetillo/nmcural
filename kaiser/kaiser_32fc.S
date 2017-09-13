@@ -1,7 +1,7 @@
 #include <nmpps_asm_defs.h>
 
-.global _nmppsWinKaiser_32f
-.global wKaiser_32f
+.global _nmppsWinKaiser_32fc
+.global wKaiser_32fc
 
 
 
@@ -14,7 +14,7 @@
 	w(n) = I0(beta*sqrt(1-((n - (L-1)/2)/((L-1)/2))^2)) / I0(beta), 0 <= n <= L - 1
 */
 
-_nmppsWinKaiser_32f:
+_nmppsWinKaiser_32fc:
     ar5 = ar7 - 2;
 
     // Сохранение в стеке регистров, чтобы исключить их повреждение
@@ -26,7 +26,7 @@ _nmppsWinKaiser_32f:
     gr0 = [--ar5]; // len
 	gr1 = [--ar5]; // beta
 
-	call wKaiser_32f;
+	call wKaiser_32fc;
 
 	//loop for multiply input vector and window
 
@@ -44,7 +44,7 @@ _nmppsWinKaiser_32f:
 	write window to output adr
 */
 
-wKaiser_32f:
+wKaiser_32fc:
 
    // Сохранение в стеке регистров, чтобы исключить их повреждение
     push ar2, gr2;
@@ -153,6 +153,10 @@ wKaiser_32f:
     gr4 = 64;
 
 main_loop:
+	gr0 - gr4;
+	if >= goto M1;
+	gr4 = gr0;
+	M1:
 	fpu 2 .float vreg7 = vreg5 - vreg2; // n - (L-1)/2
 	fpu 2 .float vreg7 = vreg7 * vreg3; // (n - (L-1)/2) div (L-1)/2
 	fpu 2 .float vreg7 = vreg7 * vreg7;
@@ -193,40 +197,39 @@ main_loop:
     fpu 2 vreg7 = fpu 0 vreg7; //I0(beta*sqrt(1 - t*t))
 	fpu 2 .float vreg7 = vreg7 * vreg1; //I0(beta*sqrt(1 - t*t))/I0(beta) aka window
 
-	//multiply
-	fpu 0 vreg7 = fpu 2 vreg7;
-	fpu 0 rep 32 vreg1 = [ar0++];
-	fpu 0 .float vreg7 = vreg7*vreg1;
+	ar5 = ar3;
+	fpu 2 rep 32 [ar5++] = vreg7;
+/*
+	multiply vector with real values and vector with complex values
+
+	ar0 - vector with real values
+	ar1 - vector with complex values
+	ar2 - output vector
+	gr0 - len
+*/
+
+	push ar0, gr0;
+	push ar1;
+	push ar2;
+	gr0 = gr4;
+	ar2 = ar1;
+	ar1 = ar0;
+	ar0 = ar3;
+	call mulV32_r_fc;
+	pop ar2;
+	pop ar1;
+	pop ar0, gr0;
 
 
-
-
-	gr0 - gr4; // minus 64
-	if >= goto simple_save;
-
-		//if <
-		ar5 = ar3;
-		fpu 0 rep 32 [ar5++] = vreg7; // save into buffer
-		gr5 = 1;
-		gr0 - gr5;
-		if =0 goto save_last_word;
-		gr3 = gr0 >> 1;//div 2
-		gr3--;
-		vlen = gr3;
-		fpu 0 rep vlen vreg0 = [ar3++];//load from buffer
-		fpu 0 rep vlen [ar1++] = vreg0;//save to output
-		gr5 and gr0;
-		if =0 goto pre_exit;
-	save_last_word:
-		gr5 = [ar3];
-		[ar1] = gr5;
-		goto pre_exit;
-
-
-	simple_save:
-	fpu 0 rep 32 [ar1++] = vreg7;
+	//***********
 	gr0 = gr0 - gr4; // minus 64
-	if =0 goto pre_exit;
+	if <= goto pre_exit;
+
+	gr5 = gr4<<1;
+	ar5 = ar0;
+	ar0 = ar5 + gr5;
+	ar5 = ar1;
+	ar1 = ar5 + gr5;
 
 	fpu 2 .float vreg5 = vreg5 + vreg6; // prepare n for next iteration
 	goto main_loop;

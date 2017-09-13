@@ -8,7 +8,9 @@ void runAllTests(void) {
 
 
 #if KaiserTestEnable
+    RUN_TEST_GROUP(tests_kaiser_16s);
     RUN_TEST_GROUP(tests_kaiser_32f);
+    RUN_TEST_GROUP(tests_kaiser_32fc);
     RUN_TEST_GROUP(tests_bessel_I0_32f);
     RUN_TEST_GROUP(tests_exp_32f);
 #endif
