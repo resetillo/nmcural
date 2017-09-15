@@ -28,8 +28,6 @@ _nmppsWinKaiser_32f:
 
 	call wKaiser_32f;
 
-	//loop for multiply input vector and window
-
     pop ar1, gr1;
     pop ar0, gr0;
     return;

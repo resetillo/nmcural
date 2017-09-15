@@ -26,6 +26,7 @@ nmpps32f one_flt[2] = {_RPT(1.0)};
 nmpps32f two_flt[2] = {_RPT(2.0)};
 nmpps32f half_pi_flt[2] = {_RPT(1.57079633)};
 nmpps32f pi_flt[2] = {_RPT(3.14159265)};
+nmpps32f dbl_pi_flt[2] = {_RPT((2.0*3.14159265))};
 nmpps32f nan_flt[2] = {_RPT(((nmpps32f)0.0)/((nmpps32f)0.0))};
 nmpps32f inf_flt[2] = {_RPT(((nmpps32f)1.0)/((nmpps32f)0.0))};
 

@@ -6,6 +6,9 @@
 
 void runAllTests(void) {
 
+#if BlackmanTestEnable
+	RUN_TEST_GROUP(tests_blackman32f);
+#endif
 
 #if KaiserTestEnable
     RUN_TEST_GROUP(tests_kaiser_16s);
@@ -16,6 +19,7 @@ void runAllTests(void) {
 #endif
 
 #if DivTestEnable
+    RUN_TEST_GROUP(tests_div64fc);
     RUN_TEST_GROUP(tests_divCRev32);
     RUN_TEST_GROUP(tests_div32);
     RUN_TEST_GROUP(tests_divC32);
