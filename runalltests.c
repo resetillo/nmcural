@@ -25,12 +25,13 @@ void runAllTests(void) {
 #endif
 
 #if DivTestEnable
+    RUN_TEST_GROUP(tests_div32fc);
     RUN_TEST_GROUP(tests_div64fc);
-    RUN_TEST_GROUP(tests_divCRev32);
-    RUN_TEST_GROUP(tests_div32);
-    RUN_TEST_GROUP(tests_divC32);
+    RUN_TEST_GROUP(tests_div32f);
     RUN_TEST_GROUP(tests_div64);
+    RUN_TEST_GROUP(tests_divC32f);
     RUN_TEST_GROUP(tests_divC64);
+    RUN_TEST_GROUP(tests_divCRev32f);
 #endif
 
 

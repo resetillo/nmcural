@@ -20,7 +20,7 @@ typedef union {
 
 #define DivTestEnable 1
 #define AtanTestEnable 0
-#define SqrtTestEnable 0
+#define SqrtTestEnable 1
 #define NormalizeTestEnable 0
 #define NormTestEnable 0
 
@@ -36,7 +36,7 @@ typedef union {
 
 #define PhaseTestEnable 0
 #define KaiserTestEnable 0
-#define BlackmanTestEnable 1
+#define BlackmanTestEnable 0
 #define AnotherTestEnable 0
 
 #endif /* __NMPPS_PROTO_TESTS_H__ */
