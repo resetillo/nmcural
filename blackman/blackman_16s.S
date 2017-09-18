@@ -1,19 +1,17 @@
 #include <nmpps_asm_defs.h>
 
-.global _nmppsWinBlackman_32f
-.global wBlackman_32f
+.global _nmppsWinBlackman_16s
+.global wBlackman_16s
 
 .text
 
 /*
-	nmppsStatus nmppsWinBlackman_32f(const nmpps32f*  pSrc, nmpps32f*  pDst, int len, nmpps32f alpha)
+	nmppsStatus nmppsWinBlackman_16s(const nmpps16s*  pSrc, nmpps16s*  pDst, int len, nmpps16s alpha)
 
 	pDst[n] = pSrc[n]*w(n)
-	w(n) = (alpha + 1)/2 - 0.5cos(2pi*n/(len-1)) - 0.5*alpha*cos(4pi*n/(len-1)) =
-	= alpha(1-cos^2(2pi*n/(len-1))) + 0.5(1 - cos(2pi*n/(len-1)))
 */
 
-_nmppsWinBlackman_32f:
+_nmppsWinBlackman_16s:
     ar5 = ar7 - 2;
 
     // Сохранение в стеке регистров, чтобы исключить их повреждение
@@ -25,7 +23,7 @@ _nmppsWinBlackman_32f:
     gr0 = [--ar5]; // len
 	gr1 = [--ar5]; // alpha
 
-	call wBlackman_32f;
+	call wBlackman_16s;
 
     pop ar1, gr1;
     pop ar0, gr0;
@@ -41,7 +39,7 @@ _nmppsWinBlackman_32f:
 
 	write window to output adr
 */
-wBlackman_32f:
+wBlackman_16s:
 
 
    // Сохранение в стеке регистров, чтобы исключить их повреждение
@@ -173,8 +171,21 @@ after_correct:
 	fpu 2 .float vreg7 = vreg6 + vreg7;// alpha*(1-cos(t)^2) + 0.5(1 - cos(t))
 
 	//multiply
-	fpu 2 rep vlen vreg6 = [ar0++];
-	fpu 2 .float  vreg7 = vreg6*vreg7;
+	/*
+	convert from 16s
+	ar0 = adr;
+	gr0 = len;[1,64]
+	fpu 0 vreg7 = out;
+	*/
+	push ar0, gr0;
+	gr0 = gr4;
+	call i16toV7;
+	pop ar0, gr0;
+	fpu 2 vreg6 = fpu 0 vreg7;
+	fpu 2 .float vreg7 = vreg7*vreg6;
+	//convert to 16s
+	fpu 2 .packer = vreg7 with .fixed_32 <= .float;
+	fpu 2 rep vlen vreg7 = .packer;
 
 	//save
 	gr5 = 1;
@@ -198,6 +209,10 @@ after_correct:
 	simple_save:
 	fpu 2 rep vlen [ar1++] = vreg7;
 	fpu 2 .float vreg4 = vreg4 + vreg5;// prepare n for next iteration
+
+	ar5 = ar0 with \
+	gr5 = gr4;
+	ar0 = ar5 + gr5;
 
 	gr0 = gr0 - gr4;
 	if > goto loop;

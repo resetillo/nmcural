@@ -7,7 +7,11 @@
 void runAllTests(void) {
 
 #if BlackmanTestEnable
+	RUN_TEST_GROUP(tests_blackmanStd32fc);
+	RUN_TEST_GROUP(tests_blackmanStd32f);
+	RUN_TEST_GROUP(tests_blackman16s);
 	RUN_TEST_GROUP(tests_blackman32f);
+	RUN_TEST_GROUP(tests_blackman32fc);
 #endif
 
 #if KaiserTestEnable

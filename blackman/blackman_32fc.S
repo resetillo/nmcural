@@ -1,19 +1,17 @@
 #include <nmpps_asm_defs.h>
 
-.global _nmppsWinBlackman_32f
-.global wBlackman_32f
+.global _nmppsWinBlackman_32fc
+.global wBlackman_32fc
 
 .text
 
 /*
-	nmppsStatus nmppsWinBlackman_32f(const nmpps32f*  pSrc, nmpps32f*  pDst, int len, nmpps32f alpha)
+	nmppsStatus nmppsWinBlackman_32fc(const nmpps32fc*  pSrc, nmpps32fc*  pDst, int len, nmpps32f alpha)
 
 	pDst[n] = pSrc[n]*w(n)
-	w(n) = (alpha + 1)/2 - 0.5cos(2pi*n/(len-1)) - 0.5*alpha*cos(4pi*n/(len-1)) =
-	= alpha(1-cos^2(2pi*n/(len-1))) + 0.5(1 - cos(2pi*n/(len-1)))
 */
 
-_nmppsWinBlackman_32f:
+_nmppsWinBlackman_32fc:
     ar5 = ar7 - 2;
 
     // Сохранение в стеке регистров, чтобы исключить их повреждение
@@ -25,7 +23,7 @@ _nmppsWinBlackman_32f:
     gr0 = [--ar5]; // len
 	gr1 = [--ar5]; // alpha
 
-	call wBlackman_32f;
+	call wBlackman_32fc;
 
     pop ar1, gr1;
     pop ar0, gr0;
@@ -41,7 +39,7 @@ _nmppsWinBlackman_32f:
 
 	write window to output adr
 */
-wBlackman_32f:
+wBlackman_32fc:
 
 
    // Сохранение в стеке регистров, чтобы исключить их повреждение
@@ -173,31 +171,37 @@ after_correct:
 	fpu 2 .float vreg7 = vreg6 + vreg7;// alpha*(1-cos(t)^2) + 0.5(1 - cos(t))
 
 	//multiply
-	fpu 2 rep vlen vreg6 = [ar0++];
-	fpu 2 .float  vreg7 = vreg6*vreg7;
+	ar5 = ar4;
+	fpu 2 rep vlen [ar5++] = vreg7;
 
-	//save
-	gr5 = 1;
-	gr4 and gr5;
-	if =0 goto simple_save;
-		ar5 = ar4;
-		fpu 2 rep vlen [ar5++] = vreg7;
-		gr4 - gr5;
-		if =0 goto save_last_word;
-			gr5 = VL;
-			gr5--;
-			VL = gr5;
-			fpu 2 rep vlen vreg7 = [ar4++];
-			fpu 2 rep vlen [ar1++] = vreg7;
+/*
+	multiply vector with real values and vector with complex values
 
-		save_last_word:
-		gr5 = [ar4];
-		[ar1] = gr5;
-		goto pre_exit;
+	ar0 - vector with real values
+	ar1 - vector with complex values
+	ar2 - output vector
+	gr0 - len
+*/
 
-	simple_save:
-	fpu 2 rep vlen [ar1++] = vreg7;
+	push ar0, gr0;
+	push ar1;
+	push ar2;
+	gr0 = gr4;
+	ar2 = ar1;
+	ar1 = ar0;
+	ar0 = ar4;
+	call mulV32_r_fc;
+	pop ar2;
+	pop ar1;
+	pop ar0, gr0;
+
 	fpu 2 .float vreg4 = vreg4 + vreg5;// prepare n for next iteration
+	//increase adresses for next iteration
+	gr5 = gr4<<1;
+	ar5 = ar0;
+	ar0 = ar5 + gr5;
+	ar5 = ar1;
+	ar1 = ar5 + gr5;
 
 	gr0 = gr0 - gr4;
 	if > goto loop;
