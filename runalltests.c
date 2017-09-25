@@ -61,7 +61,10 @@ void runAllTests(void) {
     RUN_TEST_GROUP(tests_div64);
     RUN_TEST_GROUP(tests_divC64);
 #endif
-    RUN_TEST_GROUP(tests_mean);    RUN_TEST_GROUP(tests_conj);
+    RUN_TEST_GROUP(tests_realtocplx);
+    RUN_TEST_GROUP(tests_cplxtoreal);
+    RUN_TEST_GROUP(tests_mean);
+    RUN_TEST_GROUP(tests_conj);
     RUN_TEST_GROUP(tests_sqr);
     RUN_TEST_GROUP(tests_min);
     RUN_TEST_GROUP(tests_minabs);
