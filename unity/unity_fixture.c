@@ -79,8 +79,9 @@ void UnityTestRunner(unityfunction* setup,
         Unity.TestFile = file;
         Unity.CurrentTestName = printableName;
         Unity.CurrentTestLineNumber = line;
-        if (!UnityFixture.Verbose)
+        if (!UnityFixture.Verbose) {
             UNITY_OUTPUT_CHAR('.');
+        }
         else
         {
             UnityPrint(printableName);
@@ -426,7 +427,6 @@ void UnityConcludeFixtureTest(void)
         Unity.TestFailures++;
         UNITY_PRINT_EOL();
     }
-
     Unity.CurrentTestFailed = 0;
     Unity.CurrentTestIgnored = 0;
 }

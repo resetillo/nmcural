@@ -6,10 +6,12 @@
 __asm__(" .align 8");
 
 nmpps64f zero_dbl = 0.0;
+nmpps64f quarted_dbl  = 0.25;
 nmpps64f half_dbl = 0.5;
 nmpps64f one_dbl  = 1.0;
 nmpps64f two_dbl  = 2.0;
 nmpps64f half_pi_dbl = 1.5707963267948966192313216916398;
+nmpps64f pi_dbl = 3.1415926535897932384626433832795;
 nmpps64f nan_dbl  =  (((nmpps64f)0.0)/((nmpps64f)0.0));
 nmpps64f inf_dbl  =  (((nmpps64f)1.0)/((nmpps64f)0.0));
 
@@ -18,10 +20,13 @@ unsigned long bigest_flt = 0x7F7FFFFF7F7FFFFF;
 
 
 nmpps32f zero_flt[2] = {_RPT(0.0)};
+nmpps32f quarted_flt[2]  = {_RPT(0.25)};
 nmpps32f half_flt[2] = {_RPT(0.5)};
 nmpps32f one_flt[2] = {_RPT(1.0)};
 nmpps32f two_flt[2] = {_RPT(2.0)};
 nmpps32f half_pi_flt[2] = {_RPT(1.57079633)};
+nmpps32f pi_flt[2] = {_RPT(3.14159265)};
+nmpps32f dbl_pi_flt[2] = {_RPT((2.0*3.14159265))};
 nmpps32f nan_flt[2] = {_RPT(((nmpps32f)0.0)/((nmpps32f)0.0))};
 nmpps32f inf_flt[2] = {_RPT(((nmpps32f)1.0)/((nmpps32f)0.0))};
 

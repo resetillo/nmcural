@@ -5,6 +5,36 @@
 
 
 void runAllTests(void) {
+
+#if BlackmanTestEnable
+	RUN_TEST_GROUP(tests_blackman32f);
+#endif
+
+#if KaiserTestEnable
+    RUN_TEST_GROUP(tests_kaiser_16s);
+    RUN_TEST_GROUP(tests_kaiser_32f);
+    RUN_TEST_GROUP(tests_kaiser_32fc);
+    RUN_TEST_GROUP(tests_bessel_I0_32f);
+    RUN_TEST_GROUP(tests_exp_32f);
+#endif
+
+#if DivTestEnable
+    RUN_TEST_GROUP(tests_div64fc);
+    RUN_TEST_GROUP(tests_divCRev32);
+    RUN_TEST_GROUP(tests_div32);
+    RUN_TEST_GROUP(tests_divC32);
+    RUN_TEST_GROUP(tests_div64);
+    RUN_TEST_GROUP(tests_divC64);
+#endif
+
+
+#if PhaseTestEnable
+    RUN_TEST_GROUP(tests_phase32f);
+    RUN_TEST_GROUP(tests_phase32fc);
+    RUN_TEST_GROUP(tests_phase64f);
+    RUN_TEST_GROUP(tests_phase64fc);
+#endif
+
 #if NormInfTestEnable
     RUN_TEST_GROUP(tests_norm_Inf_32f);
     RUN_TEST_GROUP(tests_norm_Inf_64f);
@@ -44,23 +74,21 @@ void runAllTests(void) {
 #endif
 
 #if AtanTestEnable
-//    RUN_TEST_GROUP(tests_atan32f);
+    RUN_TEST_GROUP(tests_atan32f);
     RUN_TEST_GROUP(tests_atan64f);
 #endif
+
 #if SqrtTestEnable
     RUN_TEST_GROUP(tests_sqrt32f);
     RUN_TEST_GROUP(tests_sqrt64f);
 #endif
+
 #if NormalizeTestEnable
     RUN_TEST_GROUP(tests_normalize32);
     RUN_TEST_GROUP(tests_normalize64);
 #endif
-#if DivTestEnable
-    RUN_TEST_GROUP(tests_div32);
-    RUN_TEST_GROUP(tests_divC32);
-    RUN_TEST_GROUP(tests_div64);
-    RUN_TEST_GROUP(tests_divC64);
-#endif
+
+#if AnotherTestEnable
     RUN_TEST_GROUP(tests_realtocplx);
     RUN_TEST_GROUP(tests_cplxtoreal);
     RUN_TEST_GROUP(tests_mean);
@@ -82,8 +110,11 @@ void runAllTests(void) {
     RUN_TEST_GROUP(tests_flip);
     RUN_TEST_GROUP(tests_lshift);
     RUN_TEST_GROUP(tests_rshift);
-}
+	RUN_TEST_GROUP(tests_dotprod);
+	RUN_TEST_GROUP(tests_sum);
+#endif
 
+}
 
 int main(void) {
 	static const char *argv[] = {
@@ -97,7 +128,6 @@ int main(void) {
 #endif
 	};
 	static const int argc = sizeof(argv) / sizeof(char*);
-
     return UnityMain(argc, argv, runAllTests);
 
 

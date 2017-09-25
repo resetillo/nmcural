@@ -1438,5 +1438,5 @@ NMPPSAPI(nmppsStatus, nmppsMaxEvery_16s_I, (const nmpps16s* pSrc, nmpps16s* pSrc
 NMPPSAPI(nmppsStatus, nmppsMaxEvery_32s_I, (const nmpps32s* pSrc, nmpps32s* pSrcDst, int len))
 NMPPSAPI(nmppsStatus, nmppsMaxEvery_32f_I, (const nmpps32f* pSrc, nmpps32f* pSrcDst, int len))
 
-
+nmppsStatus nmppsCosinus_32f(const nmpps32f* pSrc, nmpps32f* pDst, int len);
 #endif /* __NMPPSS_H__ */

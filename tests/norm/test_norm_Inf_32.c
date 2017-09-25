@@ -31,8 +31,6 @@ nmppsStatus test_norm32Inf_diap(nmpps32f bgn, nmpps32f step, int count){
 	nmpps32f KD;
 	nmpps32f res;
 	nmppsStatus stat;
-	//float er;
-	int i;
 	//Создаем эталонные значения
 	KD = create_norm32Inf_vecs(bgn, step, count, Vec);
 	//Производим рассчеты

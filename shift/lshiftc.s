@@ -82,6 +82,7 @@ _nmppsLShiftC_32s:
   gr1;
   if <= goto err_size;
 
+
 shift_left:
   // Буфер на 64 слова
   ar3 = ar7 + 2;

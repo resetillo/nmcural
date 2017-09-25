@@ -2,7 +2,7 @@
 #include "nmpps_asm_defs.h"
 
 .global _nmppsArctan_32f
-.global _arctan32f
+.global arctan32f
 
 .global _tanTableF
 .global _angTableF
@@ -24,7 +24,7 @@ _nmppsArctan_32f:
     ar1 = [--ar5];//pDst
     gr0 = [--ar5];//len
 
-    call _arctan32f;
+    call arctan32f;
 
 
     pop ar1, gr1;
@@ -37,7 +37,7 @@ _nmppsArctan_32f:
     gr0 len
 */
 
-_arctan32f:
+arctan32f:
     push ar2, gr2;
     push ar3, gr3;
     push ar4, gr4;

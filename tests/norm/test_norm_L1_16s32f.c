@@ -75,7 +75,6 @@ TEST(tests_norm_L1_16s32f, nmppsNorm_L1_16s32f_check_answer) {
 TEST(tests_norm_L1_16s32f, nmppsNorm_L1_16s32f_subnormal) {
 	//Учитываться должны только данные в младших разрядах
 	unsigned int vec[4] = {0x10001, 0x1FFFF,0x33330001,0x777FFFF};
-	nmpps32f KD;
 	nmpps32f res;
 	TEST_ASSERT_EQUAL(nmppsStsNoErr, nmppsNorm_L1_16s32f(vec, 4, &res));
 	TEST_ASSERT_EQUAL_FLOAT(res, 4.0);
