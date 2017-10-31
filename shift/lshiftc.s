@@ -10,6 +10,8 @@
 
 .globl _arrShiftlData
 
+.text
+
 _nmppsLShiftC_8u_I:
 _nmppsLShiftC_16u_I:
 _nmppsLShiftC_16s_I:

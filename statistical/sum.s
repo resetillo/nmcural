@@ -1,6 +1,8 @@
 .globl _nmppsSum_16s_Sfs
 .globl _nmppsSum_32s_Sfs
 
+.text
+
 _nmppsSum_16s_Sfs:
 _nmppsSum_32s_Sfs:
   ar5 = ar7 - 2;
@@ -26,7 +28,7 @@ _nmppsSum_32s_Sfs:
 
   gr1 = [--ar5]; // scale_factor
 
-  //gr7 = 0;
+  gr7 = 0;
 
   //gr0 - 1;
   //if =0 goto exit_one_element;

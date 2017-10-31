@@ -797,6 +797,7 @@ NMPPSAPI(nmppsStatus, nmppsThreshold_32fc_I, (      nmpps32fc* pSrcDst,         
 NMPPSAPI(nmppsStatus, nmppsThreshold_64f_I,  (      nmpps64f*  pSrcDst,             int len, nmpps64f level, nmppsCmpOp relOp))
 NMPPSAPI(nmppsStatus, nmppsThreshold_64fc_I, (      nmpps64fc* pSrcDst,             int len, nmpps64f level, nmppsCmpOp relOp))
 NMPPSAPI(nmppsStatus, nmppsThreshold_16s,    (const nmpps16s*  pSrc, nmpps16s*  pDst, int len, nmpps16s level, nmppsCmpOp relOp))
+NMPPSAPI(nmppsStatus, nmppsThreshold_32s,    (const nmpps32s*  pSrc, nmpps32s*  pDst, int len, nmpps32s level, nmppsCmpOp relOp))
 NMPPSAPI(nmppsStatus, nmppsThreshold_16sc,   (const nmpps16sc* pSrc, nmpps16sc* pDst, int len, nmpps16s level, nmppsCmpOp relOp))
 NMPPSAPI(nmppsStatus, nmppsThreshold_32f,    (const nmpps32f*  pSrc, nmpps32f*  pDst, int len, nmpps32f level, nmppsCmpOp relOp))
 NMPPSAPI(nmppsStatus, nmppsThreshold_32fc,   (const nmpps32fc* pSrc, nmpps32fc* pDst, int len, nmpps32f level, nmppsCmpOp relOp))
