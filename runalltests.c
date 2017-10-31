@@ -89,6 +89,8 @@ void runAllTests(void) {
 #endif
 
 #if AnotherTestEnable
+    RUN_TEST_GROUP(tests_realtocplx);
+    RUN_TEST_GROUP(tests_cplxtoreal);
     RUN_TEST_GROUP(tests_mean);
     RUN_TEST_GROUP(tests_conj);
     RUN_TEST_GROUP(tests_sqr);
@@ -142,7 +144,6 @@ int main(void) {
 	static const int argc = sizeof(argv) / sizeof(char*);
     return UnityMain(argc, argv, runAllTests);
 }
-
 
 
 
