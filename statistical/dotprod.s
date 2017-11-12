@@ -3,6 +3,7 @@
 .globl _nmppsDotProd_32s_Sfs
 .global scale_f64
 
+.text
 
 _nmppsDotProd_16s32s_Sfs:
 _nmppsDotProd_16s32s32s_Sfs:

@@ -113,6 +113,14 @@ void runAllTests(void) {
 	RUN_TEST_GROUP(tests_dotprod);
 	RUN_TEST_GROUP(tests_sum);
 	RUN_TEST_GROUP(tests_stddev);
+	RUN_TEST_GROUP(tests_minevery);
+	RUN_TEST_GROUP(tests_maxevery);
+    RUN_TEST_GROUP(tests_threshold_lt);
+    RUN_TEST_GROUP(tests_threshold_gt);
+    RUN_TEST_GROUP(tests_threshold_abs_lt);
+    RUN_TEST_GROUP(tests_threshold_abs_gt);
+    RUN_TEST_GROUP(tests_threshold_val_gt);
+    RUN_TEST_GROUP(tests_threshold);
 #endif
 }
 
@@ -132,3 +140,4 @@ int main(void) {
 
 
 }
+
