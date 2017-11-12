@@ -112,8 +112,8 @@ void runAllTests(void) {
     RUN_TEST_GROUP(tests_rshift);
 	RUN_TEST_GROUP(tests_dotprod);
 	RUN_TEST_GROUP(tests_sum);
+	RUN_TEST_GROUP(tests_stddev);
 #endif
-
 }
 
 int main(void) {
@@ -124,7 +124,7 @@ int main(void) {
 #endif
 #if defined(UNITY_RETRIES)
 			"-r",
-			"2"
+			"2",
 #endif
 	};
 	static const int argc = sizeof(argv) / sizeof(char*);
