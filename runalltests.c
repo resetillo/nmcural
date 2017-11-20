@@ -96,6 +96,8 @@ void runAllTests(void) {
 #endif
 
 #if AnotherTestEnable
+    RUN_TEST_GROUP(tests_realtocplx);
+    RUN_TEST_GROUP(tests_cplxtoreal);
     RUN_TEST_GROUP(tests_mean);
     RUN_TEST_GROUP(tests_conj);
     RUN_TEST_GROUP(tests_sqr);
@@ -117,8 +119,16 @@ void runAllTests(void) {
     RUN_TEST_GROUP(tests_rshift);
 	RUN_TEST_GROUP(tests_dotprod);
 	RUN_TEST_GROUP(tests_sum);
+	RUN_TEST_GROUP(tests_stddev);
+	RUN_TEST_GROUP(tests_minevery);
+	RUN_TEST_GROUP(tests_maxevery);
+    RUN_TEST_GROUP(tests_threshold_lt);
+    RUN_TEST_GROUP(tests_threshold_gt);
+    RUN_TEST_GROUP(tests_threshold_abs_lt);
+    RUN_TEST_GROUP(tests_threshold_abs_gt);
+    RUN_TEST_GROUP(tests_threshold_val_gt);
+    RUN_TEST_GROUP(tests_threshold);
 #endif
-
 }
 
 int main(void) {
@@ -129,7 +139,7 @@ int main(void) {
 #endif
 #if defined(UNITY_RETRIES)
 			"-r",
-			"2"
+			"2",
 #endif
 	};
 	static const int argc = sizeof(argv) / sizeof(char*);
@@ -137,3 +147,4 @@ int main(void) {
 
 
 }
+

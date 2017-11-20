@@ -12,6 +12,8 @@
 .globl _arrRShiftMatr
 .globl _arrRShiftReg
 
+.text
+
 _nmppsRShiftC_8u_I:
 _nmppsRShiftC_16u_I:
 _nmppsRShiftC_16s_I:

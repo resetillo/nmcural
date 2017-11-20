@@ -25,5 +25,7 @@ void init_vector_value_8u(nmpps8u* vector, nmpps8u value, unsigned int size);
 void init_vector_value_16u(nmpps16u* vector, nmpps16u value, unsigned int size);
 void init_vector_value_16s(nmpps16s* vector, nmpps16s value, unsigned int size);
 void init_vector_value_32s(nmpps32s* vector, nmpps32s value, unsigned int size);
+void init_vector_value_32f(nmpps32f* vector, nmpps32f value, unsigned int size);
+void init_vector_value_64f(nmpps64f* vector, nmpps64f value, unsigned int size);
 
 #endif /* TEST_COMMON_H_ */

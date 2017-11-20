@@ -147,4 +147,19 @@ void init_vector_value_32s(nmpps32s* vector, nmpps32s value, unsigned int size){
   }
 }
 
+void init_vector_value_32f(nmpps32f* vector, nmpps32f value, unsigned int size){
+  unsigned int i = 0;
+
+  for(i = 0; i < size; i++){
+    vector[i] = value;
+  }
+}
+
+void init_vector_value_64f(nmpps64f* vector, nmpps64f value, unsigned int size){
+  unsigned int i = 0;
+
+  for(i = 0; i < size; i++){
+    vector[i] = value;
+  }
+}
 
