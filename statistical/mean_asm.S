@@ -17,10 +17,27 @@
 	.text
 
 
-/* /////////////////////////////////////////////////////////////////////////////
-// nmppsStatus nmppsMean_16s_Sfs(const nmpps16s*  pSrc, int len, nmpps16s*  pMean, int scaleFactor) {
-*/
-	.align 8
+/**
+ * @addtogroup StatisticalGroup
+ * @{
+ */
+
+
+/**
+ * @fn nmppsStatus nmppsMean_16s_Sfs(const nmpps16s*  pSrc, int len, nmpps16s*  pMean, int scaleFactor)
+ *
+ * @brief Вычисление среднего значения элементов вектора типа nmpps16s с масштабированием.
+ *
+ * @param[in] pSrc Исходный вектор.
+ * @param[in] len Размер вектора.
+ * @param[out] pMean Среднее значение.
+ * @param[in] scaleFactor Масштаб.
+ *
+ * @retval nmppsStsNullPtrErr Хотя бы один из указателей имеет значение NULL.
+ * @retval nmppsStsSizeErr Размер вектора меньше чем 1.
+ * @retval nmppsStsNoErr Успешное выполнение.
+ */
+	.align
 _nmppsMean_16s_Sfs: .globl _nmppsMean_16s_Sfs
 	ar5 = ar7 - 2 addr;
 	push ar0, gr0;
@@ -337,15 +354,23 @@ _nmppsMean_16s_Sfs: .globl _nmppsMean_16s_Sfs
 	pop ar1, gr1;
 	pop ar0, gr0;
 	return;
-/*
-// }
-*/
 
 
-/* /////////////////////////////////////////////////////////////////////////////
-// nmppsStatus nmppsMean_32f(const nmpps32f* pSrc, int len, nmpps32f* pMean, nmppsHintAlgorithm hint) {
-*/
-	.align 8
+/**
+ * @fn nmppsStatus nmppsMean_32f(const nmpps32f* pSrc, int len, nmpps32f* pMean, nmppsHintAlgorithm hint)
+ *
+ * @brief Вычисление среднего значения элементов вектора типа nmpps32f.
+ *
+ * @param[in] pSrc Исходный вектор.
+ * @param[in] len Размер вектора.
+ * @param[out] pMean Среднее значение.
+ * @param[in] hint Не используется.
+ *
+ * @retval nmppsStsNullPtrErr Хотя бы один из указателей имеет значение NULL.
+ * @retval nmppsStsSizeErr Размер вектора меньше чем 1.
+ * @retval nmppsStsNoErr Успешное выполнение.
+ */
+	.align
 _nmppsMean_32f: .global _nmppsMean_32f
 	ar5 = ar7 - 2 addr;
 	push ar0, gr0;
@@ -436,7 +461,7 @@ _nmppsMean_32f: .global _nmppsMean_32f
 
 	with gr0 -= gr6 noflags;
 	with gr0 - gr6;
-	if > goto .LnmppsMean_32f_more_than_64;
+	if > goto .LnmppsMean_32f_more_than_64 with gr0;
 
 	if =0 delayed goto .LnmppsMean_32f_get_average;
 .LnmppsMean_32f_less64:
@@ -587,15 +612,23 @@ _nmppsMean_32f: .global _nmppsMean_32f
 	pop ar1, gr1;
 	pop ar0, gr0;
 	return;
-/*
-// }
-*/
 
 
-/* /////////////////////////////////////////////////////////////////////////////
-// nmppsStatus nmppsMean_32fc(const nmpps32fc* pSrc, int len, nmpps32fc* pMean, nmppsHintAlgorithm hint) {
-*/
-	.align 8
+/**
+ * @fn nmppsStatus nmppsMean_32fc(const nmpps32fc* pSrc, int len, nmpps32fc* pMean, nmppsHintAlgorithm hint)
+ *
+ * @brief Вычисление среднего комплексного значения элементов вектора типа nmpps32fc.
+ *
+ * @param[in] pSrc Исходный вектор.
+ * @param[in] len Размер вектора.
+ * @param[out] pMean Среднее значение.
+ * @param[in] hint Не используется.
+ *
+ * @retval nmppsStsNullPtrErr Хотя бы один из указателей имеет значение NULL.
+ * @retval nmppsStsSizeErr Размер вектора меньше чем 1.
+ * @retval nmppsStsNoErr Успешное выполнение.
+ */
+	.align
 _nmppsMean_32fc: .global _nmppsMean_32fc
 	ar5 = ar7 - 2 addr;
 	push ar0, gr0;
@@ -837,15 +870,22 @@ _nmppsMean_32fc: .global _nmppsMean_32fc
 	pop ar1, gr1;
 	pop ar0, gr0;
 	return;
-/*
-// }
-*/
 
 
-/* /////////////////////////////////////////////////////////////////////////////
-// nmppsStatus nmppsMean_64f(const nmpps64f*  pSrc, int len, nmpps64f*  pMean) {
-*/
-	.align 8
+/**
+ * @fn nmppsStatus nmppsMean_64f(const nmpps64f*  pSrc, int len, nmpps64f*  pMean)
+ *
+ * @brief Вычисление среднего значения элементов вектора типа nmpps64f.
+ *
+ * @param[in] pSrc Исходный вектор.
+ * @param[in] len Размер вектора.
+ * @param[out] pMean Среднее значение.
+ *
+ * @retval nmppsStsNullPtrErr Хотя бы один из указателей имеет значение NULL.
+ * @retval nmppsStsSizeErr Размер вектора меньше чем 1.
+ * @retval nmppsStsNoErr Успешное выполнение.
+ */
+	.align
 _nmppsMean_64f: .global _nmppsMean_64f
 	ar5 = ar7 - 2 addr;
 	push ar0, gr0;
@@ -1079,15 +1119,22 @@ _nmppsMean_64f: .global _nmppsMean_64f
 	pop ar1, gr1;
 	pop ar0, gr0;
 	return;
-/*
-// }
-*/
 
 
-/* /////////////////////////////////////////////////////////////////////////////
-// nmppsStatus nmppsMean_64fc(const nmpps64fc* pSrc, int len, nmpps64fc* pMean) {
-*/
-	.align 8
+/**
+ * @fn nmppsStatus nmppsMean_64fc(const nmpps64fc* pSrc, int len, nmpps64fc* pMean)
+ *
+ * @brief Вычисление среднего комплексного значения элементов вектора типа nmpps64fc.
+ *
+ * @param[in] pSrc Исходный вектор.
+ * @param[in] len Размер вектора.
+ * @param[out] pMean Среднее значение.
+ *
+ * @retval nmppsStsNullPtrErr Хотя бы один из указателей имеет значение NULL.
+ * @retval nmppsStsSizeErr Размер вектора меньше чем 1.
+ * @retval nmppsStsNoErr Успешное выполнение.
+ */
+	.align
 _nmppsMean_64fc: .global _nmppsMean_64fc
 	ar5 = ar7 - 2 addr;
 	push ar0, gr0;
@@ -1469,9 +1516,9 @@ _nmppsMean_64fc: .global _nmppsMean_64fc
 	pop ar1, gr1;
 	pop ar0, gr0;
 	return;
-/*
-// }
-*/
+/**
+ * @}
+ */
 
 
 /* /////////////////////////////////////////////////////////////////////////////

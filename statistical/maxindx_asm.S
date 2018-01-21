@@ -17,10 +17,27 @@
 	.text
 
 
-/* /////////////////////////////////////////////////////////////////////////////
-// nmppsStatus nmppsMaxIndx_16s(const nmpps16s* pSrc, int len, nmpps16s* pMax, int* pIndx) {
-*/
-	.align 8
+/**
+ * @addtogroup StatisticalGroup
+ * @{
+ */
+
+
+/**
+ * @fn nmppsStatus nmppsMaxIndx_16s(const nmpps16s* pSrc, int len, nmpps16s* pMax, int* pIndx)
+ *
+ * @brief Определение максимального значения среди элементов вектора типа nmpps16s и его индекса.
+ *
+ * @param[in] pSrc Исходный вектор.
+ * @param[in] len Размер вектора.
+ * @param[out] pMax Максимальное значение.
+ * @param[out] pIndx Индекс элемента вектора.
+ *
+ * @retval nmppsStsNullPtrErr Хотя бы один из указателей имеет значение NULL.
+ * @retval nmppsStsSizeErr Размер вектора меньше чем 1.
+ * @retval nmppsStsNoErr Успешное выполнение.
+ */
+	.align
 _nmppsMaxIndx_16s: .globl _nmppsMaxIndx_16s
 	ar5 = ar7 - 2 addr;
 	push ar0, gr0;
@@ -77,15 +94,23 @@ _nmppsMaxIndx_16s: .globl _nmppsMaxIndx_16s
 	pop ar1, gr1;
 	pop ar0, gr0;
 	return;
-/*
-// }
-*/
 
 
-/* /////////////////////////////////////////////////////////////////////////////
-// nmppsStatus nmppsMaxIndx_32s(const nmpps32s* pSrc, int len, nmpps32s* pMax, int* pIndx) {
-*/
-	.align 8
+/**
+ * @fn nmppsStatus nmppsMaxIndx_32s(const nmpps32s* pSrc, int len, nmpps32s* pMax, int* pIndx)
+ *
+ * @brief Определение максимального значения среди элементов вектора типа nmpps32s и его индекса.
+ *
+ * @param[in] pSrc Исходный вектор.
+ * @param[in] len Размер вектора.
+ * @param[out] pMax Максимальное значение.
+ * @param[out] pIndx Индекс элемента вектора.
+ *
+ * @retval nmppsStsNullPtrErr Хотя бы один из указателей имеет значение NULL.
+ * @retval nmppsStsSizeErr Размер вектора меньше чем 1.
+ * @retval nmppsStsNoErr Успешное выполнение.
+ */
+	.align
 _nmppsMaxIndx_32s: .globl _nmppsMaxIndx_32s
 	ar5 = ar7 - 2 addr;
 	push ar0, gr0;
@@ -142,15 +167,23 @@ _nmppsMaxIndx_32s: .globl _nmppsMaxIndx_32s
 	pop ar1, gr1;
 	pop ar0, gr0;
 	return;
-/*
-// }
-*/
 
 
-/* /////////////////////////////////////////////////////////////////////////////
-// nmppsStatus nmppsMaxIndx_32f(const nmpps32f* pSrc, int len, nmpps32f* pMax, int* pIndx) {
-*/
-	.align 8
+/**
+ * @fn nmppsStatus nmppsMaxIndx_32f(const nmpps32f* pSrc, int len, nmpps32f* pMax, int* pIndx)
+ *
+ * @brief Определение максимального значения среди элементов вектора типа nmpps32f и его индекса.
+ *
+ * @param[in] pSrc Исходный вектор.
+ * @param[in] len Размер вектора.
+ * @param[out] pMax Максимальное значение.
+ * @param[out] pIndx Индекс элемента вектора.
+ *
+ * @retval nmppsStsNullPtrErr Хотя бы один из указателей имеет значение NULL.
+ * @retval nmppsStsSizeErr Размер вектора меньше чем 1.
+ * @retval nmppsStsNoErr Успешное выполнение.
+ */
+	.align
 _nmppsMaxIndx_32f: .globl _nmppsMaxIndx_32f
 	ar5 = ar7 - 2 addr;
 	push ar0, gr0;
@@ -211,15 +244,23 @@ _nmppsMaxIndx_32f: .globl _nmppsMaxIndx_32f
 	pop ar1, gr1;
 	pop ar0, gr0;
 	return;
-/*
-// }
-*/
 
 
-/* /////////////////////////////////////////////////////////////////////////////
-// nmppsStatus nmppsMaxIndx_64f(const nmpps64f* pSrc, int len, nmpps64f* pMax, int* pIndx) {
-*/
-	.align 8
+/**
+ * @fn nmppsStatus nmppsMaxIndx_64f(const nmpps64f* pSrc, int len, nmpps64f* pMax, int* pIndx)
+ *
+ * @brief Определение максимального значения среди элементов вектора типа nmpps64f и его индекса.
+ *
+ * @param[in] pSrc Исходный вектор.
+ * @param[in] len Размер вектора.
+ * @param[out] pMax Максимальное значение.
+ * @param[out] pIndx Индекс элемента вектора.
+ *
+ * @retval nmppsStsNullPtrErr Хотя бы один из указателей имеет значение NULL.
+ * @retval nmppsStsSizeErr Размер вектора меньше чем 1.
+ * @retval nmppsStsNoErr Успешное выполнение.
+ */
+	.align
 _nmppsMaxIndx_64f: .globl _nmppsMaxIndx_64f
 	ar5 = ar7 - 2 addr;
 	push ar0, gr0;
@@ -286,6 +327,6 @@ _nmppsMaxIndx_64f: .globl _nmppsMaxIndx_64f
 	pop ar1, gr1;
 	pop ar0, gr0;
 	return;
-/*
-// }
-*/
+/**
+ * @}
+ */

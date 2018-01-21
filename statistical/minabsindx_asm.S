@@ -17,10 +17,27 @@
 	.text
 
 
-/* /////////////////////////////////////////////////////////////////////////////
-// nmppsStatus nmppsMinAbsIndx_16s(const nmpps16s* pSrc, int len, nmpps16s* pMinAbs, int* pIndx) {
-*/
-	.align 8
+/**
+ * @addtogroup StatisticalGroup
+ * @{
+ */
+
+
+/**
+ * @fn nmppsStatus nmppsMinAbsIndx_16s(const nmpps16s* pSrc, int len, nmpps16s* pMinAbs, int* pIndx)
+ *
+ * @brief Определение минимального абсолютного значения среди элементов вектора типа nmpps16s и его индекса.
+ *
+ * @param[in] pSrc Исходный вектор.
+ * @param[in] len Размер вектора.
+ * @param[out] pMinAbs Минимальное абсолютное значение.
+ * @param[out] pIndx Индекс элемента вектора.
+ *
+ * @retval nmppsStsNullPtrErr Хотя бы один из указателей имеет значение NULL.
+ * @retval nmppsStsSizeErr Размер вектора меньше чем 1.
+ * @retval nmppsStsNoErr Успешное выполнение.
+ */
+	.align
 _nmppsMinAbsIndx_16s: .globl _nmppsMinAbsIndx_16s
 	ar5 = ar7 - 2 addr;
 	push ar0, gr0;
@@ -82,15 +99,23 @@ _nmppsMinAbsIndx_16s: .globl _nmppsMinAbsIndx_16s
 	pop ar1, gr1;
 	pop ar0, gr0;
 	return;
-/*
-// }
-*/
 
 
-/* /////////////////////////////////////////////////////////////////////////////
-// nmppsStatus nmppsMinAbsIndx_32s(const nmpps32s* pSrc, int len, nmpps32s* pMinAbs, int* pIndx) {
-*/
-	.align 8
+/**
+ * @fn nmppsStatus nmppsMinAbsIndx_32s(const nmpps32s* pSrc, int len, nmpps32s* pMinAbs, int* pIndx)
+ *
+ * @brief Определение минимального абсолютного значения среди элементов вектора типа nmpps32s и его индекса.
+ *
+ * @param[in] pSrc Исходный вектор.
+ * @param[in] len Размер вектора.
+ * @param[out] pMinAbs Минимальное абсолютное значение.
+ * @param[out] pIndx Индекс элемента вектора.
+ *
+ * @retval nmppsStsNullPtrErr Хотя бы один из указателей имеет значение NULL.
+ * @retval nmppsStsSizeErr Размер вектора меньше чем 1.
+ * @retval nmppsStsNoErr Успешное выполнение.
+ */
+	.align
 _nmppsMinAbsIndx_32s: .globl _nmppsMinAbsIndx_32s
 	ar5 = ar7 - 2 addr;
 	push ar0, gr0;
@@ -152,3 +177,6 @@ _nmppsMinAbsIndx_32s: .globl _nmppsMinAbsIndx_32s
 	pop ar1, gr1;
 	pop ar0, gr0;
 	return;
+/**
+ * @}
+ */

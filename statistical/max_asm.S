@@ -12,13 +12,30 @@
 //    nmppsStsNullPtrErr  - Error when any of the specified pointers is NULL.
 //    nmppsStsSizeErr     - Error when length of the vector is less or equal 0.
 */
+
 	.text
 
 
-/* /////////////////////////////////////////////////////////////////////////////
-// nmppsStatus nmppsMax_32f(const nmpps32f* pSrc, int len, nmpps32f* pMax) {
-*/
-	.align 8
+/**
+ * @addtogroup StatisticalGroup
+ * @{
+ */
+
+
+/**
+ * @fn nmppsStatus nmppsMax_32f(const nmpps32f* pSrc, int len, nmpps32f* pMax)
+ *
+ * @brief Определение максимального значения среди элементов вектора типа nmpps32f.
+ *
+ * @param[in] pSrc Исходный вектор.
+ * @param[in] len Размер вектора.
+ * @param[out] pMax Максимальное значение.
+ *
+ * @retval nmppsStsNullPtrErr Хотя бы один из указателей имеет значение NULL.
+ * @retval nmppsStsSizeErr Размер вектора меньше чем 1.
+ * @retval nmppsStsNoErr Успешное выполнение.
+ */
+	.align
 _nmppsMax_32f: .globl _nmppsMax_32f
 	ar5 = ar7 - 2 addr;
 	push ar0, gr0;
@@ -71,14 +88,22 @@ _nmppsMax_32f: .globl _nmppsMax_32f
 	pop ar1, gr1;
 	pop ar0, gr0;
 	return;
-/*
-// }
-*/
 
-/* /////////////////////////////////////////////////////////////////////////////
-// nmppsStatus nmppsMax_64f(const nmpps64f* pSrc, int len, nmpps64f* pMax) {
-*/
-	.align 8
+
+/**
+ * @fn nmppsStatus nmppsMax_64f(const nmpps64f* pSrc, int len, nmpps64f* pMax)
+ *
+ * @brief Определение максимального значения среди элементов вектора типа nmpps64f.
+ *
+ * @param[in] pSrc Исходный вектор.
+ * @param[in] len Размер вектора.
+ * @param[out] pMax Максимальное значение.
+ *
+ * @retval nmppsStsNullPtrErr Хотя бы один из указателей имеет значение NULL.
+ * @retval nmppsStsSizeErr Размер вектора меньше чем 1.
+ * @retval nmppsStsNoErr Успешное выполнение.
+ */
+	.align
 _nmppsMax_64f: .globl _nmppsMax_64f
 	ar5 = ar7 - 2 addr;
 	push ar0, gr0;
@@ -126,6 +151,6 @@ _nmppsMax_64f: .globl _nmppsMax_64f
 	pop ar1, gr1;
 	pop ar0, gr0;
 	return;
-/*
-// }
-*/
+/**
+ * @}
+ */

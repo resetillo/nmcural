@@ -23,11 +23,27 @@
 
 	.text
 
+/**
+ * @addtogroup ArithmeticGroup
+ * @{
+ */
 
-/* /////////////////////////////////////////////////////////////////////////////
-// nmppsStatus nmppsSqr_8u_Sfs(const nmpps8u* pSrc, nmpps8u* pDst, int len, int scaleFactor) {
-*/
-	.align 8
+
+/**
+ * @fn nmppsStatus nmppsSqr_8u_Sfs(const nmpps8u* pSrc, nmpps8u* pDst, int len, int scaleFactor)
+ *
+ * @brief Вычисление квадрата каждого элемента вектора для типа nmpps8u c масштабированием.
+ *
+ * @param[in] pSrc Исходный вектор.
+ * @param[out] pDst Получаемый вектор.
+ * @param[in] len Размер вектора.
+ * @param[in] scaleFactor Масштаб.
+ *
+ * @retval nmppsStsNullPtrErr Хотя бы один из указателей имеет значение NULL.
+ * @retval nmppsStsSizeErr Размер вектора меньше чем 1.
+ * @retval nmppsStsNoErr Успешное выполнение.
+ */
+	.align
 _nmppsSqr_8u_Sfs: .globl _nmppsSqr_8u_Sfs
 	ar5 = ar7 - 2 addr;
 	push ar0, gr0;									// ar0,gr0 used to store args
@@ -469,15 +485,23 @@ _nmppsSqr_8u_Sfs: .globl _nmppsSqr_8u_Sfs
 	pop ar1, gr1;
 	pop ar0, gr0;
 	return;
-/*
-// }
-*/
 
 
-/* /////////////////////////////////////////////////////////////////////////////
-// nmppsStatus nmppsSqr_16s_Sfs(const nmpps16s* pSrc, nmpps16s* pDst, int len, int scaleFactor) {
-*/
-	.align 8
+/**
+ * @fn nmppsStatus nmppsSqr_16s_Sfs(const nmpps16s* pSrc, nmpps16s* pDst, int len, int scaleFactor)
+ *
+ * @brief Вычисление квадрата каждого элемента вектора для типа nmpps16s c масштабированием.
+ *
+ * @param[in] pSrc Исходный вектор.
+ * @param[out] pDst Получаемый вектор.
+ * @param[in] len Размер вектора.
+ * @param[in] scaleFactor Масштаб.
+ *
+ * @retval nmppsStsNullPtrErr Хотя бы один из указателей имеет значение NULL.
+ * @retval nmppsStsSizeErr Размер вектора меньше чем 1.
+ * @retval nmppsStsNoErr Успешное выполнение.
+ */
+	.align
 _nmppsSqr_16s_Sfs: .globl _nmppsSqr_16s_Sfs
 	ar5 = ar7 - 2 addr;
 	push ar0, gr0;									// ar0,gr0 used to store args
@@ -518,15 +542,23 @@ _nmppsSqr_16s_Sfs: .globl _nmppsSqr_16s_Sfs
 	ar6 = Unsigned_Scale_Handlers_Table;
 
 	goto .LnmppsSqr_implementation_same_as_for_8u_Sfs;
-/*
-// }
-*/
 
 
-/* /////////////////////////////////////////////////////////////////////////////
-// nmppsStatus nmppsSqr_16u_Sfs(const nmpps16u* pSrc, nmpps16u* pDst, int len, int scaleFactor) {
-*/
-	.align 8
+/**
+ * @fn nmppsStatus nmppsSqr_16u_Sfs(const nmpps16u* pSrc, nmpps16u* pDst, int len, int scaleFactor)
+ *
+ * @brief Вычисление квадрата каждого элемента вектора для типа nmpps16u c масштабированием.
+ *
+ * @param[in] pSrc Исходный вектор.
+ * @param[out] pDst Получаемый вектор.
+ * @param[in] len Размер вектора.
+ * @param[in] scaleFactor Масштаб.
+ *
+ * @retval nmppsStsNullPtrErr Хотя бы один из указателей имеет значение NULL.
+ * @retval nmppsStsSizeErr Размер вектора меньше чем 1.
+ * @retval nmppsStsNoErr Успешное выполнение.
+ */
+	.align
 _nmppsSqr_16u_Sfs: .globl _nmppsSqr_16u_Sfs
 	ar5 = ar7 - 2 addr;
 	push ar0, gr0;									// ar0,gr0 used to store args
@@ -567,15 +599,22 @@ _nmppsSqr_16u_Sfs: .globl _nmppsSqr_16u_Sfs
 	ar6 = Unsigned_Scale_Handlers_Table;
 
 	goto .LnmppsSqr_implementation_same_as_for_8u_Sfs;
-/*
-// }
-*/
 
 
-/* /////////////////////////////////////////////////////////////////////////////
-// nmppsStatus nmppsSqr_32f(const nmpps32f* pSrc, nmpps32f* pDst, int len) {
-*/
-	.align 8
+/**
+ * @fn nmppsStatus nmppsSqr_32f(const nmpps32f* pSrc, nmpps32f* pDst, int len)
+ *
+ * @brief Вычисление квадрата каждого элемента вектора для типа nmpps32f.
+ *
+ * @param[in] pSrc Исходный вектор.
+ * @param[out] pDst Получаемый вектор.
+ * @param[in] len Размер вектора.
+ *
+ * @retval nmppsStsNullPtrErr Хотя бы один из указателей имеет значение NULL.
+ * @retval nmppsStsSizeErr Размер вектора меньше чем 1.
+ * @retval nmppsStsNoErr Успешное выполнение.
+ */
+	.align
 _nmppsSqr_32f: .globl _nmppsSqr_32f
 	ar5 = ar7 - 2 addr;
 	push ar0, gr0;
@@ -648,15 +687,22 @@ _nmppsSqr_32f: .globl _nmppsSqr_32f
 	pop ar1, gr1;
 	pop ar0, gr0;
 	return;
-/*
-// }
-*/
 
 
-/* /////////////////////////////////////////////////////////////////////////////
-// nmppsStatus nmppsSqr_64f(const nmpps64f* pSrc, nmpps64f* pDst, int len) {
-*/
-	.align 8
+/**
+ * @fn nmppsStatus nmppsSqr_64f(const nmpps64f* pSrc, nmpps64f* pDst, int len)
+ *
+ * @brief Вычисление квадрата каждого элемента вектора для типа nmpps64f.
+ *
+ * @param[in] pSrc Исходный вектор.
+ * @param[out] pDst Получаемый вектор.
+ * @param[in] len Размер вектора.
+ *
+ * @retval nmppsStsNullPtrErr Хотя бы один из указателей имеет значение NULL.
+ * @retval nmppsStsSizeErr Размер вектора меньше чем 1.
+ * @retval nmppsStsNoErr Успешное выполнение.
+ */
+	.align
 _nmppsSqr_64f: .globl _nmppsSqr_64f
 	ar5 = ar7 - 2 addr;
 	push ar0, gr0;
@@ -706,9 +752,6 @@ _nmppsSqr_64f: .globl _nmppsSqr_64f
 	pop ar1, gr1;
 	pop ar0, gr0;
 	return;
-/*
-// }
-*/
 
 
 /* /////////////////////////////////////////////////////////////////////////////
@@ -720,10 +763,21 @@ _nmppsSqr_64f: .globl _nmppsSqr_64f
 */
 
 
-/* /////////////////////////////////////////////////////////////////////////////
-// nmppsStatus nmppsSqr_16sc_Sfs(const nmpps16sc* pSrc, nmpps16sc* pDst, int len, int scaleFactor) {
-*/
-	.align 8
+/**
+ * @fn nmppsStatus nmppsSqr_16sc_Sfs(const nmpps16sc* pSrc, nmpps16sc* pDst, int len, int scaleFactor)
+ *
+ * @brief Вычисление квадрата каждого элемента вектора для комплексного типа nmpps16sc c масштабированием.
+ *
+ * @param[in] pSrc Исходный вектор.
+ * @param[out] pDst Получаемый вектор.
+ * @param[in] len Размер вектора.
+ * @param[in] scaleFactor Масштаб.
+ *
+ * @retval nmppsStsNullPtrErr Хотя бы один из указателей имеет значение NULL.
+ * @retval nmppsStsSizeErr Размер вектора меньше чем 1.
+ * @retval nmppsStsNoErr Успешное выполнение.
+ */
+	.align
 _nmppsSqr_16sc_Sfs: .globl _nmppsSqr_16sc_Sfs
 	ar5 = ar7 - 2 addr;
 	push ar0, gr0;									// ar0,gr0 used to store args
@@ -1111,15 +1165,22 @@ _nmppsSqr_16sc_Sfs: .globl _nmppsSqr_16sc_Sfs
 	pop ar1, gr1;
 	pop ar0, gr0;
 	return;
-/*
-// }
-*/
 
 
-/* /////////////////////////////////////////////////////////////////////////////
-// nmppsStatus nmppsSqr_32fc(const nmpps32fc* pSrc, nmpps32fc* pDst, int len) {
-*/
-	.align 8
+/**
+ * @fn nmppsStatus nmppsSqr_32fc(const nmpps16sc* pSrc, nmpps16sc* pDst, int len)
+ *
+ * @brief Вычисление квадрата каждого элемента вектора для комплексного типа nmpps32fc.
+ *
+ * @param[in] pSrc Исходный вектор.
+ * @param[out] pDst Получаемый вектор.
+ * @param[in] len Размер вектора.
+ *
+ * @retval nmppsStsNullPtrErr Хотя бы один из указателей имеет значение NULL.
+ * @retval nmppsStsSizeErr Размер вектора меньше чем 1.
+ * @retval nmppsStsNoErr Успешное выполнение.
+ */
+	.align
 _nmppsSqr_32fc: .globl _nmppsSqr_32fc
 	ar5 = ar7 - 2 addr;
 	push ar0, gr0;
@@ -1189,10 +1250,20 @@ _nmppsSqr_32fc: .globl _nmppsSqr_32fc
 */
 
 
-/* /////////////////////////////////////////////////////////////////////////////
-// nmppsStatus nmppsSqr_64fc(const nmpps64fc* pSrc, nmpps64fc* pDst, int len) {
-*/
-	.align 8
+/**
+ * @fn nmppsStatus nmppsSqr_64fc(const nmpps64fc* pSrc, nmpps64fc* pDst, int len)
+ *
+ * @brief Вычисление квадрата каждого элемента вектора для комплексного типа nmpps64fc.
+ *
+ * @param[in] pSrc Исходный вектор.
+ * @param[out] pDst Получаемый вектор.
+ * @param[in] len Размер вектора.
+ *
+ * @retval nmppsStsNullPtrErr Хотя бы один из указателей имеет значение NULL.
+ * @retval nmppsStsSizeErr Размер вектора меньше чем 1.
+ * @retval nmppsStsNoErr Успешное выполнение.
+ */
+	.align
 _nmppsSqr_64fc: .globl _nmppsSqr_64fc
 	ar5 = ar7 - 2 addr;
 	push ar0, gr0;
@@ -1266,9 +1337,9 @@ _nmppsSqr_64fc: .globl _nmppsSqr_64fc
 	pop ar1, gr1;
 	pop ar0, gr0;
 	return;
-/*
-// }
-*/
+/**
+ * @}
+ */
 
 
 /* /////////////////////////////////////////////////////////////////////////////
@@ -1276,7 +1347,7 @@ _nmppsSqr_64fc: .globl _nmppsSqr_64fc
 */
 
 	.text
-	.align 8
+	.align 2
 
 Mask_LO32:
 	.quad 0x00000000FFFFFFFF

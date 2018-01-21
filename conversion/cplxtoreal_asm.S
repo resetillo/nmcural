@@ -17,10 +17,27 @@
 	.text
 
 
-/* /////////////////////////////////////////////////////////////////////////////
-// nmppsStatus nmppsCplxToReal_64fc(const nmpps64fc* pSrc, nmpps64f* pDstRe, nmpps64f* pDstIm, int len) {
-*/
-	.align 8
+/**
+ * @addtogroup ConversionGroup
+ * @{
+ */
+
+
+/**
+ * @fn nmppsStatus nmppsCplxToReal_64fc(const nmpps64fc* pSrc, nmpps64f* pDstRe, nmpps64f* pDstIm, int len)
+ *
+ * @brief Преобразование комплексного вектора в действительный типа nmpps64fc.
+ *
+ * @param[in] pSrc Исходный вектор.
+ * @param[out] pDstRe Вектор действительных частей.
+ * @param[out] pDstIm Вектор мнимых частей.
+ * @param[in] len Размер вектора.
+ *
+ * @retval nmppsStsNullPtrErr Хотя бы один из указателей имеет значение NULL.
+ * @retval nmppsStsSizeErr Размер вектора меньше чем 1.
+ * @retval nmppsStsNoErr Успешное выполнение.
+ */
+	.align
 _nmppsCplxToReal_64fc: .globl _nmppsCplxToReal_64fc
 	ar5 = ar7 - 2 addr;
 	push ar0, gr0;
@@ -196,15 +213,23 @@ _nmppsCplxToReal_64fc: .globl _nmppsCplxToReal_64fc
 	pop ar1, gr1;
 	pop ar0, gr0;
 	return;
-/*
-// }
-*/
 
 
-/* /////////////////////////////////////////////////////////////////////////////
-// nmppsStatus nmppsCplxToReal_32fc(const nmpps32fc* pSrc, nmpps32f* pDstRe, nmpps32f* pDstIm, int len) {
-*/
-	.align 8
+/**
+ * @fn nmppsStatus nmppsCplxToReal_32fc(const nmpps32fc* pSrc, nmpps32f* pDstRe, nmpps32f* pDstIm, int len)
+ *
+ * @brief Преобразование комплексного вектора в действительный типа nmpps32fc.
+ *
+ * @param[in] pSrc Исходный вектор.
+ * @param[out] pDstRe Вектор действительных частей.
+ * @param[out] pDstIm Вектор мнимых частей.
+ * @param[in] len Размер вектора.
+ *
+ * @retval nmppsStsNullPtrErr Хотя бы один из указателей имеет значение NULL.
+ * @retval nmppsStsSizeErr Размер вектора меньше чем 1.
+ * @retval nmppsStsNoErr Успешное выполнение.
+ */
+	.align
 _nmppsCplxToReal_32fc: .globl _nmppsCplxToReal_32fc
 	ar5 = ar7 - 2 addr;
 	push ar0, gr0;
@@ -359,6 +384,6 @@ _nmppsCplxToReal_32fc: .globl _nmppsCplxToReal_32fc
 	pop ar1, gr1;
 	pop ar0, gr0;
 	return;
-/*
-// }
-*/
+/**
+ * @}
+ */

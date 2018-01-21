@@ -16,10 +16,26 @@
 	.text
 
 
-/* /////////////////////////////////////////////////////////////////////////////
-// nmppsStatus nmppsMinAbs_16s(const nmpps16s* pSrc, int len, nmpps16s* pMinAbs) {
-*/
-	.align 8
+/**
+ * @addtogroup StatisticalGroup
+ * @{
+ */
+
+
+/**
+ * @fn nmppsStatus nmppsMinAbs_16s(const nmpps16s* pSrc, int len, nmpps16s* pMinAbs)
+ *
+ * @brief Определение минимального абсолютного значения среди элементов вектора типа nmpps16s.
+ *
+ * @param[in] pSrc Исходный вектор.
+ * @param[in] len Размер вектора.
+ * @param[out] pMinAbs Минимальное абсолютное значение.
+ *
+ * @retval nmppsStsNullPtrErr Хотя бы один из указателей имеет значение NULL.
+ * @retval nmppsStsSizeErr Размер вектора меньше чем 1.
+ * @retval nmppsStsNoErr Успешное выполнение.
+ */
+	.align
 _nmppsMinAbs_16s: .globl _nmppsMinAbs_16s
 	ar5 = ar7 - 2 addr;
 	push ar0, gr0;
@@ -72,10 +88,20 @@ _nmppsMinAbs_16s: .globl _nmppsMinAbs_16s
 	return;
 
 
-/* /////////////////////////////////////////////////////////////////////////////
-// nmppsStatus nmppsMinAbs_32s(const nmpps32s* pSrc, int len, nmpps32s* pMinAbs) {
-*/
-	.align 8
+/**
+ * @fn nmppsStatus nmppsMinAbs_32s(const nmpps32s* pSrc, int len, nmpps32s* pMinAbs)
+ *
+ * @brief Определение минимального абсолютного значения среди элементов вектора типа nmpps32s.
+ *
+ * @param[in] pSrc Исходный вектор.
+ * @param[in] len Размер вектора.
+ * @param[out] pMinAbs Минимальное абсолютное значение.
+ *
+ * @retval nmppsStsNullPtrErr Хотя бы один из указателей имеет значение NULL.
+ * @retval nmppsStsSizeErr Размер вектора меньше чем 1.
+ * @retval nmppsStsNoErr Успешное выполнение.
+ */
+	.align
 _nmppsMinAbs_32s: .globl _nmppsMinAbs_32s
 	ar5 = ar7 - 2 addr;
 	push ar0, gr0;
@@ -126,3 +152,6 @@ _nmppsMinAbs_32s: .globl _nmppsMinAbs_32s
 	pop ar1, gr1;
 	pop ar0, gr0;
 	return;
+/**
+ * @}
+ */

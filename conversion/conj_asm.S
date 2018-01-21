@@ -12,13 +12,30 @@
 //    nmppsStsSizeErr         Vectors' length is less than 1
 //    nmppsStsNoErr           Otherwise
 */
+
 	.text
 
 
-/* /////////////////////////////////////////////////////////////////////////////
-// nmppsStatus nmppsConj_32fc(const nmpps32fc* pSrc, nmpps32fc* pDst, int len) {
-*/
-	.align 8
+/**
+ * @addtogroup ConversionGroup
+ * @{
+ */
+
+
+/**
+ * @fn nmppsStatus nmppsConj_32fc(const nmpps32fc* pSrc, nmpps32fc* pDst, int len)
+ *
+ * @brief Вычисление комплексно-сопряженных значений элемента вектора типа nmpps32fc.
+ *
+ * @param[in] pSrc Исходный вектор
+ * @param[out] pDst Получаемый вектор
+ * @param[in] len Размер вектора
+ *
+ * @retval nmppsStsNullPtrErr Хотя бы один из указателей имеет значение NULL.
+ * @retval nmppsStsSizeErr Размер вектора меньше чем 1.
+ * @retval nmppsStsNoErr Успешное выполнение.
+ */
+	.align
 _nmppsConj_32fc: .global _nmppsConj_32fc
 	ar5 = ar7 - 2 addr;
 	push ar0, gr0;
@@ -78,15 +95,22 @@ _nmppsConj_32fc: .global _nmppsConj_32fc
 	pop ar1, gr1;
 	pop ar0, gr0;
 	return;
-/*
-// }
-*/
 
 
-/* /////////////////////////////////////////////////////////////////////////////
-// nmppsStatus nmppsConj_64fc(const nmpps64fc* pSrc, nmpps64fc* pDst, int len) {
-*/
-	.align 8
+/**
+ * @fn nmppsStatus nmppsConj_64fc(const nmpps64fc* pSrc, nmpps64fc* pDst, int len)
+ *
+ * @brief Вычисление комплексно-сопряженных значений элемента вектора типа nmpps64fc.
+ *
+ * @param[in] pSrc Исходный вектор
+ * @param[out] pDst Получаемый вектор
+ * @param[in] len Размер вектора
+ *
+ * @retval nmppsStsNullPtrErr Хотя бы один из указателей имеет значение NULL.
+ * @retval nmppsStsSizeErr Размер вектора меньше чем 1.
+ * @retval nmppsStsNoErr Успешное выполнение.
+ */
+	.align
 _nmppsConj_64fc: .global _nmppsConj_64fc
 	ar5 = ar7 - 2;
 	push ar0, gr0;
@@ -159,9 +183,9 @@ _nmppsConj_64fc: .global _nmppsConj_64fc
 	pop ar1, gr1;
 	pop ar0, gr0;
 	return;
-/*
-// }
-*/
+/**
+ * @}
+ */
 
 
 /* /////////////////////////////////////////////////////////////////////////////

@@ -17,10 +17,27 @@
 	.text
 
 
-/* /////////////////////////////////////////////////////////////////////////////
-// nmppsStatus nmppsMinIndx_16s(const nmpps16s* pSrc, int len, nmpps16s* pMin, int* pIndx) {
-*/
-	.align 8
+/**
+ * @addtogroup StatisticalGroup
+ * @{
+ */
+
+
+/**
+ * @fn nmppsStatus nmppsMinIndx_16s(const nmpps16s* pSrc, int len, nmpps16s* pMin, int* pIndx)
+ *
+ * @brief Определение минимального значения среди элементов вектора типа nmpps16s и его индекса.
+ *
+ * @param[in] pSrc Исходный вектор.
+ * @param[in] len Размер вектора.
+ * @param[out] pMin Минимальное значение.
+ * @param[out] pIndx Индекс элемента вектора.
+ *
+ * @retval nmppsStsNullPtrErr Хотя бы один из указателей имеет значение NULL.
+ * @retval nmppsStsSizeErr Размер вектора меньше чем 1.
+ * @retval nmppsStsNoErr Успешное выполнение.
+ */
+	.align
 _nmppsMinIndx_16s: .globl _nmppsMinIndx_16s
 	ar5 = ar7 - 2 addr;
 	push ar0, gr0;
@@ -77,15 +94,23 @@ _nmppsMinIndx_16s: .globl _nmppsMinIndx_16s
 	pop ar1, gr1;
 	pop ar0, gr0;
 	return;
-/*
-// }
-*/
 
 
-/* /////////////////////////////////////////////////////////////////////////////
-// nmppsStatus nmppsMinIndx_32s(const nmpps32s* pSrc, int len, nmpps32s* pMin, int* pIndx) {
-*/
-	.align 8
+/**
+ * @fn nmppsStatus nmppsMinIndx_32s(const nmpps32s* pSrc, int len, nmpps32s* pMin, int* pIndx)
+ *
+ * @brief Определение минимального значения среди элементов вектора типа nmpps32s и его индекса.
+ *
+ * @param[in] pSrc Исходный вектор.
+ * @param[in] len Размер вектора.
+ * @param[out] pMin Минимальное значение.
+ * @param[out] pIndx Индекс элемента вектора.
+ *
+ * @retval nmppsStsNullPtrErr Хотя бы один из указателей имеет значение NULL.
+ * @retval nmppsStsSizeErr Размер вектора меньше чем 1.
+ * @retval nmppsStsNoErr Успешное выполнение.
+ */
+	.align
 _nmppsMinIndx_32s: .globl _nmppsMinIndx_32s
 	ar5 = ar7 - 2 addr;
 	push ar0, gr0;
@@ -142,15 +167,23 @@ _nmppsMinIndx_32s: .globl _nmppsMinIndx_32s
 	pop ar1, gr1;
 	pop ar0, gr0;
 	return;
-/*
-// }
-*/
 
 
-/* /////////////////////////////////////////////////////////////////////////////
-// nmppsStatus nmppsMinIndx_32f(const nmpps32f* pSrc, int len, nmpps32f* pMin, int* pIndx) {
-*/
-	.align 8
+/**
+ * @fn nmppsStatus nmppsMinIndx_32f(const nmpps32f* pSrc, int len, nmpps32f* pMin, int* pIndx)
+ *
+ * @brief Определение минимального значения среди элементов вектора типа nmpps32f и его индекса.
+ *
+ * @param[in] pSrc Исходный вектор.
+ * @param[in] len Размер вектора.
+ * @param[out] pMin Минимальное значение.
+ * @param[out] pIndx Индекс элемента вектора.
+ *
+ * @retval nmppsStsNullPtrErr Хотя бы один из указателей имеет значение NULL.
+ * @retval nmppsStsSizeErr Размер вектора меньше чем 1.
+ * @retval nmppsStsNoErr Успешное выполнение.
+ */
+	.align
 _nmppsMinIndx_32f: .globl _nmppsMinIndx_32f
 	ar5 = ar7 - 2 addr;
 	push ar0, gr0;
@@ -211,15 +244,23 @@ _nmppsMinIndx_32f: .globl _nmppsMinIndx_32f
 	pop ar1, gr1;
 	pop ar0, gr0;
 	return;
-/*
-// }
-*/
 
 
-/* /////////////////////////////////////////////////////////////////////////////
-// nmppsStatus nmppsMinIndx_64f(const nmpps64f* pSrc, int len, nmpps64f* pMin, int* pIndx) {
-*/
-	.align 8
+/**
+ * @fn nmppsStatus nmppsMinIndx_64f(const nmpps64f* pSrc, int len, nmpps64f* pMin, int* pIndx)
+ *
+ * @brief Определение минимального значения среди элементов вектора типа nmpps64f и его индекса.
+ *
+ * @param[in] pSrc Исходный вектор.
+ * @param[in] len Размер вектора.
+ * @param[out] pMin Минимальное значение.
+ * @param[out] pIndx Индекс элемента вектора.
+ *
+ * @retval nmppsStsNullPtrErr Хотя бы один из указателей имеет значение NULL.
+ * @retval nmppsStsSizeErr Размер вектора меньше чем 1.
+ * @retval nmppsStsNoErr Успешное выполнение.
+ */
+	.align
 _nmppsMinIndx_64f: .globl _nmppsMinIndx_64f
 	ar5 = ar7 - 2 addr;
 	push ar0, gr0;
@@ -286,6 +327,6 @@ _nmppsMinIndx_64f: .globl _nmppsMinIndx_64f
 	pop ar1, gr1;
 	pop ar0, gr0;
 	return;
-/*
-// }
-*/
+/**
+ * @}
+ */

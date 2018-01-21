@@ -12,13 +12,30 @@
 //    nmppsStsNullPtrErr  - Error when any of the specified pointers is NULL.
 //    nmppsStsSizeErr     - Error when length of the vector is less or equal 0.
 */
+
 	.text
 
 
-/* /////////////////////////////////////////////////////////////////////////////
-// nmppsStatus nmppsMin_32f(const nmpps32f* pSrc, int len, nmpps32f* pMin) {
-*/
-	.align 8
+/**
+ * @addtogroup StatisticalGroup
+ * @{
+ */
+
+
+/**
+ * @fn nmppsStatus nmppsMin_32f(const nmpps32f* pSrc, int len, nmpps32f* pMin)
+ *
+ * @brief Определение минимального значения среди элементов вектора типа nmpps32f.
+ *
+ * @param[in] pSrc Исходный вектор.
+ * @param[in] len Размер вектора.
+ * @param[out] pMin Минимальное значение.
+ *
+ * @retval nmppsStsNullPtrErr Хотя бы один из указателей имеет значение NULL.
+ * @retval nmppsStsSizeErr Размер вектора меньше чем 1.
+ * @retval nmppsStsNoErr Успешное выполнение.
+ */
+	.align
 _nmppsMin_32f: .globl _nmppsMin_32f
 	ar5 = ar7 - 2 addr;
 	push ar0, gr0;
@@ -71,15 +88,22 @@ _nmppsMin_32f: .globl _nmppsMin_32f
 	pop ar1, gr1;
 	pop ar0, gr0;
 	return;
-/*
-// }
-*/
 
 
-/* /////////////////////////////////////////////////////////////////////////////
-// nmppsStatus nmppsMin_64f(const nmpps64f* pSrc, int len, nmpps64f* pMin) {
-*/
-	.align 8
+/**
+ * @fn nmppsStatus nmppsMin_64f(const nmpps64f* pSrc, int len, nmpps64f* pMin)
+ *
+ * @brief Определение минимального значения среди элементов вектора типа nmpps64f.
+ *
+ * @param[in] pSrc Исходный вектор.
+ * @param[in] len Размер вектора.
+ * @param[out] pMin Минимальное значение.
+ *
+ * @retval nmppsStsNullPtrErr Хотя бы один из указателей имеет значение NULL.
+ * @retval nmppsStsSizeErr Размер вектора меньше чем 1.
+ * @retval nmppsStsNoErr Успешное выполнение.
+ */
+	.align
 _nmppsMin_64f: .globl _nmppsMin_64f
 	ar5 = ar7 - 2 addr;
 	push ar0, gr0;
@@ -126,6 +150,6 @@ _nmppsMin_64f: .globl _nmppsMin_64f
 	pop ar1, gr1;
 	pop ar0, gr0;
 	return;
-/*
-// }
-*/
+/**
+ * @}
+ */

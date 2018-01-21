@@ -21,10 +21,29 @@
 	.text
 
 
-/* /////////////////////////////////////////////////////////////////////////////
-// nmppsStatus nmppsRealToCplx_64f(const nmpps64f* pSrcRe, const nmpps64f* pSrcIm, nmpps64fc* pDst, int len) {
-*/
-	.align 8
+/**
+ * @addtogroup ConversionGroup
+ * @{
+ */
+
+
+/**
+ * @fn nmppsStatus nmppsRealToCplx_64f(const nmpps64f* pSrcRe, const nmpps64f* pSrcIm, nmpps64fc* pDst, int len)
+ *
+ * @brief Преобразование действительного вектора в комплексный типа nmpps64f.
+ *
+ * @param pSrcRe[in] Исходный вектор действительных частей.
+ * @param pSrcIm[in] Исходный вектор мнимых частей.
+ * @param pDst[out] Получаемый вектор.
+ * @param len [in] Размер вектора.
+ *
+ * @retval nmppsStsNullPtrErr Указатель на выходной вектор или оба указателя действительной и мнимой частей имеют значение NULL.
+ * @retval nmppsStsSizeErr Размер вектора меньше чем 1.
+ * @retval nmppsStsNoErr Успешное выполнение.
+ *
+ * @note Один из исходных векторов может иметь значение NULL, в таком случае соответствующий элемент комплексного числа получит значение 0.
+ */
+	.align
 _nmppsRealToCplx_64f: .globl _nmppsRealToCplx_64f
 	ar5 = ar7 - 2 addr;
 	push ar0, gr0;
@@ -127,15 +146,25 @@ _nmppsRealToCplx_64f: .globl _nmppsRealToCplx_64f
 	pop ar1, gr1;
 	pop ar0, gr0;
 	return;
-/*
-// }
-*/
 
 
-/* /////////////////////////////////////////////////////////////////////////////
-// nmppsStatus nmppsRealToCplx_32f(const nmpps32f* pSrcRe, const nmpps32f* pSrcIm, nmpps32fc* pDst, int len) {
-*/
-	.align 8
+/**
+ * @fn nmppsStatus nmppsRealToCplx_32f(const nmpps32f* pSrcRe, const nmpps32f* pSrcIm, nmpps32fc* pDst, int len)
+ *
+ * @brief Преобразование действительного вектора в комплексный типа nmpps32f.
+ *
+ * @param pSrcRe[in] Исходный вектор действительных частей.
+ * @param pSrcIm[in] Исходный вектор мнимых частей.
+ * @param pDst[out] Получаемый вектор.
+ * @param len [in] Размер вектора.
+ *
+ * @retval nmppsStsNullPtrErr Указатель на выходной вектор или оба указателя действительной и мнимой частей имеют значение NULL.
+ * @retval nmppsStsSizeErr Размер вектора меньше чем 1.
+ * @retval nmppsStsNoErr Успешное выполнение.
+ *
+ * @note Один из исходных векторов может иметь значение NULL, в таком случае соответствующий элемент комплексного числа получит значение 0.
+ */
+	.align
 _nmppsRealToCplx_32f: .globl _nmppsRealToCplx_32f
 	ar5 = ar7 - 2 addr;
 	push ar0, gr0;
@@ -264,9 +293,9 @@ _nmppsRealToCplx_32f: .globl _nmppsRealToCplx_32f
 	pop ar1, gr1;
 	pop ar0, gr0;
 	return;
-/*
-// }
-*/
+/**
+ * @}
+ */
 
 
 /* /////////////////////////////////////////////////////////////////////////////

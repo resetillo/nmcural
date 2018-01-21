@@ -15,6 +15,7 @@
 //  Functionality:
 //         std = sqrt( sum( (x[n] - mean(x))^2, n=0..len-1 ) / (len-1) )
 */
+
 	.text
 
 	.extern _nmppsMean_32f		// from mean_asm.S
@@ -23,10 +24,27 @@
 	.extern _square_root64f	// from squareroot64.S
 
 
-/* /////////////////////////////////////////////////////////////////////////////
-// nmppsStatus nmppsStdDev_32f(const nmpps32f* pSrc, int len, nmpps32f* pStdDev, nmppsHintAlgorithm hint) {
-*/
-	.align 8
+/**
+ * @addtogroup StatisticalGroup
+ * @{
+ */
+
+
+/**
+ * @fn nmppsStatus nmppsStdDev_32f(const nmpps32f* pSrc, int len, nmpps32f* pStdDev, nmppsHintAlgorithm hint)
+ *
+ * @brief Вычисление стандартного отклонения элементов вектора типа nmpps32f.
+ *
+ * @param[in] pSrc Исходный вектор.
+ * @param[in] len Размер вектора.
+ * @param[out] pStdDev Стандартное отклонение.
+ * @param[in] hint Не используется.
+ *
+ * @retval nmppsStsNullPtrErr Хотя бы один из указателей имеет значение NULL.
+ * @retval nmppsStsSizeErr Размер вектора меньше чем 2.
+ * @retval nmppsStsNoErr Успешное выполнение.
+ */
+	.align
 _nmppsStdDev_32f: .global _nmppsStdDev_32f
 	ar5 = ar7 - 2;
 	push ar0, gr0;
@@ -314,15 +332,23 @@ _nmppsStdDev_32f: .global _nmppsStdDev_32f
 	pop ar1, gr1;
 	pop ar0, gr0;
 	return;
-/*
-// }
-*/
 
 
-/* /////////////////////////////////////////////////////////////////////////////
-// nmppsStatus nmppsStdDev_64f(const nmpps64f* pSrc, int len, nmpps64f* pStdDev) {
-*/
-	.align 8
+/**
+ * @fn nmppsStatus nmppsStdDev_64f(const nmpps64f* pSrc, int len, nmpps64f* pStdDev)
+ *
+ * @brief Вычисление стандартного отклонения элементов вектора типа nmpps64f.
+ *
+ * @param[in] pSrc Исходный вектор.
+ * @param[in] len Размер вектора.
+ * @param[out] pStdDev Стандартное отклонение.
+ * @param[in] hint Не используется.
+ *
+ * @retval nmppsStsNullPtrErr Хотя бы один из указателей имеет значение NULL.
+ * @retval nmppsStsSizeErr Размер вектора меньше чем 2.
+ * @retval nmppsStsNoErr Успешное выполнение.
+ */
+	.align
 _nmppsStdDev_64f: .global _nmppsStdDev_64f
 	ar5 = ar7 - 2;
 	push ar0, gr0;
@@ -583,9 +609,9 @@ _nmppsStdDev_64f: .global _nmppsStdDev_64f
 	pop ar1, gr1;
 	pop ar0, gr0;
 	return;
-/*
-// }
-*/
+/**
+ * @}
+ */
 
 
 /* /////////////////////////////////////////////////////////////////////////////

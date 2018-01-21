@@ -13,13 +13,31 @@
 //    nmppsStsNullPtrErr  - Error when any of the specified pointers is NULL.
 //    nmppsStsSizeErr     - Error when length of the vector is less or equal 0.
 */
+
 	.text
 
 
-/* /////////////////////////////////////////////////////////////////////////////
-// nmppsStatus nmppsMinMax_16s(const nmpps16s* pSrc, int len, nmpps16s* pMin, nmpps16s* pMax) {
-*/
-	.align 8
+/**
+ * @addtogroup StatisticalGroup
+ * @{
+ */
+
+
+/**
+ * @fn nmppsStatus nmppsMinMax_16s(const nmpps16s* pSrc, int len, nmpps16s* pMin, nmpps16s* pMax)
+ *
+ * @brief Определение минимального и максимального значений среди элементов вектора типа nmpps16s.
+ *
+ * @param[in] pSrc Исходный вектор.
+ * @param[in] len Размер вектора.
+ * @param[out] pMin Минимальное значение.
+ * @param[out] pMax Максимальное значение.
+ *
+ * @retval nmppsStsNullPtrErr Хотя бы один из указателей имеет значение NULL.
+ * @retval nmppsStsSizeErr Размер вектора меньше чем 1.
+ * @retval nmppsStsNoErr Успешное выполнение.
+ */
+	.align
 _nmppsMinMax_16s: .globl _nmppsMinMax_16s
 	ar5 = ar7 - 2 addr;
 	push ar0, gr0;
@@ -81,15 +99,23 @@ _nmppsMinMax_16s: .globl _nmppsMinMax_16s
 	pop ar1, gr1;
 	pop ar0, gr0;
 	return;
-/*
-// }
-*/
 
 
-/* /////////////////////////////////////////////////////////////////////////////
-// nmppsStatus nmppsMinMax_32s(const nmpps32s* pSrc, int len, nmpps32s* pMin, nmpps32s* pMax) {
-*/
-	.align 8
+/**
+ * @fn nmppsStatus nmppsMinMax_32s(const nmpps32s* pSrc, int len, nmpps32s* pMin, nmpps32s* pMax)
+ *
+ * @brief Определение минимального и максимального значений среди элементов вектора типа nmpps32s.
+ *
+ * @param[in] pSrc Исходный вектор.
+ * @param[in] len Размер вектора.
+ * @param[out] pMin Минимальное значение.
+ * @param[out] pMax Максимальное значение.
+ *
+ * @retval nmppsStsNullPtrErr Хотя бы один из указателей имеет значение NULL.
+ * @retval nmppsStsSizeErr Размер вектора меньше чем 1.
+ * @retval nmppsStsNoErr Успешное выполнение.
+ */
+	.align
 _nmppsMinMax_32s: .globl _nmppsMinMax_32s
 	ar5 = ar7 - 2 addr;
 	push ar0, gr0;
@@ -151,15 +177,23 @@ _nmppsMinMax_32s: .globl _nmppsMinMax_32s
 	pop ar1, gr1;
 	pop ar0, gr0;
 	return;
-/*
-// }
-*/
 
 
-/* /////////////////////////////////////////////////////////////////////////////
-// nmppsStatus nmppsMinMax_32f(const nmpps32f* pSrc, int len, nmpps32f* pMin, nmpps32f* pMax) {
-*/
-	.align 8
+/**
+ * @fn nmppsStatus nmppsMinMax_32f(const nmpps32f* pSrc, int len, nmpps32f* pMin, nmpps32f* pMax)
+ *
+ * @brief Определение минимального и максимального значений среди элементов вектора типа nmpps32f.
+ *
+ * @param[in] pSrc Исходный вектор.
+ * @param[in] len Размер вектора.
+ * @param[out] pMin Минимальное значение.
+ * @param[out] pMax Максимальное значение.
+ *
+ * @retval nmppsStsNullPtrErr Хотя бы один из указателей имеет значение NULL.
+ * @retval nmppsStsSizeErr Размер вектора меньше чем 1.
+ * @retval nmppsStsNoErr Успешное выполнение.
+ */
+	.align
 _nmppsMinMax_32f: .globl _nmppsMinMax_32f
 	ar5 = ar7 - 2 addr;
 	push ar0, gr0;
@@ -235,15 +269,23 @@ _nmppsMinMax_32f: .globl _nmppsMinMax_32f
 	pop ar1, gr1;
 	pop ar0, gr0;
 	return;
-/*
-// }
-*/
 
 
-/* /////////////////////////////////////////////////////////////////////////////
-// nmppsStatus nmppsMinMax_64f(const nmpps64f* pSrc, int len, nmpps64f* pMin, nmpps64f* pMax) {
-*/
-	.align 8
+/**
+ * @fn nmppsStatus nmppsMinMax_64f(const nmpps64f* pSrc, int len, nmpps64f* pMin, nmpps64f* pMax)
+ *
+ * @brief Определение минимального и максимального значений среди элементов вектора типа nmpps64f.
+ *
+ * @param[in] pSrc Исходный вектор.
+ * @param[in] len Размер вектора.
+ * @param[out] pMin Минимальное значение.
+ * @param[out] pMax Максимальное значение.
+ *
+ * @retval nmppsStsNullPtrErr Хотя бы один из указателей имеет значение NULL.
+ * @retval nmppsStsSizeErr Размер вектора меньше чем 1.
+ * @retval nmppsStsNoErr Успешное выполнение.
+ */
+	.align
 _nmppsMinMax_64f: .globl _nmppsMinMax_64f
 	ar5 = ar7 - 2 addr;
 	push ar0, gr0;
@@ -301,6 +343,6 @@ _nmppsMinMax_64f: .globl _nmppsMinMax_64f
 	pop ar1, gr1;
 	pop ar0, gr0;
 	return;
-/*
-// }
-*/
+/**
+ * @}
+ */

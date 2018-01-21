@@ -19,10 +19,29 @@
 	.text
 
 
-/* /////////////////////////////////////////////////////////////////////////////
-// nmppsStatus nmppsMinMaxIndx_16s(const nmpps16s* pSrc, int len, nmpps16s* pMin, int* pMinIndx, nmpps16s* pMax, int* pMaxIndx) {
-*/
-	.align 8
+/**
+ * @addtogroup StatisticalGroup
+ * @{
+ */
+
+
+/**
+ * @fn nmppsStatus nmppsMinMaxIndx_16s(const nmpps16s* pSrc, int len, nmpps16s* pMin, int* pMinIndx, nmpps16s* pMax, int* pMaxIndx)
+ *
+ * @brief Определение минимального и максимального значений среди элементов вектора типа nmpps16s и их индексов.
+ *
+ * @param[in] pSrc Исходный вектор.
+ * @param[in] len Размер вектора.
+ * @param[out] pMin Минимальное значение.
+ * @param[out] pMinIndx Индекс элемента вектора для минимального значения.
+ * @param[out] pMax Максимальное значение.
+ * @param[out] pMaxIndx Индекс элемента вектора для максимального значения.
+ *
+ * @retval nmppsStsNullPtrErr Хотя бы один из указателей имеет значение NULL.
+ * @retval nmppsStsSizeErr Размер вектора меньше чем 1.
+ * @retval nmppsStsNoErr Успешное выполнение.
+ */
+	.align
 _nmppsMinMaxIndx_16s: .globl _nmppsMinMaxIndx_16s
 	ar5 = ar7 - 2 addr;
 	push ar0, gr0;
@@ -106,15 +125,25 @@ _nmppsMinMaxIndx_16s: .globl _nmppsMinMaxIndx_16s
 	pop ar1, gr1;
 	pop ar0, gr0;
 	return;
-/*
-// }
-*/
 
 
-/* /////////////////////////////////////////////////////////////////////////////
-// nmppsStatus nmppsMinMaxIndx_32s(const nmpps32s* pSrc, int len, nmpps32s* pMin, int* pMinIndx, nmpps32s* pMax, int* pMaxIndx) {
-*/
-	.align 8
+/**
+ * @fn nmppsStatus nmppsMinMaxIndx_32s(const nmpps32s* pSrc, int len, nmpps32s* pMin, int* pMinIndx, nmpps32s* pMax, int* pMaxIndx)
+ *
+ * @brief Определение минимального и максимального значений среди элементов вектора типа nmpps32s и их индексов.
+ *
+ * @param[in] pSrc Исходный вектор.
+ * @param[in] len Размер вектора.
+ * @param[out] pMin Минимальное значение.
+ * @param[out] pMinIndx Индекс элемента вектора для минимального значения.
+ * @param[out] pMax Максимальное значение.
+ * @param[out] pMaxIndx Индекс элемента вектора для максимального значения.
+ *
+ * @retval nmppsStsNullPtrErr Хотя бы один из указателей имеет значение NULL.
+ * @retval nmppsStsSizeErr Размер вектора меньше чем 1.
+ * @retval nmppsStsNoErr Успешное выполнение.
+ */
+	.align
 _nmppsMinMaxIndx_32s: .globl _nmppsMinMaxIndx_32s
 	ar5 = ar7 - 2 addr;
 	push ar0, gr0;
@@ -198,15 +227,25 @@ _nmppsMinMaxIndx_32s: .globl _nmppsMinMaxIndx_32s
 	pop ar1, gr1;
 	pop ar0, gr0;
 	return;
-/*
-// }
-*/
 
 
-/* /////////////////////////////////////////////////////////////////////////////
-// nmppsStatus nmppsMinMaxIndx_32f(const nmpps32f* pSrc, int len, nmpps32f* pMin, int* pMinIndx, nmpps32f* pMax, int* pMaxIndx) {
-*/
-	.align 8
+/**
+ * @fn nmppsStatus nmppsMinMaxIndx_32f(const nmpps32f* pSrc, int len, nmpps32f* pMin, int* pMinIndx, nmpps32f* pMax, int* pMaxIndx)
+ *
+ * @brief Определение минимального и максимального значений среди элементов вектора типа nmpps32f и их индексов.
+ *
+ * @param[in] pSrc Исходный вектор.
+ * @param[in] len Размер вектора.
+ * @param[out] pMin Минимальное значение.
+ * @param[out] pMinIndx Индекс элемента вектора для минимального значения.
+ * @param[out] pMax Максимальное значение.
+ * @param[out] pMaxIndx Индекс элемента вектора для максимального значения.
+ *
+ * @retval nmppsStsNullPtrErr Хотя бы один из указателей имеет значение NULL.
+ * @retval nmppsStsSizeErr Размер вектора меньше чем 1.
+ * @retval nmppsStsNoErr Успешное выполнение.
+ */
+	.align
 _nmppsMinMaxIndx_32f: .globl _nmppsMinMaxIndx_32f
 	ar5 = ar7 - 2 addr;
 	push ar0, gr0;
@@ -304,15 +343,25 @@ _nmppsMinMaxIndx_32f: .globl _nmppsMinMaxIndx_32f
 	pop ar1, gr1;
 	pop ar0, gr0;
 	return;
-/*
-// }
-*/
 
 
-/* /////////////////////////////////////////////////////////////////////////////
-// nmppsStatus nmppsMinMaxIndx_64f(const nmpps64f* pSrc, int len, nmpps64f* pMin, int* pMinIndx, nmpps64f* pMax, int* pMaxIndx) {
-*/
-	.align 8
+/**
+ * @fn nmppsStatus nmppsMinMaxIndx_64f(const nmpps64f* pSrc, int len, nmpps64f* pMin, int* pMinIndx, nmpps64f* pMax, int* pMaxIndx)
+ *
+ * @brief Определение минимального и максимального значений среди элементов вектора типа nmpps64f и их индексов.
+ *
+ * @param[in] pSrc Исходный вектор.
+ * @param[in] len Размер вектора.
+ * @param[out] pMin Минимальное значение.
+ * @param[out] pMinIndx Индекс элемента вектора для минимального значения.
+ * @param[out] pMax Максимальное значение.
+ * @param[out] pMaxIndx Индекс элемента вектора для максимального значения.
+ *
+ * @retval nmppsStsNullPtrErr Хотя бы один из указателей имеет значение NULL.
+ * @retval nmppsStsSizeErr Размер вектора меньше чем 1.
+ * @retval nmppsStsNoErr Успешное выполнение.
+ */
+	.align
 _nmppsMinMaxIndx_64f: .globl _nmppsMinMaxIndx_64f
 	ar5 = ar7 - 2 addr;
 	push ar0, gr0;
@@ -411,6 +460,6 @@ _nmppsMinMaxIndx_64f: .globl _nmppsMinMaxIndx_64f
 	pop ar1, gr1;
 	pop ar0, gr0;
 	return;
-/*
-// }
-*/
+/**
+ * @}
+ */
